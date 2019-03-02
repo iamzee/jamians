@@ -1,5 +1,5 @@
-const mongoose = require ('mongoose');
-const Teacher = require ('../models/teacher.model');
+import mongoose from 'mongoose';
+import Teacher from '../models/teacher.model';
 
 const create = (req, res) => {
   new Teacher (req.body)
@@ -15,6 +15,6 @@ const create = (req, res) => {
     });
 };
 
-module.exports = {
+export default {
   create,
 };

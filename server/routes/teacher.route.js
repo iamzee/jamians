@@ -1,8 +1,8 @@
-const express = require ('express');
-const teacherCtrl = require ('../controllers/teacher.controller');
+import express from 'express';
+import teacherCtrl from '../controllers/teacher.controller';
 
 const router = express.Router ();
 
 router.route ('/api/teacher').post (teacherCtrl.create);
 
-module.exports = router;
+export default router;

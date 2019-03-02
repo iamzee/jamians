@@ -1,11 +1,11 @@
-const path = require ('path');
-const express = require ('express');
-const bodyParser = require ('body-parser');
-const mongoose = require ('mongoose');
+import path from 'path';
+import express from 'express';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
 
-const teacherRoutes = require ('./routes/teacher.route');
-const subjectRoutes = require ('./routes/subject.route');
-const noteRoutes = require ('./routes/note.route');
+import teacherRoutes from './routes/teacher.route';
+import subjectRoutes from './routes/subject.route';
+import noteRoutes from './routes/note.route';
 
 mongoose.Promise = global.Promise;
 mongoose.connect ('mongodb://localhost:27017/jamians');

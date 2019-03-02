@@ -1,6 +1,4 @@
-const mongoose = require ('mongoose');
-const Teacher = require ('./teacher.model');
-const Subject = require ('./subject.model');
+import mongoose from 'mongoose';
 
 const NoteSchema = mongoose.Schema ({
   topic: {
@@ -34,4 +32,4 @@ const NoteSchema = mongoose.Schema ({
 
 const Note = mongoose.model ('Note', NoteSchema);
 
-module.exports = Note;
+export default Note;

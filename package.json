@@ -21,8 +21,11 @@
     "nodemon": "^1.18.10",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
+    "react-hot-loader": "^4.7.1",
     "webpack": "^4.29.5",
     "webpack-cli": "^3.2.3",
+    "webpack-dev-middleware": "^3.6.0",
+    "webpack-hot-middleware": "^2.24.3",
     "webpack-node-externals": "^1.7.2"
   }
 }

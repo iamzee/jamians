@@ -1,4 +1,4 @@
-const Note = require ('../models/note.model');
+import Note from '../models/note.model';
 
 const create = (req, res) => {
   new Note (req.body)
@@ -51,7 +51,7 @@ const list = (req, res) => {
   //   });
 };
 
-module.exports = {
+export default {
   create,
   list,
 };

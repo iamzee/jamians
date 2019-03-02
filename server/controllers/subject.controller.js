@@ -1,5 +1,5 @@
-const mongoose = require ('mongoose');
-const Subject = require ('../models/subject.model');
+import mongoose from 'mongoose';
+import Subject from '../models/subject.model';
 
 const create = (req, res) => {
   new Subject (req.body)
@@ -15,4 +15,4 @@ const create = (req, res) => {
     });
 };
 
-module.exports = {create};
+export default {create};
