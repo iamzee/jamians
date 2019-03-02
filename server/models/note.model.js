@@ -28,6 +28,10 @@ const NoteSchema = mongoose.Schema ({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Subject',
   },
+  downloads: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const Note = mongoose.model ('Note', NoteSchema);
