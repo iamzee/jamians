@@ -11,6 +11,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect ('mongodb://localhost:27017/jamians');
 
 const app = express ();
+
 app.use (express.static ('dist'));
 app.use (bodyParser.json ());
 
