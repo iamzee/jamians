@@ -1,4 +1,3 @@
-import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
@@ -8,6 +7,8 @@ import subjectRoutes from './routes/subject.route';
 import noteRoutes from './routes/note.route';
 import userRoutes from './routes/user.route';
 import authRoutes from './routes/auth.route';
+
+import template from '../template';
 
 mongoose.Promise = global.Promise;
 mongoose.connect ('mongodb://localhost:27017/jamians');
@@ -23,8 +24,8 @@ app.use ('/', noteRoutes);
 app.use ('/', userRoutes);
 app.use ('/', authRoutes);
 
-app.get ('/', (req, res) => {
-  res.sendFile (path.resolve (__dirname, 'dist', 'index.html'));
+app.get ('*', (req, res) => {
+  res.send (template ());
 });
 
 app.listen (3000, () => {

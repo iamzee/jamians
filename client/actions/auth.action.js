@@ -18,6 +18,6 @@ export const startLogin = user => {
       .then (({data}) => {
         dispatch (login (data));
       })
-      .catch ();
+      .catch (err => {});
   };
 };

@@ -1,18 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import App from './App';
-import createStore from './store/store.config';
+import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+import {Provider} from 'react-redux';
 
-import {startLogin} from './actions/auth.action';
+import MainRouter from './routers/MainRouter';
+import createStore from './store/store.config';
 
 const store = createStore ();
 
-store.dispatch (
-  startLogin ({
-    email: 'messi@gmail.com',
-    password: 'antonella',
-  })
-);
+const theme = createMuiTheme ({
+  palette: {
+    primary: {
+      main: '#35234b',
+    },
+    secondary: {
+      main: '#774898',
+    },
+    typography: {
+      useNextVariants: true,
+    },
+  },
+});
 
-ReactDOM.render (<App />, document.getElementById ('root'));
+ReactDOM.render (
+  <Provider store={store}>
+    <MuiThemeProvider theme={theme}>
+      <MainRouter />
+    </MuiThemeProvider>
+  </Provider>,
+  document.getElementById ('root')
+);
