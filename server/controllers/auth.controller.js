@@ -2,6 +2,7 @@ import User from '../models/user.model';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from '../../config/config';
+import expressJwt from 'express-jwt';
 
 const login = (req, res) => {
   User.findOne ({
@@ -55,7 +56,18 @@ const logout = () => {
   });
 };
 
+const requireSignin = expressJwt ({
+  secret: config.jwtSecret,
+  requestProperty: 'auth',
+});
+
+const currentUser = (req, res) => {
+  res.status (200).json (req.auth);
+};
+
 export default {
   login,
   logout,
+  requireSignin,
+  currentUser,
 };

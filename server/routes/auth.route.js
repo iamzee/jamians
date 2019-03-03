@@ -7,4 +7,8 @@ router.route ('/api/login').post (authCtrl.login);
 
 router.route ('/api/logout').post (authCtrl.logout);
 
+router
+  .route ('/api/current_user')
+  .get (authCtrl.requireSignin, authCtrl.currentUser);
+
 export default router;
