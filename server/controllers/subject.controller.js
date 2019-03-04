@@ -15,4 +15,19 @@ const create = (req, res) => {
     });
 };
 
-export default {create};
+const list = (req, res) => {
+  Subject.find ({})
+    .then (docs => {
+      res.status (200).json ({
+        subjects: docs,
+      });
+    })
+    .catch (err => {
+      res.status (400).json ({
+        err,
+        errorMessage: 'Unable to fetch subjects',
+      });
+    });
+};
+
+export default {create, list};

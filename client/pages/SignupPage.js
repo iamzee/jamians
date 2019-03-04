@@ -105,7 +105,7 @@ class SignupPage extends React.Component {
             className={classes.submit}
             onClick={this.onSubmit}
           >
-            Login
+            Signup
           </Button>
         </CardActions>
       </Card>

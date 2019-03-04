@@ -7,6 +7,7 @@ import subjectRoutes from './routes/subject.route';
 import noteRoutes from './routes/note.route';
 import userRoutes from './routes/user.route';
 import authRoutes from './routes/auth.route';
+import uploadRoutes from './routes/upload.route';
 
 import template from '../template';
 
@@ -23,6 +24,7 @@ app.use ('/', subjectRoutes);
 app.use ('/', noteRoutes);
 app.use ('/', userRoutes);
 app.use ('/', authRoutes);
+app.use ('/', uploadRoutes);
 
 app.get ('*', (req, res) => {
   res.send (template ());

@@ -6,6 +6,7 @@ import LoginPage from '../pages/LoginPage';
 import HomePage from '../pages/HomePage';
 import Header from '../components/Header';
 import SignupPage from '../pages/SignupPage';
+import UploadNotesPage from '../pages/UploadNotesPage';
 
 const MainRouter = () => (
   <BrowserRouter>
@@ -14,6 +15,7 @@ const MainRouter = () => (
       <Switch>
         <Route path="/signup" component={SignupPage} />
         <Route path="/login" component={LoginPage} />
+        <PrivateRouter path="/notes/upload" component={UploadNotesPage} />
         <PrivateRouter path="/" component={HomePage} />
       </Switch>
     </div>

@@ -20,6 +20,10 @@ const NoteSchema = mongoose.Schema ({
     required: true,
     default: Date.now (),
   },
+  uploadedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
+  },
   teacher: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Teacher',
