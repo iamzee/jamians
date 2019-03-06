@@ -3,6 +3,8 @@ import React from 'react';
 import NoteItem from '../components/NoteItem';
 import {listNotes, getFilteredNotes} from '../api/note.api';
 import FilterNotes from '../components/FilterNotes';
+import NotesNav from '../components/NotesNav';
+import NavBar from '../components/NavBar';
 
 class NotesPage extends React.Component {
   state = {
@@ -30,6 +32,8 @@ class NotesPage extends React.Component {
   render () {
     return (
       <div>
+        <NavBar title={'Notes Mania'} />
+        <NotesNav />
         <FilterNotes getSubjectId={this.getSubjectId} />
         {this.state.filteredNotes.map (note => (
           <NoteItem key={note._id} note={note} />

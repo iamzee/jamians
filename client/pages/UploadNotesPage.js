@@ -15,6 +15,8 @@ import {getSignedUrl, upload} from '../api/upload.api';
 import {listTeachers} from '../api/teacher.api';
 import {listSubjects} from '../api/subject.api';
 import {createNote} from '../api/note.api';
+import NotesNav from '../components/NotesNav';
+import NavBar from '../components/NavBar';
 
 const styles = theme => ({
   card: {
@@ -109,74 +111,78 @@ class UploadNotesPage extends React.Component {
     const {classes} = this.props;
 
     return (
-      <Card className={classes.card}>
-        <CardContent>
-          <Typography variant="h5">Upload Notes</Typography>
-          <input
-            accept="application/pdf"
-            className={classes.fileInput}
-            type="file"
-            id="file-upload"
-            onChange={this.onFileChange}
-          />
-          <label htmlFor="file-upload">
-            <Button variant="contained" color="secondary" component="span">
-              Choose File
+      <div>
+        <NavBar title={'Notes Mania'} />
+        <NotesNav />
+        <Card className={classes.card}>
+          <CardContent>
+            <Typography variant="h5">Upload Notes</Typography>
+            <input
+              accept="application/pdf"
+              className={classes.fileInput}
+              type="file"
+              id="file-upload"
+              onChange={this.onFileChange}
+            />
+            <label htmlFor="file-upload">
+              <Button variant="contained" color="secondary" component="span">
+                Choose File
+              </Button>
+            </label>
+            <br />
+            <TextField
+              className={classes.textField}
+              label="Topic"
+              value={this.state.topic}
+              onChange={this.onTopicChange}
+            />
+            <br />
+            <TextField
+              className={classes.textField}
+              label="Description"
+              value={this.state.description}
+              onChange={this.onDescriptionChange}
+            />
+            <br />
+            <TextField
+              className={classes.textField}
+              select
+              value={this.state.teacher}
+              onChange={this.onTeacherChange}
+              helperText="Filter by teacher"
+              margin="normal"
+              label="Teacher"
+            >
+              {this.state.teachers.map (teacher => (
+                <MenuItem key={teacher._id} value={teacher._id}>
+                  {teacher.name}
+                </MenuItem>
+              ))}
+            </TextField><br />
+            <TextField
+              className={classes.textField}
+              select
+              value={this.state.subject}
+              onChange={this.onSubjectChange}
+              helperText="Filter by subject"
+              margin="normal"
+              label="Subject"
+            >
+              {this.state.subjects.map (subject => (
+                <MenuItem key={subject._id} value={subject._id}>
+                  {subject.name}
+                </MenuItem>
+              ))}
+            </TextField><br />
+            {this.state.error && <Typography>{this.state.error}</Typography>}
+          </CardContent>
+          <CardActions>
+            <Button onClick={this.onSubmit}>
+              Submit
             </Button>
-          </label>
-          <br />
-          <TextField
-            className={classes.textField}
-            label="Topic"
-            value={this.state.topic}
-            onChange={this.onTopicChange}
-          />
-          <br />
-          <TextField
-            className={classes.textField}
-            label="Description"
-            value={this.state.description}
-            onChange={this.onDescriptionChange}
-          />
-          <br />
-          <TextField
-            className={classes.textField}
-            select
-            value={this.state.teacher}
-            onChange={this.onTeacherChange}
-            helperText="Filter by teacher"
-            margin="normal"
-            label="Teacher"
-          >
-            {this.state.teachers.map (teacher => (
-              <MenuItem key={teacher._id} value={teacher._id}>
-                {teacher.name}
-              </MenuItem>
-            ))}
-          </TextField><br />
-          <TextField
-            className={classes.textField}
-            select
-            value={this.state.subject}
-            onChange={this.onSubjectChange}
-            helperText="Filter by subject"
-            margin="normal"
-            label="Subject"
-          >
-            {this.state.subjects.map (subject => (
-              <MenuItem key={subject._id} value={subject._id}>
-                {subject.name}
-              </MenuItem>
-            ))}
-          </TextField><br />
-          {this.state.error && <Typography>{this.state.error}</Typography>}
-        </CardContent>
-        <CardActions>
-          <Button onClick={this.onSubmit}>
-            Submit
-          </Button>
-        </CardActions>
-      </Card>
+          </CardActions>
+        </Card>
+      </div>
     );
   }
 }

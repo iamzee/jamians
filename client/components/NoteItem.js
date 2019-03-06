@@ -21,15 +21,23 @@ const NoteItem = ({note, classes}) => {
   return (
     <Card className={classes.card}>
       <CardContent>
-        <Typography>{note.topic}</Typography>
-        <Typography>{note.description}</Typography>
-        <Typography>
-          Uploaded On: {moment (note.uploadedOn).format ('Mo MMM YYYY')}
+        <Typography variant="h6">{note.topic}</Typography>
+        <Typography variant="body2">{note.description}</Typography>
+        <Typography variant="caption">
+          {moment (note.uploadedOn).format ('Mo MMM YYYY')}
         </Typography>
         <Divider variant="middle" />
-        <Typography>Uploaded By: {note.uploadedBy}</Typography>
-        <Typography>Teacher: {note.teacher.name}</Typography>
-        <Typography>Subject: {note.subject.name}</Typography>
+        <Typography variant="caption">
+          Uploaded By:
+          {' '}
+          <span style={{fontWeight: 'bold'}}>{note.uploadedBy}</span>
+        </Typography>
+        <Typography variant="caption">
+          Teacher: <span style={{fontWeight: 'bold'}}>{note.teacher.name}</span>
+        </Typography>
+        <Typography variant="caption">
+          Subject: <span style={{fontWeight: 'bold'}}>{note.subject.name}</span>
+        </Typography>
       </CardContent>
       <CardActions>
         <a target="_blank" href={`${config.awsDownloadUrl}/${note.note_url}`}>
