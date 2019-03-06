@@ -12,13 +12,13 @@ import NotesPage from '../pages/NotesPage';
 const MainRouter = () => (
   <BrowserRouter>
     <div>
-      <Header />
+      {/* <Header /> */}
       <Switch>
         <Route exact path="/notes" component={NotesPage} />
         <Route path="/signup" component={SignupPage} />
         <Route path="/login" component={LoginPage} />
         <PrivateRouter path="/notes/upload" component={UploadNotesPage} />
-        <PrivateRouter path="/" component={HomePage} />
+        <Route path="/" component={HomePage} />
       </Switch>
     </div>
   </BrowserRouter>
