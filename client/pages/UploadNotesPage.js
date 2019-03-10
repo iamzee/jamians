@@ -10,14 +10,18 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import CardActions from '@material-ui/core/CardActions';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
 import {withStyles} from '@material-ui/core/styles';
 
 import {getSAS, upload} from '../api/upload.api';
 import {listTeachers} from '../api/teacher.api';
 import {listSubjects} from '../api/subject.api';
 import {createNote} from '../api/note.api';
+
 import NotesNav from '../components/NotesNav';
 import NavBar from '../components/NavBar';
+import SnackbarContentWrapper from '../components/SnackbarContentWrapper';
 
 const styles = theme => ({
   card: {
@@ -42,6 +46,14 @@ const styles = theme => ({
   },
   button: {
     margin: 'auto',
+    marginBottom: theme.spacing.unit * 2,
+  },
+  progress: {
+    marginLeft: theme.spacing.unit * 2,
+    marginRight: theme.spacing.unit * 2,
+  },
+  margin: {
+    margin: theme.spacing.unit,
   },
 });
 
@@ -57,6 +69,8 @@ class UploadNotesPage extends React.Component {
     semester: '',
     error: '',
     progressPercent: 0,
+    uploading: false,
+    open: false,
   };
 
   componentDidMount () {
@@ -109,6 +123,8 @@ class UploadNotesPage extends React.Component {
     ) {
       this.setState (() => ({error: 'All fields are necessary!'}));
     } else {
+      this.setState (() => ({uploading: true}));
+
       getSAS ().then (sasToken => {
         const {speedSummary, blobName} = upload (sasToken, this.state.file);
 
@@ -130,11 +146,16 @@ class UploadNotesPage extends React.Component {
 
             createNote (note).then (data => {
               console.log (data);
+              this.setState (() => ({uploading: false, open: true}));
             });
           }
         });
       });
     }
+  };
+
+  handleClose = () => {
+    this.setState (() => ({open: false}));
   };
 
   render () {
@@ -228,7 +249,6 @@ class UploadNotesPage extends React.Component {
               select
               value={this.state.semester}
               onChange={this.onSemesterChange}
-              helperText="Filter by semester"
               margin="normal"
               label="Semester"
               variant="outlined"
@@ -259,15 +279,48 @@ class UploadNotesPage extends React.Component {
             {this.state.error && <Typography>{this.state.error}</Typography>}
           </CardContent>
           <CardActions>
-            <Button
-              variant="contained"
-              className={classes.button}
-              onClick={this.onSubmit}
-            >
-              Submit - {this.state.progressPercent}
-            </Button>
+
+            {this.state.uploading
+              ? <Button
+                  variant="contained"
+                  className={classes.button}
+                  color="primary"
+                >
+                  Uploading
+                  <CircularProgress
+                    className={classes.progress}
+                    color="secondary"
+                    size={24}
+                    variant="indeterminate"
+                  />
+                </Button>
+              : <Button
+                  variant="contained"
+                  className={classes.button}
+                  onClick={this.onSubmit}
+                  color="primary"
+                >
+                  Submit
+                </Button>}
           </CardActions>
         </Card>
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.open}
+          onClose={this.handleClose}
+        >
+          <SnackbarContentWrapper
+            onClose={this.handleClose}
+            variant="success"
+            message="Note Uploaded!!"
+            className={classes.margin}
+          />
+        </Snackbar>
+
       </div>
     );
   }
