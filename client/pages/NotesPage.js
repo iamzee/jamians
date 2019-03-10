@@ -1,13 +1,17 @@
 import React from 'react';
+import Select from 'react-select';
 
 import NoteItem from '../components/NoteItem';
 import {listNotes, getFilteredNotes} from '../api/note.api';
-import FilterNotes from '../components/FilterNotes';
 import NotesNav from '../components/NotesNav';
 import NavBar from '../components/NavBar';
 
+import {listSubjects} from '../api/subject.api';
+
 class NotesPage extends React.Component {
   state = {
+    subjects: [],
+    subjectId: null,
     filteredNotes: [],
   };
 
@@ -15,15 +19,14 @@ class NotesPage extends React.Component {
     listNotes ().then (notes => {
       this.setState (() => ({filteredNotes: notes}));
     });
+
+    listSubjects ().then (subjects => {
+      this.setState (() => ({subjects}));
+    });
   }
 
-  // shouldComponentUpdate (nextProps, nextState) {
-  //   console.log ('this.state', this.state);
-  //   console.log ('nextState', nextState);
-  //   return true;
-  // }
-
-  getSubjectId = subjectId => {
+  onSubjectChange = e => {
+    const subjectId = e.value;
     getFilteredNotes (subjectId).then (notes => {
       this.setState (() => ({filteredNotes: notes}));
     });
@@ -34,7 +37,16 @@ class NotesPage extends React.Component {
       <div>
         <NavBar title={'Notes Mania'} />
         <NotesNav />
-        <FilterNotes getSubjectId={this.getSubjectId} />
+        <Select
+          placeholder="Search notes by Subject"
+          options={this.state.subjects.map (subject => {
+            return {
+              value: subject._id,
+              label: subject.name,
+            };
+          })}
+          onChange={this.onSubjectChange}
+        />
         {this.state.filteredNotes.map (note => (
           <NoteItem key={note._id} note={note} />
         ))}
