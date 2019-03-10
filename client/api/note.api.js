@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 export const createNote = note => {
+  console.log (note);
   return axios ({
     method: 'post',
     url: '/api/note',

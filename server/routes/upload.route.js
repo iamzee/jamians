@@ -1,8 +1,8 @@
 import express from 'express';
-import uploadCtrl from '../controllers/upload.controller';
+import {generateSAS} from '../controllers/upload.controller';
 
 const router = express.Router ();
 
-router.route ('/api/upload/notes').get (uploadCtrl.uploadNotes);
+router.route ('/generateSAS').get (generateSAS);
 
 export default router;

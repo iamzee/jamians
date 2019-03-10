@@ -1,5 +1,6 @@
 const path = require ('path');
 const nodeExternals = require ('webpack-node-externals');
+const webpack = require ('webpack');
 
 module.exports = {
   mode: 'development',
@@ -20,5 +21,9 @@ module.exports = {
         loader: 'babel-loader',
       },
     ],
+  },
+  plugins: [new webpack.DefinePlugin ({'global.GENTLY': false})],
+  node: {
+    __dirname: true,
   },
 };

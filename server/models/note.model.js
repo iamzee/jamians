@@ -1,23 +1,19 @@
 import mongoose from 'mongoose';
 
 const NoteSchema = mongoose.Schema ({
+  name: {
+    type: String,
+  },
   topic: {
     type: String,
-    required: 'Topic is required',
     trim: true,
   },
   description: {
     type: String,
     trim: true,
   },
-  note_url: {
-    type: String,
-    required: 'Note URL is required',
-    trim: true,
-  },
   uploadedOn: {
     type: Date,
-    required: true,
     default: Date.now (),
   },
   uploadedBy: {
@@ -31,6 +27,9 @@ const NoteSchema = mongoose.Schema ({
   subject: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Subject',
+  },
+  semester: {
+    type: Number,
   },
   downloads: {
     type: Number,

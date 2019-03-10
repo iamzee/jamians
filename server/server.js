@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+import path from 'path';
 
 import teacherRoutes from './routes/teacher.route';
 import subjectRoutes from './routes/subject.route';
@@ -10,6 +11,9 @@ import authRoutes from './routes/auth.route';
 import uploadRoutes from './routes/upload.route';
 
 import template from '../template';
+
+import dotenv from 'dotenv';
+dotenv.load ({path: path.resolve (__dirname, '..', 'config', 'env')});
 
 mongoose.Promise = global.Promise;
 mongoose.connect ('mongodb://localhost:27017/jamians');
