@@ -1,5 +1,6 @@
 import React from 'react';
-import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import {Router, Switch, Route} from 'react-router-dom';
+import createHistory from 'history/createBrowserHistory';
 
 import PrivateRouter from './PrivateRouter';
 import LoginPage from '../pages/LoginPage';
@@ -9,8 +10,10 @@ import SignupPage from '../pages/SignupPage';
 import UploadNotesPage from '../pages/UploadNotesPage';
 import NotesPage from '../pages/NotesPage';
 
+const history = createHistory ();
+
 const MainRouter = () => (
-  <BrowserRouter>
+  <Router history={history}>
     <div>
       {/* <Header /> */}
       <Switch>
@@ -21,7 +24,7 @@ const MainRouter = () => (
         <Route path="/" component={HomePage} />
       </Switch>
     </div>
-  </BrowserRouter>
+  </Router>
 );
 
 export default MainRouter;

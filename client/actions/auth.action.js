@@ -7,7 +7,7 @@ const login = data => ({
 
 export const startLogin = user => {
   return dispatch => {
-    axios ({
+    return axios ({
       method: 'post',
       url: '/api/login',
       data: JSON.stringify (user),

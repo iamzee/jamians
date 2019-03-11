@@ -57,7 +57,9 @@ class LoginPage extends React.Component {
         email: this.state.email,
         password: this.state.password,
       };
-      this.props.dispatch (startLogin (user));
+      this.props.dispatch (startLogin (user)).then (() => {
+        this.props.history.push ('/');
+      });
     }
   };
 
