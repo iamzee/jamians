@@ -31,3 +31,23 @@ export const getFilteredNotes = subjectId => {
     return data.notes;
   });
 };
+
+export const addBookmark = (userId, noteId) => {
+  return axios ({
+    methos: 'post',
+    url: '/api/note/bookmark',
+    data: JSON.stringify ({
+      userId,
+      noteId,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then (doc => {
+      console.log (doc);
+    })
+    .catch (err => {
+      console.log (err);
+    });
+};

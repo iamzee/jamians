@@ -6,6 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
 import config from '../../config/config';
@@ -14,6 +15,21 @@ const styles = theme => ({
   card: {
     maxWidth: 600,
     margin: 'auto',
+    textAlign: 'center',
+    marginBottom: theme.spacing.unit * 2,
+  },
+  content: {
+    display: 'flex',
+    flex: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    marginTop: theme.spacing.unit * 2,
+  },
+  cardActions: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    marginBottom: theme.spacing.unit * 2,
   },
 });
 
@@ -22,27 +38,51 @@ const NoteItem = ({note, classes}) => {
     <Card className={classes.card}>
       <CardContent>
         <Typography variant="h6">{note.topic}</Typography>
-        <Typography variant="body2">{note.description}</Typography>
-        <Typography variant="caption">
-          {moment (note.uploadedOn).format ('Mo MMM YYYY')}
-        </Typography>
         <Divider variant="middle" />
-        <Typography variant="caption">
-          Uploaded By:
-          {' '}
-          <span style={{fontWeight: 'bold'}}>{note.uploadedBy}</span>
-        </Typography>
-        <Typography variant="caption">
-          Teacher: <span style={{fontWeight: 'bold'}}>{note.teacher.name}</span>
-        </Typography>
-        <Typography variant="caption">
-          Subject: <span style={{fontWeight: 'bold'}}>{note.subject.name}</span>
-        </Typography>
+        <div className={classes.content}>
+          <div>
+            <Typography variant="caption">
+              Description:
+              <br />
+              <span style={{fontWeight: 'bold'}}>{note.description}</span>
+            </Typography>
+            <Typography variant="caption">
+              Uploaded On:
+              <br />
+              <span style={{fontWeight: 'bold'}}>
+                {moment (note.uploadedOn).format ('Mo MMM YYYY')}
+              </span>
+            </Typography>
+            <Typography variant="caption">
+              Uploaded By:
+              <br />
+              <span style={{fontWeight: 'bold'}}>{note.uploadedBy}</span>
+            </Typography>
+          </div>
+          <div>
+            <Typography variant="caption">
+              Semester:
+              <br />
+              <span style={{fontWeight: 'bold'}}>{note.semester}</span>
+            </Typography>
+            <Typography variant="caption">
+              Teacher:
+              <br />
+              <span style={{fontWeight: 'bold'}}>{note.teacher.name}</span>
+            </Typography>
+            <Typography variant="caption">
+              Subject:
+              <br />
+              <span style={{fontWeight: 'bold'}}>{note.subject.name}</span>
+            </Typography>
+          </div>
+
+        </div>
+
       </CardContent>
-      <CardActions>
-        <a target="_blank" href={`${config.awsDownloadUrl}/${note.note_url}`}>
-          Download
-        </a>
+      <CardActions className={classes.cardActions}>
+        <Button variant="contained" color="primary">View</Button>
+        <Button variant="contained" color="primary">Bookmark</Button>
       </CardActions>
     </Card>
   );

@@ -41,7 +41,27 @@ const list = (req, res) => {
     });
 };
 
+const addBookmark = (req, res) => {
+  const userId = req.body.userId;
+  const noteId = req.body.noteId;
+
+  Note.findById (noteId).then (note => {
+    if (!note) {
+      return res.status (400).json ({
+        errorMessage: 'Note not found',
+      });
+    }
+
+    note.bookmarks.push (userId);
+
+    note.save ().then (doc => {
+      res.json (doc);
+    });
+  });
+};
+
 export default {
   create,
   list,
+  addBookmark,
 };

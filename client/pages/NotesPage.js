@@ -1,5 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
+import {withStyles} from '@material-ui/core/styles';
+import {connect} from 'react-redux';
 
 import NoteItem from '../components/NoteItem';
 import {listNotes, getFilteredNotes} from '../api/note.api';
@@ -7,6 +9,15 @@ import NotesNav from '../components/NotesNav';
 import NavBar from '../components/NavBar';
 
 import {listSubjects} from '../api/subject.api';
+import {startGetNotes, startGetFilteredNotes} from '../actions/note.action';
+
+const styles = theme => ({
+  select: {
+    maxWidth: 600,
+    margin: 'auto',
+    marginBottom: theme.spacing.unit * 2,
+  },
+});
 
 class NotesPage extends React.Component {
   state = {
@@ -16,8 +27,8 @@ class NotesPage extends React.Component {
   };
 
   componentDidMount () {
-    listNotes ().then (notes => {
-      this.setState (() => ({filteredNotes: notes}));
+    this.props.dispatch (startGetNotes ()).then (() => {
+      this.setState (() => ({filteredNotes: this.props.notes}));
     });
 
     listSubjects ().then (subjects => {
@@ -27,17 +38,20 @@ class NotesPage extends React.Component {
 
   onSubjectChange = e => {
     const subjectId = e.value;
-    getFilteredNotes (subjectId).then (notes => {
-      this.setState (() => ({filteredNotes: notes}));
+
+    this.props.dispatch (startGetFilteredNotes (subjectId)).then (() => {
+      this.setState (() => ({filteredNotes: this.props.notes}));
     });
   };
 
   render () {
+    const {classes} = this.props;
     return (
       <div>
         <NavBar title={'Notes Mania'} />
         <NotesNav />
         <Select
+          className={classes.select}
           placeholder="Search notes by Subject"
           options={this.state.subjects.map (subject => {
             return {
@@ -55,4 +69,9 @@ class NotesPage extends React.Component {
   }
 }
 
-export default NotesPage;
+const mapStateToProps = state => ({
+  user: state.auth.user,
+  notes: state.notes,
+});
+
+export default connect (mapStateToProps) (withStyles (styles) (NotesPage));
