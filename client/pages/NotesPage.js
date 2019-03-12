@@ -4,9 +4,9 @@ import {withStyles} from '@material-ui/core/styles';
 import {connect} from 'react-redux';
 
 import NoteItem from '../components/NoteItem';
-import {listNotes, getFilteredNotes} from '../api/note.api';
 import NotesNav from '../components/NotesNav';
 import NavBar from '../components/NavBar';
+import Loader from '../components/Loader';
 
 import {listSubjects} from '../api/subject.api';
 import {startGetNotes, startGetFilteredNotes} from '../actions/note.action';
@@ -24,6 +24,7 @@ class NotesPage extends React.Component {
     subjects: [],
     subjectId: null,
     filteredNotes: [],
+    noNotes: false,
   };
 
   componentDidMount () {
@@ -39,8 +40,15 @@ class NotesPage extends React.Component {
   onSubjectChange = e => {
     const subjectId = e.value;
 
+    this.setState (() => ({fileterdNotes: []}));
     this.props.dispatch (startGetFilteredNotes (subjectId)).then (() => {
       this.setState (() => ({filteredNotes: this.props.notes}));
+
+      if (this.state.filteredNotes.length === 0) {
+        this.setState (() => ({noNotes: true}));
+      } else {
+        this.setState (() => ({noNotes: false}));
+      }
     });
   };
 
@@ -50,6 +58,7 @@ class NotesPage extends React.Component {
       <div>
         <NavBar title={'Notes Mania'} />
         <NotesNav />
+
         <Select
           className={classes.select}
           placeholder="Search notes by Subject"
@@ -61,9 +70,19 @@ class NotesPage extends React.Component {
           })}
           onChange={this.onSubjectChange}
         />
-        {this.state.filteredNotes.map (note => (
-          <NoteItem key={note._id} note={note} />
-        ))}
+
+        {this.state.noNotes
+          ? <div>No notes</div>
+          : <div>
+              {this.state.filteredNotes.length === 0
+                ? <Loader />
+                : <div>
+                    {this.state.filteredNotes.map (note => (
+                      <NoteItem key={note._id} note={note} />
+                    ))}
+                  </div>}
+            </div>}
+
       </div>
     );
   }
