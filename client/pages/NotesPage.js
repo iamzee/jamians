@@ -38,18 +38,27 @@ class NotesPage extends React.Component {
   }
 
   onSubjectChange = e => {
-    const subjectId = e.value;
+    if (e) {
+      const subjectId = e.value;
 
-    this.setState (() => ({fileterdNotes: []}));
-    this.props.dispatch (startGetFilteredNotes (subjectId)).then (() => {
-      this.setState (() => ({filteredNotes: this.props.notes}));
+      this.setState (() => ({fileterdNotes: []}));
+      this.props.dispatch (startGetFilteredNotes (subjectId)).then (() => {
+        this.setState (() => ({filteredNotes: this.props.notes}));
 
-      if (this.state.filteredNotes.length === 0) {
-        this.setState (() => ({noNotes: true}));
-      } else {
-        this.setState (() => ({noNotes: false}));
-      }
-    });
+        if (this.state.filteredNotes.length === 0) {
+          this.setState (() => ({noNotes: true}));
+        } else {
+          this.setState (() => ({noNotes: false}));
+        }
+      });
+    } else {
+      this.props.dispatch (startGetNotes ()).then (() => {
+        this.setState (() => ({
+          filteredNotes: this.props.notes,
+          noNotes: false,
+        }));
+      });
+    }
   };
 
   render () {
@@ -60,6 +69,7 @@ class NotesPage extends React.Component {
         <NotesNav />
 
         <Select
+          isClearable
           className={classes.select}
           placeholder="Search notes by Subject"
           options={this.state.subjects.map (subject => {
