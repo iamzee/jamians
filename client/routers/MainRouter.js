@@ -7,9 +7,9 @@ import LoginPage from '../pages/LoginPage';
 import HomePage from '../pages/HomePage';
 import Header from '../components/Header';
 import SignupPage from '../pages/SignupPage';
-import UploadNotesPage from '../pages/UploadNotesPage';
-import NotesPage from '../pages/NotesPage';
-import NotesBookmarkPage from '../pages/NotesBookmarkPage';
+import UploadNotesPage from '../Notes/pages/UploadNotesPage';
+import NotesPage from '../Notes/pages/NotesPage';
+import NotesBookmarkPage from '../Notes/pages/NotesBookmarkPage';
 
 const history = createHistory ();
 

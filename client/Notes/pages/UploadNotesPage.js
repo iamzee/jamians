@@ -14,14 +14,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 import {withStyles} from '@material-ui/core/styles';
 
-import {getSAS, upload} from '../api/upload.api';
-import {listTeachers} from '../api/teacher.api';
-import {listSubjects} from '../api/subject.api';
-import {createNote} from '../api/note.api';
+import {getSAS, upload} from '../../api/upload.api';
+import {listTeachers} from '../../api/teacher.api';
+import {listSubjects} from '../../api/subject.api';
+import {createNote} from '../../api/note.api';
 
-import NotesNav from '../components/NotesNav';
-import NavBar from '../components/NavBar';
-import SnackbarContentWrapper from '../components/SnackbarContentWrapper';
+import SnackbarContentWrapper from '../../components/SnackbarContentWrapper';
+import Navbar from '../components/Navbar';
 
 const styles = theme => ({
   card: {
@@ -198,8 +197,7 @@ class UploadNotesPage extends React.Component {
 
     return (
       <div>
-        <NavBar title={'Notes Mania'} />
-        <NotesNav />
+        <Navbar title={'Notes Mania'} />
         <Card className={classes.card}>
           <CardContent>
             <Typography className={classes.title} variant="h5">

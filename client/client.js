@@ -17,9 +17,15 @@ const theme = createMuiTheme ({
     secondary: {
       main: '#774898',
     },
-    typography: {
-      useNextVariants: true,
-    },
+  },
+  notes: {
+    primary: '#222831',
+    secondary: '#393e46',
+    tertiary: '#00adb5',
+    quaternary: '#eeeeee',
+  },
+  typography: {
+    useNextVariants: true,
   },
 });
 

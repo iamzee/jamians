@@ -2,8 +2,7 @@ import React from 'react';
 
 import {withStyles} from '@material-ui/core/styles';
 
-import HomePageNav from '../components/HomePageNav';
-import NavBar from '../components/NavBar';
+// import HomePageNav from '../components/HomePageNav';
 
 const styles = theme => ({
   nav: {
@@ -15,15 +14,15 @@ const HomePage = props => {
   const {classes} = props;
   return (
     <div>
-      <NavBar title={'Jamians'} />
+      {/* <NavBar title={'Jamians'} /> */}
       <div className={classes.nav}>
-        <HomePageNav
+        {/* <HomePageNav
           title={'Notes Mania'}
           quote={
             'If you are afraid to fail then you are probably going to fail'
           }
           author={'Kobe Bryant'}
-        />
+        /> */}
       </div>
     </div>
   );

@@ -1,12 +1,11 @@
 import React from 'react';
 
-import {getBookmarkedNotes} from '../api/note.api';
-import {isAuthenticated} from '../helpers/auth.helper';
+import {getBookmarkedNotes} from '../../api/note.api';
+import {isAuthenticated} from '../../helpers/auth.helper';
 
 import NoteItem from '../components/NoteItem';
-import NavBar from '../components/NavBar';
-import Loader from '../components/Loader';
-import NotesNav from '../components/NotesNav';
+import Navbar from '../components/Navbar';
+import Loader from '../../components/Loader';
 
 class NotesBookmarkPage extends React.Component {
   state = {
@@ -27,8 +26,7 @@ class NotesBookmarkPage extends React.Component {
   render () {
     return (
       <div>
-        <NavBar title={'Notes Maina'} />
-        <NotesNav />
+        <Navbar title={'Notes Maina'} />
         {this.state.noNotes
           ? <p>No notes</p>
           : <div>

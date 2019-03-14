@@ -4,12 +4,11 @@ import {withStyles} from '@material-ui/core/styles';
 import {connect} from 'react-redux';
 
 import NoteItem from '../components/NoteItem';
-import NotesNav from '../components/NotesNav';
-import NavBar from '../components/NavBar';
-import Loader from '../components/Loader';
+import Navbar from '../components/Navbar';
+import Loader from '../../components/Loader';
 
-import {listSubjects} from '../api/subject.api';
-import {startGetNotes, startGetFilteredNotes} from '../actions/note.action';
+import {listSubjects} from '../../api/subject.api';
+import {startGetNotes, startGetFilteredNotes} from '../../actions/note.action';
 
 const styles = theme => ({
   select: {
@@ -65,8 +64,7 @@ class NotesPage extends React.Component {
     const {classes} = this.props;
     return (
       <div>
-        <NavBar title={'Notes Mania'} />
-        <NotesNav />
+        <Navbar title={'Notes Mania'} />
 
         <Select
           isClearable

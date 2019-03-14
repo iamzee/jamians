@@ -10,8 +10,8 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
-import {removeBookmark, addBookmark} from '../api/note.api';
-import {isAuthenticated} from '../helpers/auth.helper';
+import {removeBookmark, addBookmark} from '../../api/note.api';
+import {isAuthenticated} from '../../helpers/auth.helper';
 
 const styles = theme => ({
   card: {
@@ -32,6 +32,16 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'space-around',
     marginBottom: theme.spacing.unit * 2,
+  },
+  title: {
+    color: theme.notes.primary,
+  },
+  button: {
+    backgroundColor: theme.notes.secondary,
+    color: theme.notes.quaternary,
+    '&:hover': {
+      backgroundColor: theme.notes.primary,
+    },
   },
 });
 
@@ -83,7 +93,9 @@ class NoteItem extends React.Component {
     return (
       <Card className={classes.card}>
         <CardContent>
-          <Typography variant="h6">{note.topic}</Typography>
+          <Typography variant="h6" className={classes.title}>
+            {note.topic}
+          </Typography>
           <Divider variant="middle" />
           <div className={classes.content}>
             <div>
@@ -127,22 +139,22 @@ class NoteItem extends React.Component {
 
         </CardContent>
         <CardActions className={classes.cardActions}>
-          <Button variant="outlined" color="primary">View</Button>
+          <Button variant="contained" className={classes.button}>View</Button>
 
           {this.state.bookmarked
             ? <Button
                 variant="contained"
-                color="primary"
                 onClick={this.onRemoveBookmark}
+                className={classes.button}
               >
                 {this.state.removingBookmark
                   ? 'Removing Bookmark'
                   : 'Remove Bookmark'}
               </Button>
             : <Button
-                variant="outlined"
-                color="primary"
+                variant="contained"
                 onClick={this.onAddBookmark}
+                className={classes.button}
               >
                 {this.state.addingBookmark ? 'Adding Bookmark' : 'Add Bookmark'}
               </Button>}
