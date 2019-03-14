@@ -7,13 +7,12 @@ import Typography from '@material-ui/core/Typography';
 import {withStyles} from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import HomeIcon from '@material-ui/icons/Home';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
+import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   root: {
@@ -22,54 +21,64 @@ const styles = theme => ({
   },
   grow: {
     flexGrow: 1,
-    color: theme.notes.quaternary,
+    color: '#fff',
   },
   appbar: {
-    backgroundColor: theme.notes.primary,
+    backgroundColor: theme.home.primary,
   },
   iconButton: {
     marginRight: theme.spacing.unit,
-    color: theme.notes.quaternary,
+    color: '#fff',
   },
   list: {
     width: 250,
   },
   listItem: {
     '&:hover': {
-      backgroundColor: theme.notes.tertiary,
+      backgroundColor: theme.home.secondary,
     },
   },
   listTitle: {
     padding: theme.spacing.unit * 2,
-    backgroundColor: theme.notes.primary,
+    backgroundColor: theme.home.primary,
   },
   listTitleText: {
-    color: theme.notes.quaternary,
+    color: '#fff',
   },
   link: {
     textDecoration: 'none',
+  },
+  navButton: {
+    color: '#fff',
   },
 });
 
 class Navbar extends React.Component {
   state = {
     open: false,
-    redirectToHome: false,
+    redirectToSignup: false,
+    redirectToLogin: false,
   };
 
   toggleDrawer = open => () => {
     this.setState (() => ({open}));
   };
 
-  onHomeClick = () => {
-    this.setState (() => ({redirectToHome: true}));
+  onSignupClick = () => {
+    this.setState (() => ({redirectToSignup: true}));
+  };
+
+  onLoginClick = () => {
+    this.setState (() => ({redirectToLogin: true}));
   };
 
   render () {
     const {classes} = this.props;
 
-    if (this.state.redirectToHome) {
-      return <Redirect to="/" />;
+    if (this.state.redirectToSignup) {
+      return <Redirect to="/signup" />;
+    } else if (this.state.redirectToLogin) {
+      return <Redirect to="/login" />;
     }
 
     return (
@@ -84,14 +93,17 @@ class Navbar extends React.Component {
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" className={classes.grow}>
-                Notes
+                Jamians
               </Typography>
-              <IconButton
-                className={classes.iconButton}
-                onClick={this.onHomeClick}
+              <Button
+                className={classes.navButton}
+                onClick={this.onSignupClick}
               >
-                <HomeIcon />
-              </IconButton>
+                Signup
+              </Button>
+              <Button className={classes.navButton} onClick={this.onLoginClick}>
+                Login
+              </Button>
             </Toolbar>
           </AppBar>
         </div>
@@ -107,7 +119,7 @@ class Navbar extends React.Component {
               <div className={classes.list}>
                 <div className={classes.listTitle}>
                   <Typography variant="h5" className={classes.listTitleText}>
-                    Notes
+                    Jamians
                   </Typography>
                 </div>
 
@@ -117,18 +129,6 @@ class Navbar extends React.Component {
                   <Link to="/notes" className={classes.link}>
                     <ListItem button className={classes.listItem}>
                       <ListItemText primary={'Notes'} />
-                    </ListItem>
-                  </Link>
-
-                  <Link to="/notes/upload" className={classes.link}>
-                    <ListItem button className={classes.listItem}>
-                      <ListItemText primary={'Upload'} />
-                    </ListItem>
-                  </Link>
-
-                  <Link to="/notes/bookmarks" className={classes.link}>
-                    <ListItem button className={classes.listItem}>
-                      <ListItemText primary={'Bookmarks'} />
                     </ListItem>
                   </Link>
 

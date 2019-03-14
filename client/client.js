@@ -24,6 +24,10 @@ const theme = createMuiTheme ({
     tertiary: '#00adb5',
     quaternary: '#eeeeee',
   },
+  home: {
+    primary: '#1fab89',
+    secondary: '#d7fbe8',
+  },
   typography: {
     useNextVariants: true,
   },
