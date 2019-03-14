@@ -38,6 +38,8 @@ const styles = theme => ({
 class NoteItem extends React.Component {
   state = {
     bookmarked: false,
+    addingBookmark: false,
+    removingBookmark: false,
   };
 
   componentDidMount () {
@@ -52,22 +54,26 @@ class NoteItem extends React.Component {
   }
 
   onAddBookmark = () => {
+    this.setState (() => ({addingBookmark: true}));
+
     const {user} = isAuthenticated ();
     const userId = user._id;
     const noteId = this.props.note._id;
 
     addBookmark (userId, noteId).then (() => {
-      this.setState (() => ({bookmarked: true}));
+      this.setState (() => ({bookmarked: true, addingBookmark: false}));
     });
   };
 
   onRemoveBookmark = () => {
+    this.setState (() => ({removingBookmark: true}));
+
     const {user} = isAuthenticated ();
     const userId = user._id;
     const noteId = this.props.note._id;
 
     removeBookmark (userId, noteId).then (() => {
-      this.setState (() => ({bookmarked: false}));
+      this.setState (() => ({bookmarked: false, removingBookmark: false}));
     });
   };
 
@@ -129,14 +135,16 @@ class NoteItem extends React.Component {
                 color="primary"
                 onClick={this.onRemoveBookmark}
               >
-                Remove Bookmark
+                {this.state.removingBookmark
+                  ? 'Removing Bookmark'
+                  : 'Remove Bookmark'}
               </Button>
             : <Button
                 variant="outlined"
                 color="primary"
                 onClick={this.onAddBookmark}
               >
-                Add Bookmark
+                {this.state.addingBookmark ? 'Adding Bookmark' : 'Add Bookmark'}
               </Button>}
         </CardActions>
       </Card>
