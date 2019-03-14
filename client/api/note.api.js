@@ -34,8 +34,8 @@ export const getFilteredNotes = subjectId => {
 
 export const addBookmark = (userId, noteId) => {
   return axios ({
-    methos: 'post',
-    url: '/api/note/bookmark',
+    method: 'post',
+    url: '/api/note/addBookmark',
     data: JSON.stringify ({
       userId,
       noteId,
@@ -46,6 +46,26 @@ export const addBookmark = (userId, noteId) => {
   })
     .then (doc => {
       console.log (doc);
+    })
+    .catch (err => {
+      console.log (err);
+    });
+};
+
+export const removeBookmark = (userId, noteId) => {
+  return axios ({
+    method: 'post',
+    url: '/api/note/removeBookmark',
+    data: JSON.stringify ({
+      userId,
+      noteId,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then (({data}) => {
+      console.log (data);
     })
     .catch (err => {
       console.log (err);

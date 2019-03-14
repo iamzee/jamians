@@ -31,3 +31,32 @@ export const startGetFilteredNotes = subjectId => {
     });
   };
 };
+
+const addBookmark = (userId, noteId) => ({
+  type: 'ADD_BOOKMARK',
+  userId,
+  noteId,
+});
+
+export const startAddBookmark = (userId, noteId) => {
+  return dispatch => {
+    return axios ({
+      method: 'post',
+      url: '/api/note/bookmark',
+      data: JSON.stringify ({
+        userId,
+        noteId,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then (({data}) => {
+        console.log (data);
+        dispatch (addBookmark (userId, noteId));
+      })
+      .catch (err => {
+        console.log (err);
+      });
+  };
+};

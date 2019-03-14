@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import {connect} from 'react-redux';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -9,7 +10,7 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
-import config from '../../config/config';
+import {removeBookmark, addBookmark} from '../api/note.api';
 
 const styles = theme => ({
   card: {
@@ -33,59 +34,114 @@ const styles = theme => ({
   },
 });
 
-const NoteItem = ({note, classes}) => {
-  return (
-    <Card className={classes.card}>
-      <CardContent>
-        <Typography variant="h6">{note.topic}</Typography>
-        <Divider variant="middle" />
-        <div className={classes.content}>
-          <div>
-            <Typography variant="caption">
-              Description:
-              <br />
-              <span style={{fontWeight: 'bold'}}>{note.description}</span>
-            </Typography>
-            <Typography variant="caption">
-              Uploaded On:
-              <br />
-              <span style={{fontWeight: 'bold'}}>
-                {moment (note.uploadedOn).format ('Mo MMM YYYY')}
-              </span>
-            </Typography>
-            <Typography variant="caption">
-              Uploaded By:
-              <br />
-              <span style={{fontWeight: 'bold'}}>{note.uploadedBy}</span>
-            </Typography>
+class NoteItem extends React.Component {
+  state = {
+    bookmarked: false,
+  };
+
+  componentDidMount () {
+    const matchedUser = this.props.note.bookmarks.find (
+      bookmark => bookmark === this.props.user._id
+    );
+
+    if (matchedUser) {
+      this.setState (() => ({bookmarked: true}));
+    }
+  }
+
+  onAddBookmark = () => {
+    const userId = this.props.user._id;
+    const noteId = this.props.note._id;
+
+    addBookmark (userId, noteId).then (() => {
+      this.setState (() => ({bookmarked: true}));
+    });
+  };
+
+  onRemoveBookmark = () => {
+    const userId = this.props.user._id;
+    const noteId = this.props.note._id;
+
+    removeBookmark (userId, noteId).then (() => {
+      this.setState (() => ({bookmarked: false}));
+    });
+  };
+
+  render () {
+    const {note, classes, user} = this.props;
+
+    return (
+      <Card className={classes.card}>
+        <CardContent>
+          <Typography variant="h6">{note.topic}</Typography>
+          <Divider variant="middle" />
+          <div className={classes.content}>
+            <div>
+              <Typography variant="caption">
+                Description:
+                <br />
+                <span style={{fontWeight: 'bold'}}>{note.description}</span>
+              </Typography>
+              <Typography variant="caption">
+                Uploaded On:
+                <br />
+                <span style={{fontWeight: 'bold'}}>
+                  {moment (note.uploadedOn).format ('Mo MMM YYYY')}
+                </span>
+              </Typography>
+              <Typography variant="caption">
+                Uploaded By:
+                <br />
+                <span style={{fontWeight: 'bold'}}>{note.uploadedBy}</span>
+              </Typography>
+            </div>
+            <div>
+              <Typography variant="caption">
+                Semester:
+                <br />
+                <span style={{fontWeight: 'bold'}}>{note.semester}</span>
+              </Typography>
+              <Typography variant="caption">
+                Teacher:
+                <br />
+                <span style={{fontWeight: 'bold'}}>{note.teacher.name}</span>
+              </Typography>
+              <Typography variant="caption">
+                Subject:
+                <br />
+                <span style={{fontWeight: 'bold'}}>{note.subject.name}</span>
+              </Typography>
+            </div>
+
           </div>
-          <div>
-            <Typography variant="caption">
-              Semester:
-              <br />
-              <span style={{fontWeight: 'bold'}}>{note.semester}</span>
-            </Typography>
-            <Typography variant="caption">
-              Teacher:
-              <br />
-              <span style={{fontWeight: 'bold'}}>{note.teacher.name}</span>
-            </Typography>
-            <Typography variant="caption">
-              Subject:
-              <br />
-              <span style={{fontWeight: 'bold'}}>{note.subject.name}</span>
-            </Typography>
-          </div>
 
-        </div>
+        </CardContent>
+        <CardActions className={classes.cardActions}>
+          <Button variant="outlined" color="primary">View</Button>
 
-      </CardContent>
-      <CardActions className={classes.cardActions}>
-        <Button variant="contained" color="primary">View</Button>
-        <Button variant="contained" color="primary">Bookmark</Button>
-      </CardActions>
-    </Card>
-  );
-};
+          {this.state.bookmarked
+            ? <Button
+                variant="contained"
+                color="primary"
+                onClick={this.onRemoveBookmark}
+              >
+                Remove Bookmark
+              </Button>
+            : <Button
+                variant="outlined"
+                color="primary"
+                onClick={this.onAddBookmark}
+              >
+                Add Bookmark
+              </Button>}
+        </CardActions>
+      </Card>
+    );
+  }
+}
 
-export default withStyles (styles) (NoteItem);
+const mapStateToProps = state => ({
+  user: state.auth.user,
+});
+
+export default connect (mapStateToProps) (withStyles (styles) (NoteItem));

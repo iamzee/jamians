@@ -60,8 +60,25 @@ const addBookmark = (req, res) => {
   });
 };
 
+const removeBookmark = (req, res) => {
+  const userId = req.body.userId;
+  const noteId = req.body.noteId;
+
+  Note.findByIdAndUpdate (noteId, {$pull: {bookmarks: userId}}, {new: true})
+    .then (doc => {
+      res.status (200).json (doc);
+    })
+    .catch (err => {
+      res.status (400).json ({
+        err,
+        errorMessage: 'Unable to update note',
+      });
+    });
+};
+
 export default {
   create,
   list,
   addBookmark,
+  removeBookmark,
 };
