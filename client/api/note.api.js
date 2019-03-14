@@ -71,3 +71,25 @@ export const removeBookmark = (userId, noteId) => {
       console.log (err);
     });
 };
+
+export const getBookmarkedNotes = (token, userId) => {
+  console.log (userId);
+  return axios ({
+    method: 'get',
+    url: '/api/note/bookmarks',
+    data: JSON.stringify ({
+      userId,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + token,
+    },
+  })
+    .then (({data}) => {
+      console.log (data);
+      return data.notes;
+    })
+    .catch (err => {
+      console.log (err);
+    });
+};

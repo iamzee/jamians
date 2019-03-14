@@ -9,6 +9,7 @@ import Header from '../components/Header';
 import SignupPage from '../pages/SignupPage';
 import UploadNotesPage from '../pages/UploadNotesPage';
 import NotesPage from '../pages/NotesPage';
+import NotesBookmarkPage from '../pages/NotesBookmarkPage';
 
 const history = createHistory ();
 
@@ -20,6 +21,7 @@ const MainRouter = () => (
         <Route exact path="/notes" component={NotesPage} />
         <Route path="/signup" component={SignupPage} />
         <Route path="/login" component={LoginPage} />
+        <Route path="/notes/bookmarks" component={NotesBookmarkPage} />
         <Route path="/notes/upload" component={UploadNotesPage} />
         <Route path="/" component={HomePage} />
       </Switch>

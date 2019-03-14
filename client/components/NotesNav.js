@@ -62,6 +62,11 @@ class NotesNav extends React.Component {
                     <ListItemText primary={'Upload Notes'} />
                   </Link>
                 </ListItem>
+                <ListItem button>
+                  <Link to="/notes/bookmarks">
+                    <ListItemText primary={'Bookmarks'} />
+                  </Link>
+                </ListItem>
               </List>
             </div>
           </div>

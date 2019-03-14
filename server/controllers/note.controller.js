@@ -76,9 +76,19 @@ const removeBookmark = (req, res) => {
     });
 };
 
+const getBookmarkedNotes = (req, res) => {
+  const userId = req.auth._id;
+  Note.find ({bookmarks: {$eq: userId}}).then (docs => {
+    res.status (200).json ({
+      notes: docs,
+    });
+  });
+};
+
 export default {
   create,
   list,
   addBookmark,
   removeBookmark,
+  getBookmarkedNotes,
 };
