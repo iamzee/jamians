@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import NoteItem from '../components/NoteItem';
 import Navbar from '../components/Navbar';
 import Loader from '../../components/Loader';
+import NoNotes from '../components/NoNotes';
 
 import {listSubjects} from '../../api/subject.api';
 import {startGetNotes, startGetFilteredNotes} from '../../actions/note.action';
@@ -80,7 +81,7 @@ class NotesPage extends React.Component {
         />
 
         {this.state.noNotes
-          ? <div>No notes</div>
+          ? <NoNotes />
           : <div>
               {this.state.filteredNotes.length === 0
                 ? <Loader />

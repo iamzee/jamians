@@ -34,6 +34,11 @@ const styles = theme => ({
   },
   chooseFileButton: {
     marginBottom: theme.spacing.unit * 2,
+    backgroundColor: theme.notes.tertiary,
+    '&:hover': {
+      backgroundColor: theme.notes.secondary,
+      color: theme.notes.quaternary,
+    },
   },
   textField: {
     width: 300,
@@ -214,7 +219,6 @@ class UploadNotesPage extends React.Component {
               <Button
                 className={classes.chooseFileButton}
                 variant="contained"
-                color="secondary"
                 component="span"
               >
                 Choose File
@@ -258,6 +262,7 @@ class UploadNotesPage extends React.Component {
               ))}
             </TextField><br />
             <Select
+              placeholder="Select Teacher"
               className={classes.textField}
               options={this.state.teachers.map (teacher => {
                 return {value: teacher._id, label: teacher.name};
@@ -265,6 +270,7 @@ class UploadNotesPage extends React.Component {
               onChange={this.onTeacherChange}
             /><br />
             <Select
+              placeholder="Select Subject"
               className={classes.textField}
               options={this.state.subjects.map (subject => {
                 return {

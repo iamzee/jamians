@@ -33,11 +33,20 @@ const styles = theme => ({
   list: {
     width: 250,
   },
+  listItem: {
+    '&:hover': {
+      backgroundColor: theme.notes.tertiary,
+    },
+  },
   listTitle: {
-    ...theme.mixins.gutters (),
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
+    padding: theme.spacing.unit * 2,
+    backgroundColor: theme.notes.primary,
+  },
+  listTitleText: {
+    color: theme.notes.quaternary,
+  },
+  link: {
+    textDecoration: 'none',
   },
 });
 
@@ -79,28 +88,33 @@ class Navbar extends React.Component {
               onClick={this.toggleDrawer (false)}
             >
               <div className={classes.list}>
-                <Paper className={classes.listTitle}>
-                  <Typography variant="h5">
-                    Notes Mania
+                <div className={classes.listTitle}>
+                  <Typography variant="h5" className={classes.listTitleText}>
+                    Notes
                   </Typography>
-                </Paper>
+                </div>
+
                 <Divider variant="middle" />
                 <List>
-                  <ListItem button>
-                    <Link to="/notes">
+
+                  <Link to="/notes" className={classes.link}>
+                    <ListItem button className={classes.listItem}>
                       <ListItemText primary={'Notes'} />
-                    </Link>
-                  </ListItem>
-                  <ListItem button>
-                    <Link to="/notes/upload">
-                      <ListItemText primary={'Upload Notes'} />
-                    </Link>
-                  </ListItem>
-                  <ListItem button>
-                    <Link to="/notes/bookmarks">
+                    </ListItem>
+                  </Link>
+
+                  <Link to="/notes/upload" className={classes.link}>
+                    <ListItem button className={classes.listItem}>
+                      <ListItemText primary={'Upload'} />
+                    </ListItem>
+                  </Link>
+
+                  <Link to="/notes/bookmarks" className={classes.link}>
+                    <ListItem button className={classes.listItem}>
                       <ListItemText primary={'Bookmarks'} />
-                    </Link>
-                  </ListItem>
+                    </ListItem>
+                  </Link>
+
                 </List>
               </div>
             </div>
