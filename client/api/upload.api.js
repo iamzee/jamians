@@ -39,3 +39,18 @@ export const upload = (sasToken, file) => {
     blobName,
   };
 };
+
+export const download = (sasToken, blobName) => {
+  const blobUri = 'https://practice99.blob.core.windows.net';
+  const token = `?${sasToken}`;
+
+  const blobService = AzureStorage.Blob.createBlobServiceWithSas (
+    blobUri,
+    token
+  );
+  const containerName = 'notes';
+
+  const downloadLink = blobService.getUrl (containerName, blobName);
+
+  return downloadLink;
+};

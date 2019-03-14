@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
 import {removeBookmark, addBookmark} from '../../api/note.api';
+import {getSAS, download} from '../../api/upload.api';
 import {isAuthenticated} from '../../helpers/auth.helper';
 
 const styles = theme => ({
@@ -62,6 +63,13 @@ class NoteItem extends React.Component {
       this.setState (() => ({bookmarked: true}));
     }
   }
+
+  onView = () => {
+    getSAS ().then (token => {
+      const downloadLink = download (token, this.props.note.name);
+      window.open (downloadLink, '_blank');
+    });
+  };
 
   onAddBookmark = () => {
     this.setState (() => ({addingBookmark: true}));
@@ -139,7 +147,13 @@ class NoteItem extends React.Component {
 
         </CardContent>
         <CardActions className={classes.cardActions}>
-          <Button variant="contained" className={classes.button}>View</Button>
+          <Button
+            variant="contained"
+            className={classes.button}
+            onClick={this.onView}
+          >
+            View
+          </Button>
 
           {this.state.bookmarked
             ? <Button
