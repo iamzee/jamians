@@ -11,6 +11,8 @@ import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
 import {startLogin} from '../actions/auth.action';
+import {authenticate} from '../helpers/auth.helper';
+import {login} from '../api/auth.api';
 
 const styles = theme => {
   // console.log (theme.palette.primary.main);
@@ -57,8 +59,14 @@ class LoginPage extends React.Component {
         email: this.state.email,
         password: this.state.password,
       };
-      this.props.dispatch (startLogin (user)).then (() => {
-        this.props.history.push ('/');
+      // this.props.dispatch (startLogin (user)).then (() => {
+      //   this.props.history.push ('/');
+      // });
+      login (user).then (jwt => {
+        console.log ('login', jwt);
+        authenticate (jwt, () => {
+          this.props.history.push ('/');
+        });
       });
     }
   };

@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
 import {removeBookmark, addBookmark} from '../api/note.api';
+import {isAuthenticated} from '../helpers/auth.helper';
 
 const styles = theme => ({
   card: {
@@ -40,8 +41,9 @@ class NoteItem extends React.Component {
   };
 
   componentDidMount () {
+    const {user} = isAuthenticated ();
     const matchedUser = this.props.note.bookmarks.find (
-      bookmark => bookmark === this.props.user._id
+      bookmark => bookmark === user._id
     );
 
     if (matchedUser) {
@@ -50,7 +52,8 @@ class NoteItem extends React.Component {
   }
 
   onAddBookmark = () => {
-    const userId = this.props.user._id;
+    const {user} = isAuthenticated ();
+    const userId = user._id;
     const noteId = this.props.note._id;
 
     addBookmark (userId, noteId).then (() => {
@@ -59,7 +62,8 @@ class NoteItem extends React.Component {
   };
 
   onRemoveBookmark = () => {
-    const userId = this.props.user._id;
+    const {user} = isAuthenticated ();
+    const userId = user._id;
     const noteId = this.props.note._id;
 
     removeBookmark (userId, noteId).then (() => {
