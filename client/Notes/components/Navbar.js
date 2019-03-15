@@ -18,7 +18,7 @@ import Divider from '@material-ui/core/Divider';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 5,
   },
   grow: {
     flexGrow: 1,

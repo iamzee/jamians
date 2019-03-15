@@ -14,6 +14,13 @@ export const authenticate = (jwt, cb) => {
   if (typeof window !== 'undefined') {
     console.log ('authenticate', jwt);
     sessionStorage.setItem ('jwt', JSON.stringify (jwt));
-    cb ();
   }
+  cb ();
+};
+
+export const logout = cb => {
+  if (typeof window !== 'undefined') {
+    sessionStorage.removeItem ('jwt');
+  }
+  cb ();
 };

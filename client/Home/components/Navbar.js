@@ -14,6 +14,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
+import {isAuthenticated, logout} from '../../helpers/auth.helper';
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -72,6 +74,12 @@ class Navbar extends React.Component {
     this.setState (() => ({redirectToLogin: true}));
   };
 
+  onLogoutClick = () => {
+    logout (() => {
+      this.setState (() => ({redirectToLogin: true}));
+    });
+  };
+
   render () {
     const {classes} = this.props;
 
@@ -95,15 +103,28 @@ class Navbar extends React.Component {
               <Typography variant="h6" className={classes.grow}>
                 Jamians
               </Typography>
-              <Button
-                className={classes.navButton}
-                onClick={this.onSignupClick}
-              >
-                Signup
-              </Button>
-              <Button className={classes.navButton} onClick={this.onLoginClick}>
-                Login
-              </Button>
+              {isAuthenticated ()
+                ? <Button
+                    className={classes.navButton}
+                    onClick={this.onLogoutClick}
+                  >
+                    Logout
+                  </Button>
+                : <div>
+                    <Button
+                      className={classes.navButton}
+                      onClick={this.onSignupClick}
+                    >
+                      Signup
+                    </Button>
+                    <Button
+                      className={classes.navButton}
+                      onClick={this.onLoginClick}
+                    >
+                      Login
+                    </Button>
+                  </div>}
+
             </Toolbar>
           </AppBar>
         </div>
