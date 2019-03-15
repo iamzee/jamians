@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import Select from 'react-select';
+import Redirect from 'react-router-dom';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -11,8 +12,9 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
-import {startSignup} from '../../actions/user.action';
 import {listDepartments} from '../../api/department.api';
+import {authenticate} from '../../helpers/auth.helper';
+import {signup} from '../../api/auth.api';
 import Navbar from '../components/Navbar';
 
 const styles = theme => {
@@ -44,6 +46,7 @@ const styles = theme => {
     select: {
       width: 300,
       margin: 'auto',
+      marginTop: theme.spacing.unit * 2,
       fontFamily: 'Roboto',
     },
     submit: {
@@ -108,12 +111,17 @@ class SignupPage extends React.Component {
         department: this.state.department,
       };
 
-      this.props.dispatch (startSignup (user));
+      signup (user).then (jwt => {
+        authenticate (jwt, () => {
+          this.props.history.push ('/');
+        });
+      });
     }
   };
 
   render () {
     const {classes} = this.props;
+
     return (
       <div>
         <Navbar />
@@ -218,4 +226,4 @@ SignupPage.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default connect () (withStyles (styles) (SignupPage));
+export default withStyles (styles) (SignupPage);

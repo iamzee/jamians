@@ -14,3 +14,20 @@ export const login = user => {
     })
     .catch (err => {});
 };
+
+export const signup = user => {
+  return axios ({
+    method: 'post',
+    url: '/api/user',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: JSON.stringify (user),
+  })
+    .then (({data}) => {
+      return data;
+    })
+    .catch (err => {
+      console.log (err.response);
+    });
+};
