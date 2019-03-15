@@ -10,12 +10,11 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
-import {startLogin} from '../actions/auth.action';
-import {authenticate} from '../helpers/auth.helper';
-import {login} from '../api/auth.api';
+import {authenticate} from '../../helpers/auth.helper';
+import {login} from '../../api/auth.api';
+import Navbar from '../components/Navbar';
 
 const styles = theme => {
-  // console.log (theme.palette.primary.main);
   return {
     card: {
       maxWidth: 400,
@@ -23,13 +22,21 @@ const styles = theme => {
       textAlign: 'center',
     },
     title: {
-      color: theme.palette.secondary.main,
+      color: theme.home.primary,
+      paddingBottom: theme.spacing.unit * 2,
     },
     textField: {
       width: 300,
+      marginBottom: theme.spacing.unit * 2,
     },
     submit: {
       margin: 'auto',
+      marginBottom: theme.spacing.unit * 2,
+      backgroundColor: theme.home.secondary,
+
+      '&:hover': {
+        backgroundColor: theme.home.primary,
+      },
     },
   };
 };
@@ -59,9 +66,6 @@ class LoginPage extends React.Component {
         email: this.state.email,
         password: this.state.password,
       };
-      // this.props.dispatch (startLogin (user)).then (() => {
-      //   this.props.history.push ('/');
-      // });
       login (user).then (jwt => {
         console.log ('login', jwt);
         authenticate (jwt, () => {
@@ -74,36 +78,40 @@ class LoginPage extends React.Component {
   render () {
     const {classes} = this.props;
     return (
-      <Card className={classes.card}>
-        <CardContent>
-          <Typography className={classes.title} variant="h5">Login</Typography>
-          <TextField
-            label="Email"
-            className={classes.textField}
-            value={this.state.email}
-            onChange={this.onEmailChange}
-          />
-          <br />
-          <TextField
-            label="Password"
-            className={classes.textField}
-            value={this.state.password}
-            onChange={this.onPasswordChange}
-          />
-          <br />
-          {this.state.error && <Typography>{this.state.error}</Typography>}
-        </CardContent>
-        <CardActions>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={this.onSubmit}
-          >
-            Login
-          </Button>
-        </CardActions>
-      </Card>
+      <div>
+        <Navbar />
+        <Card className={classes.card}>
+          <CardContent>
+            <Typography className={classes.title} variant="h5">
+              Login
+            </Typography>
+            <TextField
+              label="Email"
+              className={classes.textField}
+              value={this.state.email}
+              onChange={this.onEmailChange}
+            />
+            <br />
+            <TextField
+              label="Password"
+              className={classes.textField}
+              value={this.state.password}
+              onChange={this.onPasswordChange}
+            />
+            <br />
+            {this.state.error && <Typography>{this.state.error}</Typography>}
+          </CardContent>
+          <CardActions>
+            <Button
+              variant="contained"
+              className={classes.submit}
+              onClick={this.onSubmit}
+            >
+              Login
+            </Button>
+          </CardActions>
+        </Card>
+      </div>
     );
   }
 }

@@ -17,7 +17,7 @@ import Button from '@material-ui/core/Button';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 5,
   },
   grow: {
     flexGrow: 1,
