@@ -16,12 +16,12 @@ const history = createHistory ();
 const MainRouter = () => (
   <Router history={history}>
     <Switch>
+      <PrivateRoute path="/notes/upload" component={UploadNotesPage} />
+      <PrivateRoute path="/notes/bookmarks" component={NotesBookmarkPage} />
       <PrivateRoute path="/notes/:noteId" component={Note} />
       <PrivateRoute exact path="/notes" component={NotesPage} />
       <Route exact path="/signup" component={SignupPage} />
       <Route exact path="/login" component={LoginPage} />
-      <PrivateRoute path="/notes/bookmarks" component={NotesBookmarkPage} />
-      <PrivateRoute path="/notes/upload" component={UploadNotesPage} />
       <Route path="/" component={HomePage} />
     </Switch>
   </Router>

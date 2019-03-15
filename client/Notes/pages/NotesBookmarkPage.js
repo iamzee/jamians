@@ -26,7 +26,7 @@ class NotesBookmarkPage extends React.Component {
   render () {
     return (
       <div>
-        <Navbar title={'Notes Maina'} />
+        <Navbar />
         {this.state.noNotes
           ? <p>No notes</p>
           : <div>
