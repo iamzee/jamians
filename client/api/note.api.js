@@ -93,3 +93,12 @@ export const getBookmarkedNotes = (token, userId) => {
       console.log (err);
     });
 };
+
+export const read = noteId => {
+  return axios ({
+    methos: 'get',
+    url: '/api/note/' + noteId,
+  }).then (({data}) => {
+    return data;
+  });
+};

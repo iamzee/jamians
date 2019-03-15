@@ -9,12 +9,14 @@ import SignupPage from '../Home/pages/SignupPage';
 import UploadNotesPage from '../Notes/pages/UploadNotesPage';
 import NotesPage from '../Notes/pages/NotesPage';
 import NotesBookmarkPage from '../Notes/pages/NotesBookmarkPage';
+import Note from '../Notes/components/Note';
 
 const history = createHistory ();
 
 const MainRouter = () => (
   <Router history={history}>
     <Switch>
+      <PrivateRoute path="/notes/:noteId" component={Note} />
       <PrivateRoute exact path="/notes" component={NotesPage} />
       <Route exact path="/signup" component={SignupPage} />
       <Route exact path="/login" component={LoginPage} />

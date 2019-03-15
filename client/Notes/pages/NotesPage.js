@@ -3,6 +3,8 @@ import Select from 'react-select';
 import {withStyles} from '@material-ui/core/styles';
 import {connect} from 'react-redux';
 
+import List from '@material-ui/core/List';
+
 import NoteItem from '../components/NoteItem';
 import Navbar from '../components/Navbar';
 import Loader from '../../components/Loader';
@@ -16,6 +18,10 @@ const styles = theme => ({
     maxWidth: 600,
     margin: 'auto',
     marginBottom: theme.spacing.unit * 2,
+  },
+  list: {
+    maxWidth: 600,
+    margin: 'auto',
   },
 });
 
@@ -85,11 +91,11 @@ class NotesPage extends React.Component {
           : <div>
               {this.state.filteredNotes.length === 0
                 ? <Loader />
-                : <div>
+                : <List className={classes.list}>
                     {this.state.filteredNotes.map (note => (
                       <NoteItem key={note._id} note={note} />
                     ))}
-                  </div>}
+                  </List>}
             </div>}
 
       </div>

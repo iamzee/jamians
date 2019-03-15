@@ -85,10 +85,35 @@ const getBookmarkedNotes = (req, res) => {
   });
 };
 
+const read = (req, res) => {
+  const noteId = req.params.noteId;
+
+  Note.findById (noteId)
+    .populate ('uploadedBy', 'name')
+    .populate ('teacher', 'name')
+    .populate ('subject', 'name')
+    .then (note => {
+      if (!note) {
+        return res.status (400).json ({
+          errorMessage: 'Note not found',
+        });
+      }
+
+      res.status (200).json (note);
+    })
+    .catch (err => {
+      res.status (400).json ({
+        err,
+        errorMessage: 'Unable to fetch note',
+      });
+    });
+};
+
 export default {
   create,
   list,
   addBookmark,
   removeBookmark,
   getBookmarkedNotes,
+  read,
 };
