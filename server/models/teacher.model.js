@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 const TeacherSchema = mongoose.Schema ({
   name: {
     type: String,
-    required: 'Nmae is required',
+    required: 'Name is required',
     trim: true,
   },
 });

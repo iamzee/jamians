@@ -5,6 +5,7 @@ import path from 'path';
 
 import teacherRoutes from './routes/teacher.route';
 import subjectRoutes from './routes/subject.route';
+import departmentRoutes from './routes/department.route';
 import noteRoutes from './routes/note.route';
 import userRoutes from './routes/user.route';
 import authRoutes from './routes/auth.route';
@@ -25,6 +26,7 @@ app.use (bodyParser.json ());
 
 app.use ('/', teacherRoutes);
 app.use ('/', subjectRoutes);
+app.use ('/', departmentRoutes);
 app.use ('/', noteRoutes);
 app.use ('/', userRoutes);
 app.use ('/', authRoutes);

@@ -30,6 +30,10 @@ const UserSchema = mongoose.Schema ({
     minlength: 6,
     required: [true, 'Password is required'],
   },
+  department: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Department',
+  },
 });
 
 UserSchema.pre ('save', function (next) {

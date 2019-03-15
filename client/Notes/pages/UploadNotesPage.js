@@ -18,6 +18,7 @@ import {getSAS, upload} from '../../api/upload.api';
 import {listTeachers} from '../../api/teacher.api';
 import {listSubjects} from '../../api/subject.api';
 import {createNote} from '../../api/note.api';
+import {isAuthenticated} from '../../helpers/auth.helper';
 
 import SnackbarContentWrapper from '../../components/SnackbarContentWrapper';
 import Navbar from '../components/Navbar';
@@ -139,6 +140,7 @@ class UploadNotesPage extends React.Component {
           }));
 
           if (progressPercent == 100) {
+            const {user} = isAuthenticated ();
             const note = {
               name: blobName,
               topic: this.state.topic,
@@ -146,10 +148,10 @@ class UploadNotesPage extends React.Component {
               teacher: this.state.teacher,
               subject: this.state.subject,
               semester: this.state.semester,
+              uploadedBy: user._id,
             };
 
             createNote (note).then (data => {
-              console.log (data);
               this.setState (() => ({uploading: false, open: true}));
             });
           }

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import Select from 'react-select';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -11,6 +12,7 @@ import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
 import {startSignup} from '../../actions/user.action';
+import {listDepartments} from '../../api/department.api';
 import Navbar from '../components/Navbar';
 
 const styles = theme => {
@@ -27,6 +29,22 @@ const styles = theme => {
     textField: {
       width: 300,
       marginBottom: theme.spacing.unit * 2,
+    },
+    cssLabel: {
+      '&$cssFocused': {
+        color: theme.home.primary,
+      },
+    },
+    cssFocused: {},
+    cssUnderline: {
+      '&:after': {
+        borderBottomColor: theme.home.primary,
+      },
+    },
+    select: {
+      width: 300,
+      margin: 'auto',
+      fontFamily: 'Roboto',
     },
     submit: {
       margin: 'auto',
@@ -45,7 +63,15 @@ class SignupPage extends React.Component {
     email: '',
     password: '',
     error: '',
+    departments: [],
+    department: '',
   };
+
+  componentDidMount () {
+    listDepartments ().then (departments => {
+      this.setState (() => ({departments}));
+    });
+  }
 
   onNameChange = e => {
     const name = e.target.value;
@@ -62,14 +88,24 @@ class SignupPage extends React.Component {
     this.setState (() => ({password}));
   };
 
+  onDepartmentChange = e => {
+    this.setState (() => ({department: e.value}));
+  };
+
   onSubmit = e => {
-    if (!this.state.name || !this.state.email || !this.state.password) {
+    if (
+      !this.state.name ||
+      !this.state.email ||
+      !this.state.password ||
+      !this.state.department
+    ) {
       this.setState (() => ({error: 'All fields are necessary!'}));
     } else {
       const user = {
         name: this.state.name,
         email: this.state.email,
         password: this.state.password,
+        department: this.state.department,
       };
 
       this.props.dispatch (startSignup (user));
@@ -87,13 +123,36 @@ class SignupPage extends React.Component {
               Signup
             </Typography>
             <TextField
+              InputLabelProps={{
+                classes: {
+                  root: classes.cssLabel,
+                  focused: classes.cssFocused,
+                },
+              }}
+              InputProps={{
+                classes: {
+                  underline: classes.cssUnderline,
+                },
+              }}
               label="Name"
+              id="name"
               className={classes.textField}
               value={this.state.name}
               onChange={this.onNameChange}
             />
             <br />
             <TextField
+              InputLabelProps={{
+                classes: {
+                  root: classes.cssLabel,
+                  focused: classes.cssFocused,
+                },
+              }}
+              InputProps={{
+                classes: {
+                  underline: classes.cssUnderline,
+                },
+              }}
               label="Email"
               className={classes.textField}
               value={this.state.email}
@@ -101,12 +160,43 @@ class SignupPage extends React.Component {
             />
             <br />
             <TextField
+              InputLabelProps={{
+                classes: {
+                  root: classes.cssLabel,
+                  focused: classes.cssFocused,
+                },
+              }}
+              InputProps={{
+                classes: {
+                  underline: classes.cssUnderline,
+                },
+              }}
               label="Password"
               className={classes.textField}
               value={this.state.password}
               onChange={this.onPasswordChange}
             />
             <br />
+            <Select
+              isClearable
+              className={classes.select}
+              placeholder="Select Department"
+              options={this.state.departments.map (department => {
+                return {
+                  value: department._id,
+                  label: department.name,
+                };
+              })}
+              theme={theme => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary25: '#d7fbe8',
+                  primary: '#1fab89',
+                },
+              })}
+              onChange={this.onDepartmentChange}
+            /><br />
             {this.state.error && <Typography>{this.state.error}</Typography>}
           </CardContent>
           <CardActions>
