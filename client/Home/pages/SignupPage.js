@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
+import red from '@material-ui/core/colors/red';
 import {withStyles} from '@material-ui/core/styles';
 
 import {listDepartments} from '../../api/department.api';
@@ -56,6 +57,10 @@ const styles = theme => {
       '&:hover': {
         backgroundColor: theme.home.primary,
       },
+    },
+    error: {
+      fontWeight: 'bold',
+      color: red[500],
     },
   };
 };
@@ -111,10 +116,14 @@ class SignupPage extends React.Component {
         department: this.state.department,
       };
 
-      signup (user).then (jwt => {
-        authenticate (jwt, () => {
-          this.props.history.push ('/');
-        });
+      signup (user).then (data => {
+        if (data.errorMessage) {
+          this.setState (() => ({error: data.errorMessage}));
+        } else {
+          authenticate (data, () => {
+            this.props.history.push ('/');
+          });
+        }
       });
     }
   };
@@ -205,7 +214,10 @@ class SignupPage extends React.Component {
               })}
               onChange={this.onDepartmentChange}
             /><br />
-            {this.state.error && <Typography>{this.state.error}</Typography>}
+            {this.state.error &&
+              <Typography variant="subtitle1" className={classes.error}>
+                {this.state.error}
+              </Typography>}
           </CardContent>
           <CardActions>
             <Button

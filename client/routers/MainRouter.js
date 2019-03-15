@@ -22,7 +22,7 @@ const MainRouter = () => (
       <PrivateRoute exact path="/notes" component={NotesPage} />
       <Route exact path="/signup" component={SignupPage} />
       <Route exact path="/login" component={LoginPage} />
-      <Route path="/" component={HomePage} />
+      <PrivateRoute path="/" component={HomePage} />
     </Switch>
   </Router>
 );

@@ -12,7 +12,9 @@ export const login = user => {
     .then (({data}) => {
       return data;
     })
-    .catch (err => {});
+    .catch (err => {
+      return err.response.data;
+    });
 };
 
 export const signup = user => {
@@ -28,6 +30,6 @@ export const signup = user => {
       return data;
     })
     .catch (err => {
-      console.log (err.response);
+      return err.response.data;
     });
 };

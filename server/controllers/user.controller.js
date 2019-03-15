@@ -26,9 +26,19 @@ export const create = (req, res) => {
       );
     })
     .catch (err => {
-      res.status (400).send ({
-        err,
-        errorMessage: 'Unable to create User',
+      let errorMessage = 'Unable to create User';
+
+      if (err.errors) {
+        if (err.errors.password) {
+          if (err.errors.password.kind === 'minlength') {
+            errorMessage = 'Password should be atleast 6 characters long!';
+          }
+        }
+      } else if (err.code === 11000) {
+        errorMessage = 'Email already exist!';
+      }
+      res.status (400).json ({
+        errorMessage,
       });
     });
 };

@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
+import red from '@material-ui/core/colors/red';
 import {withStyles} from '@material-ui/core/styles';
 
 import {authenticate} from '../../helpers/auth.helper';
@@ -49,6 +50,10 @@ const styles = theme => {
         backgroundColor: theme.home.primary,
       },
     },
+    error: {
+      color: red[500],
+      fontWeight: 'bold',
+    },
   };
 };
 
@@ -77,11 +82,16 @@ class LoginPage extends React.Component {
         email: this.state.email,
         password: this.state.password,
       };
-      login (user).then (jwt => {
-        console.log ('login', jwt);
-        authenticate (jwt, () => {
-          this.props.history.push ('/');
-        });
+      login (user).then (data => {
+        console.log ('login', data);
+
+        if (data.errorMessage) {
+          this.setState (() => ({error: data.errorMessage}));
+        } else {
+          authenticate (data, () => {
+            this.props.history.push ('/');
+          });
+        }
       });
     }
   };
@@ -132,7 +142,10 @@ class LoginPage extends React.Component {
               onChange={this.onPasswordChange}
             />
             <br />
-            {this.state.error && <Typography>{this.state.error}</Typography>}
+            {this.state.error &&
+              <Typography variant="subtitle1" className={classes.error}>
+                {this.state.error}
+              </Typography>}
           </CardContent>
           <CardActions>
             <Button

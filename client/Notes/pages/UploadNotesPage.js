@@ -19,6 +19,7 @@ import {listTeachers} from '../../api/teacher.api';
 import {listSubjects} from '../../api/subject.api';
 import {createNote} from '../../api/note.api';
 import {isAuthenticated} from '../../helpers/auth.helper';
+import {semesters} from '../../helpers/note.helper';
 
 import SnackbarContentWrapper from '../../components/SnackbarContentWrapper';
 import Navbar from '../components/Navbar';
@@ -45,6 +46,12 @@ const styles = theme => ({
     width: 300,
     margin: 'auto',
     marginBottom: theme.spacing.unit * 2,
+  },
+  select: {
+    width: 300,
+    margin: 'auto',
+    marginBottom: theme.spacing.unit * 2,
+    fontFamily: 'Roboto',
   },
   fileInput: {
     display: 'none',
@@ -167,41 +174,6 @@ class UploadNotesPage extends React.Component {
   render () {
     const {classes} = this.props;
 
-    const semesters = [
-      {
-        label: '1st Semester',
-        value: 1,
-      },
-      {
-        label: '2nd Semester',
-        value: 2,
-      },
-      {
-        label: '3rd Semester',
-        value: 3,
-      },
-      {
-        label: '4th Semester',
-        value: 4,
-      },
-      {
-        label: '5th Semester',
-        value: 5,
-      },
-      {
-        label: '6th Semester',
-        value: 6,
-      },
-      {
-        label: '7th Semester',
-        value: 7,
-      },
-      {
-        label: '8th Semester',
-        value: 8,
-      },
-    ];
-
     return (
       <div>
         <Navbar title={'Notes Mania'} />
@@ -265,7 +237,7 @@ class UploadNotesPage extends React.Component {
             </TextField><br />
             <Select
               placeholder="Select Teacher"
-              className={classes.textField}
+              className={classes.select}
               options={this.state.teachers.map (teacher => {
                 return {value: teacher._id, label: teacher.name};
               })}
@@ -273,7 +245,7 @@ class UploadNotesPage extends React.Component {
             /><br />
             <Select
               placeholder="Select Subject"
-              className={classes.textField}
+              className={classes.select}
               options={this.state.subjects.map (subject => {
                 return {
                   value: subject._id,
