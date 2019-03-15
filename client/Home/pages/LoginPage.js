@@ -29,6 +29,17 @@ const styles = theme => {
       width: 300,
       marginBottom: theme.spacing.unit * 2,
     },
+    cssLabel: {
+      '&$cssFocused': {
+        color: theme.home.primary,
+      },
+    },
+    cssFocused: {},
+    cssUnderline: {
+      '&:after': {
+        borderBottomColor: theme.home.primary,
+      },
+    },
     submit: {
       margin: 'auto',
       marginBottom: theme.spacing.unit * 2,
@@ -86,6 +97,17 @@ class LoginPage extends React.Component {
               Login
             </Typography>
             <TextField
+              InputLabelProps={{
+                classes: {
+                  root: classes.cssLabel,
+                  focused: classes.cssFocused,
+                },
+              }}
+              InputProps={{
+                classes: {
+                  underline: classes.cssUnderline,
+                },
+              }}
               label="Email"
               className={classes.textField}
               value={this.state.email}
@@ -93,6 +115,17 @@ class LoginPage extends React.Component {
             />
             <br />
             <TextField
+              InputLabelProps={{
+                classes: {
+                  root: classes.cssLabel,
+                  focused: classes.cssFocused,
+                },
+              }}
+              InputProps={{
+                classes: {
+                  underline: classes.cssUnderline,
+                },
+              }}
               label="Password"
               className={classes.textField}
               value={this.state.password}

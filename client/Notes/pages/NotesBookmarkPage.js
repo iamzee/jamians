@@ -1,11 +1,22 @@
 import React from 'react';
 
+import List from '@material-ui/core/List';
+import {withStyles} from '@material-ui/core/styles';
+
 import {getBookmarkedNotes} from '../../api/note.api';
 import {isAuthenticated} from '../../helpers/auth.helper';
 
 import NoteItem from '../components/NoteItem';
 import Navbar from '../components/Navbar';
 import Loader from '../../components/Loader';
+import NoNotes from '../components/NoNotes';
+
+const styles = theme => ({
+  list: {
+    maxWidth: 600,
+    margin: 'auto',
+  },
+});
 
 class NotesBookmarkPage extends React.Component {
   state = {
@@ -24,23 +35,24 @@ class NotesBookmarkPage extends React.Component {
   }
 
   render () {
+    const {classes} = this.props;
     return (
       <div>
         <Navbar />
         {this.state.noNotes
-          ? <p>No notes</p>
+          ? <NoNotes />
           : <div>
               {this.state.notes.length === 0
-                ? <Loader />
-                : <div>
+                ? <Loader color="#00adb5" />
+                : <List className={classes.list}>
                     {this.state.notes.map (note => (
                       <NoteItem key={note._id} note={note} />
                     ))}
-                  </div>}
+                  </List>}
             </div>}
       </div>
     );
   }
 }
 
-export default NotesBookmarkPage;
+export default withStyles (styles) (NotesBookmarkPage);

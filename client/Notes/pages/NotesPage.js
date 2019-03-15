@@ -18,6 +18,7 @@ const styles = theme => ({
     maxWidth: 600,
     margin: 'auto',
     marginBottom: theme.spacing.unit * 2,
+    fontFamily: 'Roboto',
   },
   list: {
     maxWidth: 600,
@@ -84,13 +85,21 @@ class NotesPage extends React.Component {
             };
           })}
           onChange={this.onSubjectChange}
+          theme={theme => ({
+            ...theme,
+            colors: {
+              ...theme.colors,
+              primary25: '#00adb5',
+              primary: '#393e46',
+            },
+          })}
         />
 
         {this.state.noNotes
           ? <NoNotes />
           : <div>
               {this.state.filteredNotes.length === 0
-                ? <Loader />
+                ? <Loader color="#00adb5" />
                 : <List className={classes.list}>
                     {this.state.filteredNotes.map (note => (
                       <NoteItem key={note._id} note={note} />
