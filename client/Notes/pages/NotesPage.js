@@ -1,7 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
 import {withStyles} from '@material-ui/core/styles';
-import {connect} from 'react-redux';
 
 import List from '@material-ui/core/List';
 

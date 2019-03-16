@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
 import Select from 'react-select';
 
 import Card from '@material-ui/core/Card';

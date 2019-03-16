@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -83,8 +82,6 @@ class LoginPage extends React.Component {
         password: this.state.password,
       };
       login (user).then (data => {
-        console.log ('login', data);
-
         if (data.errorMessage) {
           this.setState (() => ({error: data.errorMessage}));
         } else {
@@ -166,4 +163,4 @@ LoginPage.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default connect () (withStyles (styles) (LoginPage));
+export default withStyles (styles) (LoginPage);
