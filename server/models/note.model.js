@@ -31,6 +31,10 @@ const NoteSchema = mongoose.Schema ({
   semester: {
     type: Number,
   },
+  department: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Department',
+  },
   bookmarks: [
     {
       type: mongoose.Schema.Types.ObjectId,

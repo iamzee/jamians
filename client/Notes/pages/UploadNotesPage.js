@@ -17,6 +17,7 @@ import {withStyles} from '@material-ui/core/styles';
 import {getSAS, upload} from '../../api/upload.api';
 import {listTeachers} from '../../api/teacher.api';
 import {listSubjects} from '../../api/subject.api';
+import {listDepartments, readDepartment} from '../../api/department.api';
 import {createNote} from '../../api/note.api';
 import {isAuthenticated} from '../../helpers/auth.helper';
 import {semesters} from '../../helpers/note.helper';
@@ -73,9 +74,11 @@ class UploadNotesPage extends React.Component {
   state = {
     file: null,
     teachers: [],
-    teacher: '',
+    teacher: null,
     subjects: [],
-    subject: '',
+    subject: null,
+    departments: [],
+    department: {},
     topic: '',
     description: '',
     semester: '',
@@ -90,9 +93,19 @@ class UploadNotesPage extends React.Component {
       this.setState (() => ({teachers}));
     });
 
-    listSubjects ().then (subjects => {
-      this.setState (() => ({subjects}));
+    // listSubjects ().then (subjects => {
+    //   this.setState (() => ({subjects}));
+    // });
+
+    listDepartments ().then (departments => {
+      this.setState (() => ({departments}));
     });
+
+    const {user} = isAuthenticated ();
+    this.setState (() => ({
+      subjects: user.department.subjects,
+      department: {value: user.department._id, label: user.department.name},
+    }));
   }
 
   onFileChange = e => {
@@ -110,13 +123,19 @@ class UploadNotesPage extends React.Component {
     this.setState (() => ({description}));
   };
 
-  onTeacherChange = e => {
-    const teacher = e.value;
+  onDepartmentChange = department => {
+    this.setState (() => ({department}));
+
+    readDepartment (department.value).then (({subjects}) => {
+      this.setState (() => ({subjects}));
+    });
+  };
+
+  onTeacherChange = teacher => {
     this.setState (() => ({teacher}));
   };
 
-  onSubjectChange = e => {
-    const subject = e.value;
+  onSubjectChange = subject => {
     this.setState (() => ({subject}));
   };
 
@@ -152,8 +171,8 @@ class UploadNotesPage extends React.Component {
               name: blobName,
               topic: this.state.topic,
               description: this.state.description,
-              teacher: this.state.teacher,
-              subject: this.state.subject,
+              teacher: this.state.teacher.value,
+              subject: this.state.subject.value,
               semester: this.state.semester,
               uploadedBy: user._id,
             };
@@ -235,6 +254,15 @@ class UploadNotesPage extends React.Component {
                 </MenuItem>
               ))}
             </TextField><br />
+            <Select
+              value={this.state.department}
+              placeholder="Select Department"
+              className={classes.select}
+              options={this.state.departments.map (department => {
+                return {value: department._id, label: department.name};
+              })}
+              onChange={this.onDepartmentChange}
+            /><br />
             <Select
               placeholder="Select Teacher"
               className={classes.select}

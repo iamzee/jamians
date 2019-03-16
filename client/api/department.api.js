@@ -8,3 +8,18 @@ export const listDepartments = () => {
     return data.departments;
   });
 };
+
+export const readDepartment = departmentId => {
+  console.log (departmentId);
+  return axios ({
+    method: 'get',
+    url: '/api/department/' + departmentId,
+  })
+    .then (({data}) => {
+      console.log (data);
+      return data;
+    })
+    .catch (err => {
+      console.log (err);
+    });
+};

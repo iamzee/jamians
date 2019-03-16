@@ -45,6 +45,7 @@ export const create = (req, res) => {
 
 export const userById = (req, res, next, id) => {
   User.findById (id)
+    .populate ('department')
     .then (user => {
       if (!user) {
         return res.status (400).json ({

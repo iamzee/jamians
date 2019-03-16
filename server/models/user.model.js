@@ -49,11 +49,31 @@ UserSchema.pre ('save', function (next) {
   }
 });
 
+UserSchema.post ('save', function (doc, next) {
+  doc
+    .populate ({
+      path: 'department',
+      populate: {
+        path: 'subjects',
+      },
+    })
+    .execPopulate ()
+    .then (function () {
+      next ();
+    });
+});
+
 UserSchema.methods.toJSON = function () {
   const user = this;
   const userObject = user.toObject ();
 
-  return _.pick (userObject, ['name', 'email', 'createdAt', '_id']);
+  return _.pick (userObject, [
+    'name',
+    'email',
+    'createdAt',
+    '_id',
+    'department',
+  ]);
 };
 
 const User = mongoose.model ('User', UserSchema);

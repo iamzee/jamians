@@ -8,6 +8,12 @@ const login = (req, res) => {
   User.findOne ({
     email: req.body.email,
   })
+    .populate ({
+      path: 'department',
+      populate: {
+        path: 'subjects',
+      },
+    })
     .then (doc => {
       if (!doc) {
         return res.status (400).send ({
