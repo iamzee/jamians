@@ -93,10 +93,6 @@ class UploadNotesPage extends React.Component {
       this.setState (() => ({teachers}));
     });
 
-    // listSubjects ().then (subjects => {
-    //   this.setState (() => ({subjects}));
-    // });
-
     listDepartments ().then (departments => {
       this.setState (() => ({departments}));
     });
@@ -171,6 +167,7 @@ class UploadNotesPage extends React.Component {
               name: blobName,
               topic: this.state.topic,
               description: this.state.description,
+              department: this.state.department.value,
               teacher: this.state.teacher.value,
               subject: this.state.subject.value,
               semester: this.state.semester,

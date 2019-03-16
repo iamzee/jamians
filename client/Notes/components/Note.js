@@ -82,9 +82,13 @@ class Note extends React.Component {
                     {' '}
                     <span style={{fontWeight: 'bold'}}>{note.semester}</span>
                   </Typography>
-                  {/* <Typography variant="caption">
-                  Uploaded By: {note.uploadedBy.name}
-                </Typography> */}
+                  <Typography variant="caption">
+                    Uploaded By:
+                    {' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {note.uploadedBy.name}
+                    </span>
+                  </Typography>
                   <Typography variant="caption">
                     Subject:
                     {' '}
@@ -108,7 +112,7 @@ class Note extends React.Component {
                 <BookmarkButton note={note} />
               </CardActions>
             </Card>
-          : <Loader />}
+          : <Loader color="#00adb5" />}
 
       </div>
     );
