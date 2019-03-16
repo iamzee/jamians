@@ -4,11 +4,18 @@ const questionPaperSchema = mongoose.Schema ({
   name: {
     type: String,
   },
+  department: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Department',
+  },
   subject: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Subject',
   },
   semester: {
+    type: Number,
+  },
+  year: {
     type: Number,
   },
   uploadedOn: {

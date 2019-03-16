@@ -190,7 +190,7 @@ class UploadNotesPage extends React.Component {
 
     return (
       <div>
-        <Navbar title={'Notes Mania'} />
+        <Navbar />
         <Card className={classes.card}>
           <CardContent>
             <Typography className={classes.title} variant="h5">

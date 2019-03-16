@@ -10,6 +10,7 @@ import noteRoutes from './routes/note.route';
 import userRoutes from './routes/user.route';
 import authRoutes from './routes/auth.route';
 import uploadRoutes from './routes/upload.route';
+import questionPaperRoutes from './routes/questionPaper.route';
 
 import template from '../template';
 
@@ -31,6 +32,7 @@ app.use ('/', noteRoutes);
 app.use ('/', userRoutes);
 app.use ('/', authRoutes);
 app.use ('/', uploadRoutes);
+app.use ('/', questionPaperRoutes);
 
 app.get ('*', (req, res) => {
   res.send (template ());
