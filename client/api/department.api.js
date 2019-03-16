@@ -10,7 +10,6 @@ export const listDepartments = () => {
 };
 
 export const readDepartment = departmentId => {
-  console.log (departmentId);
   return axios ({
     method: 'get',
     url: '/api/department/' + departmentId,

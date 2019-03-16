@@ -16,7 +16,6 @@ import {withStyles} from '@material-ui/core/styles';
 
 import {getSAS, upload} from '../../api/upload.api';
 import {listTeachers} from '../../api/teacher.api';
-import {listSubjects} from '../../api/subject.api';
 import {listDepartments, readDepartment} from '../../api/department.api';
 import {createNote} from '../../api/note.api';
 import {isAuthenticated} from '../../helpers/auth.helper';
@@ -333,10 +332,4 @@ UploadNotesPage.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  user: state.auth.user,
-});
-
-export default connect (mapStateToProps) (
-  withStyles (styles) (UploadNotesPage)
-);
+export default withStyles (styles) (UploadNotesPage);

@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 export const createNote = note => {
-  console.log (note);
   return axios ({
     method: 'post',
     url: '/api/note',
@@ -39,13 +38,6 @@ export const getFilteredNotes = (departmentId, subjectId) => {
       return data.notes;
     });
   }
-
-  // return axios ({
-  //   method: 'get',
-  //   url: `/api/note?subject=${subjectId}`,
-  // }).then (({data}) => {
-  //   return data.notes;
-  // });
 };
 
 export const addBookmark = (userId, noteId) => {
@@ -89,7 +81,6 @@ export const removeBookmark = (userId, noteId) => {
 };
 
 export const getBookmarkedNotes = (token, userId) => {
-  console.log (userId);
   return axios ({
     method: 'get',
     url: '/api/note/bookmarks',
@@ -102,7 +93,6 @@ export const getBookmarkedNotes = (token, userId) => {
     },
   })
     .then (({data}) => {
-      console.log (data);
       return data.notes;
     })
     .catch (err => {
