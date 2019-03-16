@@ -15,17 +15,16 @@ const create = (req, res) => {
 };
 
 const list = (req, res) => {
-  let searchByObject = {};
+  let queryObject = {};
+  const {subject, department} = req.query;
 
-  const searchBySubject = req.query.subject;
-
-  if (searchBySubject) {
-    searchByObject = {
-      subject: searchBySubject,
-    };
+  if (department && subject) {
+    queryObject = {department, subject};
+  } else if (department) {
+    queryObject = {department};
   }
 
-  Note.find (searchByObject)
+  Note.find (queryObject)
     .populate ('teacher')
     .populate ('subject')
     .then (doc => {

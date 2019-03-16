@@ -23,13 +23,29 @@ export const listNotes = () => {
   });
 };
 
-export const getFilteredNotes = subjectId => {
-  return axios ({
-    method: 'get',
-    url: `/api/note?subject=${subjectId}`,
-  }).then (({data}) => {
-    return data.notes;
-  });
+export const getFilteredNotes = (departmentId, subjectId) => {
+  if (departmentId && subjectId) {
+    return axios ({
+      method: 'get',
+      url: `/api/note/?department=${departmentId}&subject=${subjectId}`,
+    }).then (({data}) => {
+      return data.notes;
+    });
+  } else if (departmentId) {
+    return axios ({
+      method: 'get',
+      url: `/api/note/?department=${departmentId}`,
+    }).then (({data}) => {
+      return data.notes;
+    });
+  }
+
+  // return axios ({
+  //   method: 'get',
+  //   url: `/api/note?subject=${subjectId}`,
+  // }).then (({data}) => {
+  //   return data.notes;
+  // });
 };
 
 export const addBookmark = (userId, noteId) => {
