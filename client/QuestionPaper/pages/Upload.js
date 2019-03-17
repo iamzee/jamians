@@ -29,6 +29,7 @@ const styles = theme => ({
   },
   title: {
     marginBottom: theme.spacing.unit * 2,
+    color: theme.questionPaper.primary,
   },
   chooseFileButton: {
     marginBottom: theme.spacing.unit * 2,
@@ -45,7 +46,6 @@ const styles = theme => ({
   select: {
     width: 300,
     margin: 'auto',
-    marginBottom: theme.spacing.unit * 2,
     fontFamily: 'Roboto',
   },
   fileInput: {
@@ -54,10 +54,17 @@ const styles = theme => ({
   button: {
     margin: 'auto',
     marginBottom: theme.spacing.unit * 2,
+    backgroundColor: theme.questionPaper.primary,
+    color: '#fff',
+
+    '&:hover': {
+      backgroundColor: theme.questionPaper.secondary,
+    },
   },
   progress: {
     marginLeft: theme.spacing.unit * 2,
     marginRight: theme.spacing.unit * 2,
+    color: theme.questionPaper.tertiary,
   },
   margin: {
     margin: theme.spacing.unit,
@@ -173,7 +180,7 @@ class Upload extends React.Component {
         <Card className={classes.card}>
           <CardContent>
             <Typography className={classes.title} variant="h5">
-              Upload Notes
+              Upload Question Paper
             </Typography>
             <input
               accept="application/pdf"
@@ -239,6 +246,14 @@ class Upload extends React.Component {
                 };
               })}
               onChange={this.onDepartmentChange}
+              theme={theme => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary25: '#e23e57',
+                  primary: '#522546',
+                },
+              })}
             />
             <br />
             <Select
@@ -252,6 +267,14 @@ class Upload extends React.Component {
                 };
               })}
               onChange={this.onSubjectChange}
+              theme={theme => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary25: '#e23e57',
+                  primary: '#522546',
+                },
+              })}
             />
             <br />
             {this.state.error && <Typography>{this.state.error}</Typography>}
@@ -266,7 +289,6 @@ class Upload extends React.Component {
                   Uploading
                   <CircularProgress
                     className={classes.progress}
-                    color="secondary"
                     size={24}
                     variant="indeterminate"
                   />
@@ -275,9 +297,8 @@ class Upload extends React.Component {
                   variant="contained"
                   className={classes.button}
                   onClick={this.onSubmit}
-                  color="primary"
                 >
-                  Submit
+                  Upload
                 </Button>}
           </CardActions>
         </Card>
