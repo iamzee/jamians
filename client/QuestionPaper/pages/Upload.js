@@ -8,12 +8,17 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import {withStyles} from '@material-ui/core/styles';
 
 import {semesters} from '../../helpers/note.helper';
 import {listDepartments, readDepartment} from '../../api/department.api';
 import {isAuthenticated} from '../../helpers/auth.helper';
 import {years} from '../../helpers/questionPaper.helper';
+import {getSAS, upload} from '../../api/upload.api';
+import {createQuestionPaper} from '../../api/questionPaper.api';
+
+import Navbar from '../components/Navbar';
 
 const styles = theme => ({
   card: {
@@ -61,12 +66,16 @@ const styles = theme => ({
 
 class Upload extends React.Component {
   state = {
+    file: null,
     semester: '',
     departments: [],
     subjects: [],
     department: null,
     subject: null,
     year: '',
+    error: '',
+    progressPercent: 0,
+    uploading: false,
   };
 
   componentDidMount () {
@@ -80,6 +89,11 @@ class Upload extends React.Component {
       department: {value: user.department._id, label: user.department.name},
     }));
   }
+
+  onFileChange = e => {
+    const file = e.target.files[0];
+    this.setState (() => ({file}));
+  };
 
   onSemesterChange = e => {
     const semester = e.target.value;
@@ -104,10 +118,58 @@ class Upload extends React.Component {
     this.setState (() => ({year}));
   };
 
+  onSubmit = e => {
+    if (
+      !this.state.semester ||
+      !this.state.department ||
+      !this.state.subject ||
+      !this.state.year ||
+      !this.state.file
+    ) {
+      this.setState (() => ({error: 'All fields are necessary!'}));
+    } else {
+      this.setState (() => ({uploading: true, error: ''}));
+
+      getSAS ().then (sasToken => {
+        const {speedSummary, blobName} = upload (
+          sasToken,
+          this.state.file,
+          'question-papers'
+        );
+
+        speedSummary.on ('progress', () => {
+          const progressPercent = speedSummary.getCompletePercent ();
+          this.setState (() => ({
+            progressPercent,
+          }));
+
+          if (progressPercent == 100) {
+            const {user} = isAuthenticated ();
+            const questionPaper = {
+              name: blobName,
+              department: this.state.department.value,
+              subject: this.state.subject.value,
+              semester: this.state.semester,
+              year: this.state.year,
+              uploadedBy: user._id,
+            };
+
+            createQuestionPaper (questionPaper).then (data => {
+              this.setState (() => ({uploading: false, open: true}));
+            });
+          }
+        });
+      });
+    }
+  };
+
   render () {
     const {classes} = this.props;
     return (
       <div>
+
+        <Navbar />
+
         <Card className={classes.card}>
           <CardContent>
             <Typography className={classes.title} variant="h5">
@@ -118,6 +180,7 @@ class Upload extends React.Component {
               type="file"
               id="file-upload"
               className={classes.fileInput}
+              onChange={this.onFileChange}
             />
             <label htmlFor="file-upload">
               <Button
@@ -191,9 +254,31 @@ class Upload extends React.Component {
               onChange={this.onSubjectChange}
             />
             <br />
+            {this.state.error && <Typography>{this.state.error}</Typography>}
           </CardContent>
           <CardActions>
-            <Button className={classes.button}>Upload</Button>
+            {this.state.uploading
+              ? <Button
+                  variant="contained"
+                  className={classes.button}
+                  color="primary"
+                >
+                  Uploading
+                  <CircularProgress
+                    className={classes.progress}
+                    color="secondary"
+                    size={24}
+                    variant="indeterminate"
+                  />
+                </Button>
+              : <Button
+                  variant="contained"
+                  className={classes.button}
+                  onClick={this.onSubmit}
+                  color="primary"
+                >
+                  Submit
+                </Button>}
           </CardActions>
         </Card>
       </div>

@@ -22,7 +22,7 @@ export const generateSAS = (req, res) => {
   };
 
   const sasToken = blobService.generateSharedAccessSignature (
-    'notes',
+    'question-papers',
     null,
     sharedAccessPolicy
   );

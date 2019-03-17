@@ -148,10 +148,14 @@ class UploadNotesPage extends React.Component {
     ) {
       this.setState (() => ({error: 'All fields are necessary!'}));
     } else {
-      this.setState (() => ({uploading: true}));
+      this.setState (() => ({uploading: true, error: ''}));
 
       getSAS ().then (sasToken => {
-        const {speedSummary, blobName} = upload (sasToken, this.state.file);
+        const {speedSummary, blobName} = upload (
+          sasToken,
+          this.state.file,
+          'notes'
+        );
 
         speedSummary.on ('progress', () => {
           const progressPercent = speedSummary.getCompletePercent ();

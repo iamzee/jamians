@@ -10,7 +10,7 @@ export const getSAS = () => {
   });
 };
 
-export const upload = (sasToken, file) => {
+export const upload = (sasToken, file, containerName) => {
   const blobUri = 'https://practice99.blob.core.windows.net';
   const token = `?${sasToken}`;
 
@@ -18,7 +18,7 @@ export const upload = (sasToken, file) => {
     blobUri,
     token
   );
-  const containerName = 'notes';
+  // const containerName = 'questionPapers';
   const blobName = `${uuid ()}.pdf`;
 
   const speedSummary = blobService.createBlockBlobFromBrowserFile (
