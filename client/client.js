@@ -24,6 +24,11 @@ const theme = createMuiTheme ({
     primary: '#1fab89',
     secondary: '#d7fbe8',
   },
+  questionPaper: {
+    primary: '#522546',
+    secondary: '88304e',
+    tertiary: '#e23e57',
+  },
   typography: {
     useNextVariants: true,
   },

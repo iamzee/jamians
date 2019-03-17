@@ -118,7 +118,7 @@ class UploadNotesPage extends React.Component {
   };
 
   onDepartmentChange = department => {
-    this.setState (() => ({department}));
+    this.setState (() => ({department, subject: null}));
 
     readDepartment (department.value).then (({subjects}) => {
       this.setState (() => ({subjects}));

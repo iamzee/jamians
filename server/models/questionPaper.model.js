@@ -16,7 +16,7 @@ const questionPaperSchema = mongoose.Schema ({
     type: Number,
   },
   year: {
-    type: Number,
+    type: String,
   },
   uploadedOn: {
     type: Date,
