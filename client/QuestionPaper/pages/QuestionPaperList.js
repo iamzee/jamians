@@ -9,6 +9,8 @@ import {listDepartments, readDepartment} from '../../api/department.api';
 import {isAuthenticated} from '../../helpers/auth.helper';
 import {semesters} from '../../helpers/note.helper';
 
+import QuestionPaperItem from '../components/QuestionPaperItem';
+
 class QuestionPaperList extends React.Component {
   state = {
     questionPapers: [],
@@ -117,6 +119,15 @@ class QuestionPaperList extends React.Component {
             </MenuItem>
           ))}
         </TextField>
+
+        {this.state.questionPapers.map ((questionPaper, i) => (
+          <QuestionPaperItem
+            key={questionPaper._id}
+            questionPaper={questionPaper}
+            i={i}
+          />
+        ))}
+
       </div>
     );
   }
