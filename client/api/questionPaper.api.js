@@ -12,3 +12,23 @@ export const createQuestionPaper = data => {
     return data;
   });
 };
+
+export const getQuestionPapers = payload => {
+  const {departmentId, subjectId, semester} = payload;
+  let query = `department=${departmentId}`;
+
+  if (subjectId && semester) {
+    query = `department=${departmentId}&subject=${subjectId}&semester=${semester}`;
+  } else if (subjectId) {
+    query = `department=${departmentId}&subject=${subjectId}`;
+  } else if (semester) {
+    query = `department=${departmentId}&semester=${semester}`;
+  }
+
+  return axios ({
+    method: 'get',
+    url: `/api/questionPaper?${query}`,
+  }).then (({data}) => {
+    return data.questionPapers;
+  });
+};

@@ -11,12 +11,14 @@ import NotesPage from '../Notes/pages/NotesPage';
 import NotesBookmarkPage from '../Notes/pages/NotesBookmarkPage';
 import Note from '../Notes/components/Note';
 import Upload from '../QuestionPaper/pages/Upload';
+import QuestionPaperList from '../QuestionPaper/pages/QuestionPaperList';
 
 const history = createHistory ();
 
 const MainRouter = () => (
   <Router history={history}>
     <Switch>
+      <PrivateRoute path="/question_papers" component={QuestionPaperList} />
       <PrivateRoute path="/question_papers/upload" component={Upload} />
       <PrivateRoute path="/notes/upload" component={UploadNotesPage} />
       <PrivateRoute path="/notes/bookmarks" component={NotesBookmarkPage} />
