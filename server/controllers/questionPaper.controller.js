@@ -49,3 +49,21 @@ export const list = (req, res) => {
       });
     });
 };
+
+export const read = (req, res) => {
+  const {questionPaperId} = req.params;
+
+  QuestionPaper.findById (questionPaperId)
+    .populate ('department', 'name')
+    .populate ('subject', 'name')
+    .populate ('uploadedBy', 'name')
+    .then (doc => {
+      res.status (200).json (doc);
+    })
+    .catch (err => {
+      res.status (400).json ({
+        err,
+        errorMessage: 'Unable to fetch Question Paper',
+      });
+    });
+};

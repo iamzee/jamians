@@ -32,3 +32,12 @@ export const getQuestionPapers = payload => {
     return data.questionPapers;
   });
 };
+
+export const readQuestionPaper = questionPaperId => {
+  return axios ({
+    method: 'get',
+    url: '/api/questionPaper/' + questionPaperId,
+  }).then (({data}) => {
+    return data;
+  });
+};
