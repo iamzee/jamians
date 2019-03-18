@@ -11,6 +11,7 @@ import {withStyles} from '@material-ui/core/styles';
 import {readQuestionPaper} from '../../api/questionPaper.api';
 
 import Navbar from '../components/Navbar';
+import Loader from '../../components/Loader';
 
 const styles = theme => ({
   card: {
@@ -48,7 +49,6 @@ class QuestionPaper extends React.Component {
   render () {
     const {questionPaper} = this.state;
     const {classes} = this.props;
-    // const {department, subject, semester, year, uploadedBy} = questionPaper;
 
     return (
       <div>
@@ -99,7 +99,7 @@ class QuestionPaper extends React.Component {
                 <Button className={classes.button}>Add bookmark</Button>
               </CardActions>
             </Card>
-          : <p>Loading</p>}
+          : <Loader color={'#e23e57'} />}
       </div>
     );
   }

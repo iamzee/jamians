@@ -14,6 +14,7 @@ import {semesters} from '../../helpers/note.helper';
 
 import QuestionPaperItem from '../components/QuestionPaperItem';
 import Navbar from '../components/Navbar';
+import Loader from '../../components/Loader';
 
 const styles = theme => ({
   root: {
@@ -63,6 +64,7 @@ class QuestionPaperList extends React.Component {
     department: null,
     subject: null,
     semester: '',
+    noQuestionPaper: false,
   };
 
   componentDidMount () {
@@ -79,13 +81,22 @@ class QuestionPaperList extends React.Component {
         subjects: user.department.subjects,
         department: {value: user.department._id, label: user.department.name},
       }));
+
+      if (questionPapers.length === 0) {
+        this.setState (() => ({noQuestionPaper: true}));
+      }
     });
   }
 
   onDepartmentChange = department => {
     console.log (department);
     // Change department state and subjects to NULL
-    this.setState (() => ({department, subjects: [], subject: null}));
+    this.setState (() => ({
+      department,
+      subjects: [],
+      subject: null,
+      questionPapers: [],
+    }));
 
     // Getting subjects asscoiated with a particular department
     readDepartment (department.value).then (({subjects}) => {
@@ -95,16 +106,19 @@ class QuestionPaperList extends React.Component {
     // Getting filteredQUestionPapers associated with a department
     getQuestionPapers ({
       departmentId: department.value,
-      subjectId: this.state.subject ? this.state.subject.value : '',
       semester: this.state.semester ? this.state.semester : '',
     }).then (questionPapers => {
-      this.setState (() => ({questionPapers}));
+      this.setState (() => ({questionPapers, noQuestionPaper: false}));
+
+      if (questionPapers.length === 0) {
+        this.setState (() => ({noQuestionPaper: true}));
+      }
     });
   };
 
   onSubjectChange = subject => {
     // Change subject state
-    this.setState (() => ({subject}));
+    this.setState (() => ({subject, questionPapers: []}));
 
     // Get filtered question papers
     getQuestionPapers ({
@@ -112,20 +126,28 @@ class QuestionPaperList extends React.Component {
       subjectId: subject.value,
       semester: this.state.semester ? this.state.semester : '',
     }).then (questionPapers => {
-      this.setState (() => ({questionPapers}));
+      this.setState (() => ({questionPapers, noQuestionPaper: false}));
+
+      if (questionPapers.length === 0) {
+        this.setState (() => ({noQuestionPaper: true}));
+      }
     });
   };
 
   onSemesterChange = e => {
     const semester = e.target.value;
-    this.setState (() => ({semester}));
+    this.setState (() => ({semester, questionPapers: []}));
 
     getQuestionPapers ({
       departmentId: this.state.department.value,
       subjectId: this.state.subject ? this.state.subject.value : '',
       semester,
     }).then (questionPapers => {
-      this.setState (() => ({questionPapers}));
+      this.setState (() => ({questionPapers, noQuestionPaper: false}));
+
+      if (questionPapers.length === 0) {
+        this.setState (() => ({noQuestionPaper: true}));
+      }
     });
   };
 
@@ -203,15 +225,21 @@ class QuestionPaperList extends React.Component {
 
           <Divider variant="middle" />
 
-          <List className={classes.list}>
-            {this.state.questionPapers.map ((questionPaper, i) => (
-              <QuestionPaperItem
-                key={questionPaper._id}
-                questionPaper={questionPaper}
-                i={i}
-              />
-            ))}
-          </List>
+          {this.state.noQuestionPaper
+            ? <p>No question paper</p>
+            : <div>
+                {this.state.questionPapers.length === 0
+                  ? <Loader color={'#e23e57'} />
+                  : <List className={classes.list}>
+                      {this.state.questionPapers.map ((questionPaper, i) => (
+                        <QuestionPaperItem
+                          key={questionPaper._id}
+                          questionPaper={questionPaper}
+                          i={i}
+                        />
+                      ))}
+                    </List>}
+              </div>}
 
         </div>
       </div>
