@@ -84,3 +84,16 @@ export const removeBookmark = (questionPaperId, userId) => {
     return data;
   });
 };
+
+export const getBookmarkedQuestionPapers = token => {
+  return axios ({
+    method: 'get',
+    url: '/api/questionPaper/bookmarks',
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }).then (({data}) => {
+    console.log (data);
+    return data.questionPapers;
+  });
+};

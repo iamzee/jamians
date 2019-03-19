@@ -120,8 +120,10 @@ export const listBookmarks = (req, res) => {
     .populate ('department', 'name')
     .populate ('subject', 'name')
     .populate ('uploadedBy', 'name')
-    .then (doc => {
-      res.status (200).json (doc);
+    .then (docs => {
+      res.status (200).json ({
+        questionPapers: docs,
+      });
     })
     .catch (err => {
       res.status (400).json ({

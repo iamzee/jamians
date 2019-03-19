@@ -13,6 +13,8 @@ import Note from '../Notes/components/Note';
 import Upload from '../QuestionPaper/pages/Upload';
 import QuestionPaperList from '../QuestionPaper/pages/QuestionPaperList';
 import QuestionPaper from '../QuestionPaper/components/QusetionPaper';
+import QuestionPaperBookmarkPage
+  from '../QuestionPaper/pages/QuestionPaperBookmarkPage';
 
 const history = createHistory ();
 
@@ -20,6 +22,10 @@ const MainRouter = () => (
   <Router history={history}>
     <Switch>
       <PrivateRoute path="/question_papers/upload" component={Upload} />
+      <PrivateRoute
+        path="/question_papers/bookmarks"
+        component={QuestionPaperBookmarkPage}
+      />
       <PrivateRoute
         path="/question_papers/:questionPaperId"
         component={QuestionPaper}

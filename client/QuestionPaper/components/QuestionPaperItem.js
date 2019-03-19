@@ -18,6 +18,7 @@ const styles = theme => ({
 
 class QuestionPaperItem extends React.Component {
   render () {
+    console.log ('hello');
     const {questionPaper, i, classes} = this.props;
     return (
       <Link
