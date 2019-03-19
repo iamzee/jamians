@@ -112,3 +112,21 @@ export const update = (req, res) => {
     }
   }
 };
+
+export const listBookmarks = (req, res) => {
+  const user = req.auth;
+
+  QuestionPaper.find ({bookmarks: {$eq: user._id}})
+    .populate ('department', 'name')
+    .populate ('subject', 'name')
+    .populate ('uploadedBy', 'name')
+    .then (doc => {
+      res.status (200).json (doc);
+    })
+    .catch (err => {
+      res.status (400).json ({
+        err,
+        errorMessage: 'Unable to list bookmarked question papers',
+      });
+    });
+};
