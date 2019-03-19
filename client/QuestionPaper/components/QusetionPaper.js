@@ -12,6 +12,7 @@ import {readQuestionPaper} from '../../api/questionPaper.api';
 
 import Navbar from '../components/Navbar';
 import Loader from '../../components/Loader';
+import BookmarkButton from '../components/BookmarkButton';
 
 const styles = theme => ({
   card: {
@@ -96,7 +97,7 @@ class QuestionPaper extends React.Component {
               </CardContent>
               <CardActions>
                 <Button className={classes.button}>View</Button>
-                <Button className={classes.button}>Add bookmark</Button>
+                <BookmarkButton questionPaper={questionPaper} />
               </CardActions>
             </Card>
           : <Loader color={'#e23e57'} />}

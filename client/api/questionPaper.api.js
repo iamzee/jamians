@@ -41,3 +41,46 @@ export const readQuestionPaper = questionPaperId => {
     return data;
   });
 };
+
+export const addBookmark = (questionPaperId, userId) => {
+  console.log (questionPaperId);
+  console.log (userId);
+  return axios ({
+    method: 'post',
+    url: '/api/questionPaper/' + questionPaperId,
+    data: JSON.stringify ({
+      type: 'ADD_BOOKMARK',
+      data: {
+        userId,
+      },
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then (({data}) => {
+      console.log (data);
+      return data;
+    })
+    .catch (err => {
+      console.log (err.response);
+    });
+};
+
+export const removeBookmark = (questionPaperId, userId) => {
+  return axios ({
+    method: 'post',
+    url: '/api/questionPaper/' + questionPaperId,
+    data: JSON.stringify ({
+      type: 'REMOVE_BOOKMARK',
+      data: {
+        userId,
+      },
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then (({data}) => {
+    return data;
+  });
+};
