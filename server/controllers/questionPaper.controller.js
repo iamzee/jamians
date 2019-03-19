@@ -67,3 +67,48 @@ export const read = (req, res) => {
       });
     });
 };
+
+export const update = (req, res) => {
+  const {type, data} = req.body;
+  const {questionPaperId} = req.params;
+
+  switch (type) {
+    case 'ADD_BOOKMARK': {
+      return QuestionPaper.findByIdAndUpdate (
+        questionPaperId,
+        {$push: {bookmarks: data.userId}},
+        {new: true}
+      )
+        .then (doc => {
+          res.status (200).json (doc);
+        })
+        .catch (err => {
+          res.status (400).json ({
+            err,
+            errorMessage: 'Unable to update question paper!',
+          });
+        });
+    }
+    case 'REMOVE_BOOKMARK': {
+      return QuestionPaper.findByIdAndUpdate (
+        questionPaperId,
+        {$pull: {bookmarks: data.userId}},
+        {new: true}
+      )
+        .then (doc => {
+          res.status (200).json (doc);
+        })
+        .catch (err => {
+          res.status (400).json ({
+            err,
+            errorMessage: 'Unable to update question paper!',
+          });
+        });
+    }
+    default: {
+      return res.status (400).json ({
+        errorMessage: 'Invalid action type!',
+      });
+    }
+  }
+};
