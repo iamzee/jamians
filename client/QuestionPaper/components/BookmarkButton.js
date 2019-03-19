@@ -67,7 +67,7 @@ class BookmarkButton extends React.Component {
               {this.state.loading ? 'Removing...' : 'Remove Bookmark'}
             </Button>
           : <Button className={classes.button} onClick={this.onAddBookmark}>
-              {this.state.loading ? 'Adding...' : 'Adding Bookmark'}
+              {this.state.loading ? 'Adding...' : 'Add Bookmark'}
             </Button>}
       </div>
     );
