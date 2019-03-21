@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import Subject from '../models/subject.model';
 
 const create = (req, res) => {
