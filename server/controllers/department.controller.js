@@ -7,7 +7,7 @@ export const create = (req, res) => {
 };
 
 export const list = (req, res) => {
-  Department.find ({}).then (docs => {
+  Department.find ({}).sort ('name').then (docs => {
     res.status (200).json ({
       departments: docs,
     });
@@ -18,7 +18,7 @@ export const read = (req, res) => {
   const {departmentId} = req.params;
 
   Department.findById (departmentId)
-    .populate ('subjects')
+    .populate ('courses', '_id name')
     .then (doc => {
       res.status (200).json (doc);
     })

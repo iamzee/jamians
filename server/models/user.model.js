@@ -34,6 +34,10 @@ const UserSchema = mongoose.Schema ({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Department',
   },
+  course: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
+  },
 });
 
 UserSchema.pre ('save', function (next) {

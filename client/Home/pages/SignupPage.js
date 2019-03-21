@@ -10,9 +10,10 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import red from '@material-ui/core/colors/red';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import MenuItem from '@material-ui/core/MenuItem';
 import {withStyles} from '@material-ui/core/styles';
 
-import {listDepartments} from '../../api/department.api';
+import {listDepartments, readDepartment} from '../../api/department.api';
 import {authenticate} from '../../helpers/auth.helper';
 import {signup} from '../../api/auth.api';
 import Navbar from '../components/Navbar';
@@ -66,6 +67,18 @@ const styles = theme => {
       marginRight: theme.spacing.unit * 2,
       color: theme.home.primary,
     },
+    cssLabel: {
+      '&$cssFocused': {
+        color: theme.home.primary,
+      },
+    },
+    cssFocused: {},
+    cssOutlinedInput: {
+      '&$cssFocused $notchedOutline': {
+        borderColor: theme.home.primary,
+      },
+    },
+    notchedOutline: {},
   };
 };
 
@@ -77,7 +90,11 @@ class SignupPage extends React.Component {
     error: '',
     departments: [],
     department: '',
+    courses: [],
+    course: '',
     loading: false,
+    showCourseLoader: false,
+    showCourses: false,
   };
 
   componentDidMount () {
@@ -102,7 +119,23 @@ class SignupPage extends React.Component {
   };
 
   onDepartmentChange = e => {
-    this.setState (() => ({department: e.value}));
+    this.setState (() => ({
+      department: e.value,
+      showCourseLoader: true,
+      showCourses: false,
+    }));
+    readDepartment (e.value).then (({courses}) => {
+      this.setState (() => ({
+        courses,
+        showCourseLoader: false,
+        showCourses: true,
+      }));
+    });
+  };
+
+  onCourseChange = e => {
+    const course = e.target.value;
+    this.setState (() => ({course}));
   };
 
   onSubmit = e => {
@@ -112,7 +145,8 @@ class SignupPage extends React.Component {
       !this.state.name ||
       !this.state.email ||
       !this.state.password ||
-      !this.state.department
+      !this.state.department ||
+      !this.state.course
     ) {
       this.setState (() => ({
         error: 'All fields are necessary!',
@@ -124,6 +158,7 @@ class SignupPage extends React.Component {
         email: this.state.email,
         password: this.state.password,
         department: this.state.department,
+        course: this.state.course,
       };
 
       signup (user).then (data => {
@@ -207,9 +242,8 @@ class SignupPage extends React.Component {
             />
             <br />
             <Select
-              isClearable
               className={classes.select}
-              placeholder="Select Department"
+              placeholder="Department"
               options={this.state.departments.map (department => {
                 return {
                   value: department._id,
@@ -226,6 +260,44 @@ class SignupPage extends React.Component {
               })}
               onChange={this.onDepartmentChange}
             /><br />
+
+            {this.state.showCourseLoader &&
+              <CircularProgress
+                className={classes.progress}
+                size={24}
+                variant="indeterminate"
+              />}
+
+            {this.state.showCourses &&
+              <TextField
+                className={classes.textField}
+                select
+                label="Course"
+                margin="normal"
+                variant="outlined"
+                value={this.state.course}
+                onChange={this.onCourseChange}
+                InputLabelProps={{
+                  classes: {
+                    root: classes.cssLabel,
+                    focused: classes.cssFocused,
+                  },
+                }}
+                InputProps={{
+                  classes: {
+                    root: classes.cssOutlinedInput,
+                    focused: classes.cssFocused,
+                    notchedOutline: classes.notchedOutline,
+                  },
+                }}
+              >
+                {this.state.courses.map (course => (
+                  <MenuItem key={course._id} value={course._id}>
+                    {course.name}
+                  </MenuItem>
+                ))}
+              </TextField>}
+
             {this.state.error &&
               <Typography variant="subtitle1" className={classes.error}>
                 {this.state.error}

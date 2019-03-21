@@ -15,7 +15,6 @@ export const readDepartment = departmentId => {
     url: '/api/department/' + departmentId,
   })
     .then (({data}) => {
-      console.log (data);
       return data;
     })
     .catch (err => {
