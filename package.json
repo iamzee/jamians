@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "nodemon --watch ./dist --exec \"node dist/server.bundle.js\"",
     "build:server": "webpack --watch --config webpack.config.server.js",
-    "build:client": "webpack --watch --config webpack.config.client.js"
+    "build:client": "webpack --watch --config webpack.config.client.js",
+    "build:prod:client": "webpack --config webpack.config.client.production.js",
+    "start": "node dist/server.bundle.js",
+    "heroku-postbuild": "npm run build:prod:client"
   },
   "author": "",
   "license": "ISC",
