@@ -7,9 +7,10 @@
     "dev": "nodemon --watch ./dist --exec \"node dist/server.bundle.js\"",
     "build:server": "webpack --watch --config webpack.config.server.js",
     "build:client": "webpack --watch --config webpack.config.client.js",
+    "build:prod:server": "webpack --config webpack.config.server.js -p",
     "build:prod:client": "webpack --config webpack.config.client.production.js",
     "start": "node dist/server.bundle.js",
-    "heroku-postbuild": "npm run build:prod:client"
+    "heroku-postbuild": "npm-run-all --parallel build:prod:*"
   },
   "author": "",
   "license": "ISC",
@@ -42,6 +43,7 @@
     "moment": "^2.24.0",
     "mongoose": "^5.4.16",
     "nodemon": "^1.18.10",
+    "npm-run-all": "^4.1.5",
     "prop-types": "^15.7.2",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",

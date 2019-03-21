@@ -3,3 +3,4 @@ problems.txt
 node_modules
 dist/
 config/
+public/

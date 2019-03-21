@@ -1,7 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-import path from 'path';
 
 import teacherRoutes from './routes/teacher.route';
 import subjectRoutes from './routes/subject.route';
@@ -13,16 +12,14 @@ import uploadRoutes from './routes/upload.route';
 import questionPaperRoutes from './routes/questionPaper.route';
 
 import template from '../template';
-
-import dotenv from 'dotenv';
-dotenv.load ({path: path.resolve (__dirname, '..', 'config', 'env')});
+import config from '../config/config';
 
 mongoose.Promise = global.Promise;
-mongoose.connect ('mongodb://localhost:27017/jamians');
+mongoose.connect (config.MONGODB_URI);
 
 const app = express ();
 
-app.use (express.static ('dist'));
+app.use (express.static ('public'));
 app.use (bodyParser.json ());
 
 app.use ('/', teacherRoutes);

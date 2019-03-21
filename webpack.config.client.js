@@ -5,8 +5,8 @@ module.exports = {
   entry: './client/client.js',
   output: {
     filename: 'client.bundle.js',
-    path: path.resolve (__dirname, 'dist'),
-    publicPath: '/dist/',
+    path: path.resolve (__dirname, 'public'),
+    publicPath: '/public',
   },
   module: {
     rules: [
