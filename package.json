@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "env": "node -r dotenv/config -r babel-core/register server/server.js ",
     "dev": "nodemon --watch ./dist --exec \"node dist/server.bundle.js\"",
     "build:server": "webpack --watch --config webpack.config.server.js",
     "build:client": "webpack --watch --config webpack.config.client.js",

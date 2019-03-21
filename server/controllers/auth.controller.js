@@ -1,7 +1,6 @@
 import User from '../models/user.model';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import config from '../../config/config';
 import expressJwt from 'express-jwt';
 
 const login = (req, res) => {
@@ -27,7 +26,7 @@ const login = (req, res) => {
             {
               _id: doc._id,
             },
-            config.jwtSecret,
+            process.env.JWT_SECRET,
             function (err, token) {
               if (err) {
                 return res.status (400).json ({
@@ -63,7 +62,7 @@ const logout = () => {
 };
 
 const requireSignin = expressJwt ({
-  secret: config.jwtSecret,
+  secret: process.env.JWT_SECRET,
   requestProperty: 'auth',
 });
 

@@ -1,3 +1,5 @@
+import '../config';
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
@@ -12,10 +14,10 @@ import uploadRoutes from './routes/upload.route';
 import questionPaperRoutes from './routes/questionPaper.route';
 
 import template from '../template';
-import config from '../config/config';
 
 mongoose.Promise = global.Promise;
-mongoose.connect (config.MONGODB_URI);
+console.log ('mongodb_url', process.env.MONGODB_URI);
+mongoose.connect (process.env.MONGODB_URI);
 
 const app = express ();
 

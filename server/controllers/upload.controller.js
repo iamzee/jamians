@@ -1,9 +1,8 @@
-import config from '../../config/config';
 import azure from 'azure-storage';
 
 export const generateSAS = (req, res) => {
   const blobService = azure.createBlobService (
-    config.AZURE_STORAGE_CONNECTION_STRING
+    process.env.AZURE_STORAGE_CONNECTION_STRING
   );
 
   const startDate = new Date ();

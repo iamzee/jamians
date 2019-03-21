@@ -1,6 +1,5 @@
 import User from '../models/user.model';
 import jwt from 'jsonwebtoken';
-import config from '../../config/config';
 
 export const create = (req, res) => {
   new User (req.body)
@@ -10,7 +9,7 @@ export const create = (req, res) => {
         {
           _id: doc._id,
         },
-        config.jwtSecret,
+        process.env.JWT_SECRET,
         function (err, token) {
           if (err) {
             return res.status (400).json ({
