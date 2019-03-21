@@ -9,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import red from '@material-ui/core/colors/red';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import {withStyles} from '@material-ui/core/styles';
 
 import {listDepartments} from '../../api/department.api';
@@ -60,6 +61,11 @@ const styles = theme => {
       fontWeight: 'bold',
       color: red[500],
     },
+    progress: {
+      marginLeft: theme.spacing.unit * 2,
+      marginRight: theme.spacing.unit * 2,
+      color: theme.home.primary,
+    },
   };
 };
 
@@ -71,6 +77,7 @@ class SignupPage extends React.Component {
     error: '',
     departments: [],
     department: '',
+    loading: false,
   };
 
   componentDidMount () {
@@ -99,13 +106,18 @@ class SignupPage extends React.Component {
   };
 
   onSubmit = e => {
+    this.setState (() => ({loading: true}));
+
     if (
       !this.state.name ||
       !this.state.email ||
       !this.state.password ||
       !this.state.department
     ) {
-      this.setState (() => ({error: 'All fields are necessary!'}));
+      this.setState (() => ({
+        error: 'All fields are necessary!',
+        loading: false,
+      }));
     } else {
       const user = {
         name: this.state.name,
@@ -116,8 +128,10 @@ class SignupPage extends React.Component {
 
       signup (user).then (data => {
         if (data.errorMessage) {
-          this.setState (() => ({error: data.errorMessage}));
+          this.setState (() => ({error: data.errorMessage, loading: false}));
         } else {
+          this.setState (() => ({loading: false}));
+
           authenticate (data, () => {
             this.props.history.push ('/');
           });
@@ -218,13 +232,22 @@ class SignupPage extends React.Component {
               </Typography>}
           </CardContent>
           <CardActions>
-            <Button
-              variant="contained"
-              className={classes.submit}
-              onClick={this.onSubmit}
-            >
-              Signup
-            </Button>
+            {this.state.loading
+              ? <Button variant="contained" className={classes.submit}>
+                  Signing up
+                  <CircularProgress
+                    className={classes.progress}
+                    size={24}
+                    variant="indeterminate"
+                  />
+                </Button>
+              : <Button
+                  variant="contained"
+                  className={classes.submit}
+                  onClick={this.onSubmit}
+                >
+                  Signup
+                </Button>}
           </CardActions>
         </Card>
       </div>
