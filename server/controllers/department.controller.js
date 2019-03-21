@@ -48,10 +48,28 @@ export const update = (req, res) => {
         .catch (err => {
           res.status (400).json ({
             err,
-            errorMessage: 'Unable to update department!',
+            errorMessage: 'Unable to add course!',
           });
         });
     }
+
+    case 'REMOVE_COURSE': {
+      return Department.findByIdAndUpdate (
+        departmentId,
+        {$pull: {courses: courseId}},
+        {new: true}
+      )
+        .then (doc => {
+          res.status (200).json (doc);
+        })
+        .catch (err => {
+          res.status (400).json ({
+            err,
+            errorMessage: 'Unable to remove course!',
+          });
+        });
+    }
+
     default: {
       return res.status (400).json ({
         errorMessage: 'Invalid action type!',
