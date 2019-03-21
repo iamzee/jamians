@@ -12,6 +12,12 @@ const DepartmentSchema = mongoose.Schema ({
       ref: 'Course',
     },
   ],
+  teachers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Teacher',
+    },
+  ],
 });
 
 const Department = mongoose.model ('Department', DepartmentSchema);

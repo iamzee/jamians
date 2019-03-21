@@ -33,7 +33,7 @@ export const read = (req, res) => {
 export const update = (req, res) => {
   const {departmentId} = req.params;
 
-  const {type, courseId} = req.body;
+  const {type, courseId, teacherId} = req.body;
 
   switch (type) {
     case 'ADD_COURSE': {
@@ -66,6 +66,40 @@ export const update = (req, res) => {
           res.status (400).json ({
             err,
             errorMessage: 'Unable to remove course!',
+          });
+        });
+    }
+
+    case 'ADD_TEACHER': {
+      return Department.findByIdAndUpdate (
+        departmentId,
+        {$push: {teachers: teacherId}},
+        {new: true}
+      )
+        .then (doc => {
+          res.status (200).json (doc);
+        })
+        .catch (err => {
+          res.status (400).json ({
+            err,
+            errorMessage: 'Unable to add teacher!',
+          });
+        });
+    }
+
+    case 'REMOVE_TEACHER': {
+      return Department.findByIdAndUpdate (
+        departmentId,
+        {$pull: {teachers: teacherId}},
+        {new: true}
+      )
+        .then (doc => {
+          res.status (200).json (doc);
+        })
+        .catch (err => {
+          res.status (400).json ({
+            err,
+            errorMessage: 'Unable to add teacher!',
           });
         });
     }

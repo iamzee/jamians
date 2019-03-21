@@ -3,6 +3,8 @@ import Select from 'react-select';
 import {withStyles} from '@material-ui/core/styles';
 
 import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 
 import NoteItem from '../components/NoteItem';
 import Navbar from '../components/Navbar';
@@ -22,6 +24,10 @@ const styles = theme => ({
     marginBottom: theme.spacing.unit * 2,
     fontFamily: 'Roboto',
     flex: 1,
+  },
+  title: {
+    fontWeight: 300,
+    color: theme.notes.primary,
   },
 });
 
@@ -107,7 +113,13 @@ class NotesPage extends React.Component {
         <Navbar title={'Notes Mania'} />
 
         <div className={classes.root}>
-          <div className={classes.filter}>
+
+          <Typography className={classes.title} variant="h4" gutterBottom>
+            Notes
+          </Typography>
+          <Divider />
+
+          {/* <div className={classes.filter}>
             <Select
               value={this.state.department}
               className={classes.select}
@@ -150,7 +162,7 @@ class NotesPage extends React.Component {
                 },
               })}
             />
-          </div>
+          </div> */}
 
           {this.state.noNotes
             ? <NoNotes />
