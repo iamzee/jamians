@@ -3,4 +3,4 @@ problems.txt
 node_modules
 dist/
 .env.development
-public/
+public/bundles

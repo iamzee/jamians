@@ -20,9 +20,9 @@ export default () => {
       </head>
       <body>
         <div id="root"></div>
-        <script type="text/javascript" src="/azure-storage.blob.js"></script>
-        <script type="text/javascript" src="/vendor.client.bundle.js"></script>
-        <script type="text/javascript" src="/client.bundle.js"></script>
+        <script type="text/javascript" src="/js/azure-storage.blob.js"></script>
+        <script type="text/javascript" src="/bundles/vendor.client.bundle.js"></script>
+        <script type="text/javascript" src="/bundles/client.bundle.js"></script>
       </body>
     </html>  
   `;
