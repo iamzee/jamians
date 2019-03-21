@@ -4,6 +4,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 
+import courseRoutes from './routes/course.route';
 import teacherRoutes from './routes/teacher.route';
 import subjectRoutes from './routes/subject.route';
 import departmentRoutes from './routes/department.route';
@@ -24,6 +25,7 @@ const app = express ();
 app.use (express.static ('public'));
 app.use (bodyParser.json ());
 
+app.use ('/', courseRoutes);
 app.use ('/', teacherRoutes);
 app.use ('/', subjectRoutes);
 app.use ('/', departmentRoutes);

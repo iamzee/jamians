@@ -6,10 +6,10 @@ const DepartmentSchema = mongoose.Schema ({
     required: 'Name is required',
     trim: true,
   },
-  subjects: [
+  courses: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Subject',
+      ref: 'Course',
     },
   ],
 });
