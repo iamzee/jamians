@@ -1,10 +1,16 @@
 import axios from 'axios';
 import uuid from 'uuid/v1';
 
-export const getSAS = () => {
+export const getSAS = containerName => {
   return axios ({
     method: 'get',
     url: '/generateSAS',
+    data: JSON.stringify ({
+      containerName,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
   }).then (({data}) => {
     return data.sasToken;
   });
@@ -40,7 +46,7 @@ export const upload = (sasToken, file, containerName) => {
   };
 };
 
-export const download = (sasToken, blobName) => {
+export const download = (sasToken, containerName, blobName) => {
   const blobUri = 'https://practice99.blob.core.windows.net';
   const token = `?${sasToken}`;
 
@@ -48,7 +54,6 @@ export const download = (sasToken, blobName) => {
     blobUri,
     token
   );
-  const containerName = 'notes';
 
   const downloadLink = blobService.getUrl (containerName, blobName);
 

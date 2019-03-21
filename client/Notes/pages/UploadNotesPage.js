@@ -150,7 +150,7 @@ class UploadNotesPage extends React.Component {
     } else {
       this.setState (() => ({uploading: true, error: ''}));
 
-      getSAS ().then (sasToken => {
+      getSAS ('notes').then (sasToken => {
         const {speedSummary, blobName} = upload (
           sasToken,
           this.state.file,

@@ -137,7 +137,7 @@ class Upload extends React.Component {
     } else {
       this.setState (() => ({uploading: true, error: ''}));
 
-      getSAS ().then (sasToken => {
+      getSAS ('question-papers').then (sasToken => {
         const {speedSummary, blobName} = upload (
           sasToken,
           this.state.file,

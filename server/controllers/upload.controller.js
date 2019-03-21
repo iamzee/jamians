@@ -1,6 +1,7 @@
 import azure from 'azure-storage';
 
 export const generateSAS = (req, res) => {
+  const {containerName} = req.body;
   const blobService = azure.createBlobService (
     process.env.AZURE_STORAGE_CONNECTION_STRING
   );
@@ -21,7 +22,7 @@ export const generateSAS = (req, res) => {
   };
 
   const sasToken = blobService.generateSharedAccessSignature (
-    'question-papers',
+    containerName,
     null,
     sharedAccessPolicy
   );

@@ -48,8 +48,8 @@ class Note extends React.Component {
   }
 
   onView = () => {
-    getSAS ().then (token => {
-      const downloadLink = download (token, this.state.note.name);
+    getSAS ('notes').then (token => {
+      const downloadLink = download (token, 'notes', this.state.note.name);
       window.open (downloadLink, '_blank');
     });
   };
