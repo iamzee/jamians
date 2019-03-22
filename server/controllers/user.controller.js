@@ -44,7 +44,27 @@ export const create = (req, res) => {
 
 export const userById = (req, res, next, id) => {
   User.findById (id)
-    .populate ('department')
+    .populate ({
+      path: 'department',
+      populate: {
+        path: 'courses',
+        select: '_id name',
+      },
+    })
+    .populate ({
+      path: 'department',
+      populate: {
+        path: 'teachers',
+        select: '_id name',
+      },
+    })
+    .populate ({
+      path: 'course',
+      populate: {
+        path: 'subjects',
+        select: '_id name',
+      },
+    })
     .then (user => {
       if (!user) {
         return res.status (400).json ({

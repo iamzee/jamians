@@ -2,6 +2,7 @@ import azure from 'azure-storage';
 
 export const generateSAS = (req, res) => {
   const {containerName} = req.body;
+  console.log (req.body);
   const blobService = azure.createBlobService (
     process.env.AZURE_STORAGE_CONNECTION_STRING
   );

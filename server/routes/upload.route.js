@@ -3,6 +3,6 @@ import {generateSAS} from '../controllers/upload.controller';
 
 const router = express.Router ();
 
-router.route ('/generateSAS').get (generateSAS);
+router.route ('/generateSAS').post (generateSAS);
 
 export default router;

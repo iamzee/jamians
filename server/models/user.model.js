@@ -77,6 +77,7 @@ UserSchema.methods.toJSON = function () {
     'createdAt',
     '_id',
     'department',
+    'course',
   ]);
 };
 

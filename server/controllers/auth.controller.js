@@ -10,7 +10,22 @@ const login = (req, res) => {
     .populate ({
       path: 'department',
       populate: {
+        path: 'courses',
+        select: '_id name',
+      },
+    })
+    .populate ({
+      path: 'department',
+      populate: {
+        path: 'teachers',
+        select: '_id name',
+      },
+    })
+    .populate ({
+      path: 'course',
+      populate: {
         path: 'subjects',
+        select: '_id name',
       },
     })
     .then (doc => {

@@ -2,8 +2,9 @@ import axios from 'axios';
 import uuid from 'uuid/v1';
 
 export const getSAS = containerName => {
+  console.log (containerName);
   return axios ({
-    method: 'get',
+    method: 'post',
     url: '/generateSAS',
     data: JSON.stringify ({
       containerName,

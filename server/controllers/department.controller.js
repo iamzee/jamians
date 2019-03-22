@@ -19,6 +19,7 @@ export const read = (req, res) => {
 
   Department.findById (departmentId)
     .populate ('courses', '_id name')
+    .populate ('teachers', '_id name')
     .then (doc => {
       res.status (200).json (doc);
     })

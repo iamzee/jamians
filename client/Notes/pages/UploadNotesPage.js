@@ -14,8 +14,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import {withStyles} from '@material-ui/core/styles';
 
 import {getSAS, upload} from '../../api/upload.api';
-import {listTeachers} from '../../api/teacher.api';
 import {listDepartments, readDepartment} from '../../api/department.api';
+import {readCourse} from '../../api/course.api';
 import {createNote} from '../../api/note.api';
 import {isAuthenticated} from '../../helpers/auth.helper';
 import {semesters} from '../../helpers/note.helper';
@@ -31,6 +31,7 @@ const styles = theme => ({
     marginBottom: theme.spacing.unit * 5,
   },
   title: {
+    fontWeight: 300,
     marginBottom: theme.spacing.unit * 2,
   },
   chooseFileButton: {
@@ -72,11 +73,13 @@ class UploadNotesPage extends React.Component {
   state = {
     file: null,
     teachers: [],
-    teacher: null,
+    teacher: '',
     subjects: [],
-    subject: null,
+    subject: '',
     departments: [],
     department: {},
+    courses: [],
+    course: '',
     topic: '',
     description: '',
     semester: '',
@@ -84,13 +87,11 @@ class UploadNotesPage extends React.Component {
     progressPercent: 0,
     uploading: false,
     open: false,
+    showLoader: false,
+    showTextFields: true,
   };
 
   componentDidMount () {
-    listTeachers ().then (teachers => {
-      this.setState (() => ({teachers}));
-    });
-
     listDepartments ().then (departments => {
       this.setState (() => ({departments}));
     });
@@ -99,6 +100,10 @@ class UploadNotesPage extends React.Component {
     this.setState (() => ({
       subjects: user.department.subjects,
       department: {value: user.department._id, label: user.department.name},
+      courses: user.department.courses,
+      teachers: user.department.teachers,
+      course: user.course._id,
+      subjects: user.course.subjects,
     }));
   }
 
@@ -118,24 +123,45 @@ class UploadNotesPage extends React.Component {
   };
 
   onDepartmentChange = department => {
-    this.setState (() => ({department, subject: null}));
-
-    readDepartment (department.value).then (({subjects}) => {
-      this.setState (() => ({subjects}));
+    this.setState (() => ({
+      department,
+      course: '',
+      teacher: '',
+      showLoader: true,
+      showTextFields: false,
+    }));
+    readDepartment (department.value).then (({courses, teachers}) => {
+      this.setState (() => ({
+        courses,
+        teachers,
+        showLoader: false,
+        showTextFields: true,
+      }));
     });
   };
 
-  onTeacherChange = teacher => {
+  onTeacherChange = e => {
+    const teacher = e.target.value;
     this.setState (() => ({teacher}));
   };
 
-  onSubjectChange = subject => {
+  onSubjectChange = e => {
+    const subject = e.target.value;
     this.setState (() => ({subject}));
   };
 
   onSemesterChange = e => {
     const semester = e.target.value;
     this.setState (() => ({semester}));
+  };
+
+  onCourseChange = e => {
+    const course = e.target.value;
+    this.setState (() => ({course, subject: ''}));
+
+    readCourse (course).then (({subjects}) => {
+      this.setState (() => ({subjects}));
+    });
   };
 
   onSubmit = e => {
@@ -170,8 +196,9 @@ class UploadNotesPage extends React.Component {
               topic: this.state.topic,
               description: this.state.description,
               department: this.state.department.value,
-              teacher: this.state.teacher.value,
-              subject: this.state.subject.value,
+              course: this.state.course,
+              teacher: this.state.teacher,
+              subject: this.state.subject,
               semester: this.state.semester,
               uploadedBy: user._id,
             };
@@ -197,7 +224,7 @@ class UploadNotesPage extends React.Component {
         <Navbar />
         <Card className={classes.card}>
           <CardContent>
-            <Typography className={classes.title} variant="h5">
+            <Typography className={classes.title} variant="h4">
               Upload Notes
             </Typography>
             <input
@@ -238,7 +265,8 @@ class UploadNotesPage extends React.Component {
               multiline
               rows="2"
             />
-            <br /><TextField
+            <br />
+            <TextField
               className={classes.textField}
               select
               value={this.state.semester}
@@ -262,25 +290,63 @@ class UploadNotesPage extends React.Component {
               })}
               onChange={this.onDepartmentChange}
             /><br />
-            <Select
-              placeholder="Select Teacher"
-              className={classes.select}
-              options={this.state.teachers.map (teacher => {
-                return {value: teacher._id, label: teacher.name};
-              })}
-              onChange={this.onTeacherChange}
-            /><br />
-            <Select
-              placeholder="Select Subject"
-              className={classes.select}
-              options={this.state.subjects.map (subject => {
-                return {
-                  value: subject._id,
-                  label: subject.name,
-                };
-              })}
-              onChange={this.onSubjectChange}
-            />
+
+            {this.state.showLoader &&
+              <CircularProgress
+                className={classes.progress}
+                size={24}
+                variant="indeterminate"
+              />}
+
+            {this.state.showTextFields &&
+              <div>
+                <TextField
+                  className={classes.textField}
+                  select
+                  value={this.state.course}
+                  onChange={this.onCourseChange}
+                  margin="normal"
+                  label="Course"
+                  variant="outlined"
+                >
+                  {this.state.courses.map (course => (
+                    <MenuItem key={course._id} value={course._id}>
+                      {course.name}
+                    </MenuItem>
+                  ))}
+                </TextField><br />
+                <TextField
+                  className={classes.textField}
+                  select
+                  value={this.state.teacher}
+                  onChange={this.onTeacherChange}
+                  margin="normal"
+                  label="Teacher"
+                  variant="outlined"
+                >
+                  {this.state.teachers.map (teacher => (
+                    <MenuItem key={teacher._id} value={teacher._id}>
+                      {teacher.name}
+                    </MenuItem>
+                  ))}
+                </TextField><br />
+                <TextField
+                  className={classes.textField}
+                  select
+                  value={this.state.subject}
+                  onChange={this.onSubjectChange}
+                  margin="normal"
+                  label="Subject"
+                  variant="outlined"
+                >
+                  {this.state.subjects.map (subject => (
+                    <MenuItem key={subject._id} value={subject._id}>
+                      {subject.name}
+                    </MenuItem>
+                  ))}
+                </TextField><br />
+              </div>}
+
             {this.state.error && <Typography>{this.state.error}</Typography>}
           </CardContent>
           <CardActions>
