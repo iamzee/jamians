@@ -35,6 +35,10 @@ const NoteSchema = mongoose.Schema ({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Department',
   },
+  course: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Department',
+  },
   bookmarks: [
     {
       type: mongoose.Schema.Types.ObjectId,

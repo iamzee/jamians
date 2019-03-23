@@ -16,17 +16,19 @@ const create = (req, res) => {
 
 const list = (req, res) => {
   let queryObject = {};
-  const {subject, department} = req.query;
+  const {department, subject, course} = req.query;
 
-  if (department && subject) {
-    queryObject = {department, subject};
-  } else if (department) {
-    queryObject = {department};
+  if (subject) {
+    queryObject = {department, course, subject};
+  } else {
+    queryObject = {department, course};
   }
 
   Note.find (queryObject)
-    .populate ('teacher')
-    .populate ('subject')
+    .populate ('department', 'name')
+    .populate ('course', 'name')
+    .populate ('teacher', 'name')
+    .populate ('subject', 'name')
     .then (doc => {
       res.status (200).send ({
         notes: doc,

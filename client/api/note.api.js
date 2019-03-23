@@ -13,27 +13,18 @@ export const createNote = note => {
   });
 };
 
-export const listNotes = () => {
-  return axios ({
-    method: 'get',
-    url: '/api/note',
-  }).then (({data}) => {
-    return data.notes;
-  });
-};
-
-export const getFilteredNotes = (departmentId, subjectId) => {
-  if (departmentId && subjectId) {
+export const listNotes = ({departmentId, courseId, subjectId}) => {
+  if (subjectId) {
     return axios ({
       method: 'get',
-      url: `/api/note/?department=${departmentId}&subject=${subjectId}`,
+      url: `/api/note/?department=${departmentId}&course=${courseId}&subject=${subjectId}`,
     }).then (({data}) => {
       return data.notes;
     });
-  } else if (departmentId) {
+  } else {
     return axios ({
       method: 'get',
-      url: `/api/note/?department=${departmentId}`,
+      url: `/api/note/?department=${departmentId}&course=${courseId}`,
     }).then (({data}) => {
       return data.notes;
     });

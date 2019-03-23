@@ -12,8 +12,9 @@ import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
+
+import {isAuthenticated} from '../../helpers/auth.helper';
 
 const styles = theme => ({
   root: {
@@ -55,6 +56,8 @@ class Navbar extends React.Component {
   state = {
     open: false,
     redirectToHome: false,
+    department: '',
+    course: '',
   };
 
   toggleDrawer = open => () => {
@@ -64,6 +67,15 @@ class Navbar extends React.Component {
   onHomeClick = () => {
     this.setState (() => ({redirectToHome: true}));
   };
+
+  componentDidMount () {
+    const {user} = isAuthenticated ();
+
+    this.setState (() => ({
+      department: user.department._id,
+      course: user.course._id,
+    }));
+  }
 
   render () {
     const {classes} = this.props;
@@ -114,7 +126,10 @@ class Navbar extends React.Component {
                 <Divider variant="middle" />
                 <List>
 
-                  <Link to="/notes" className={classes.link}>
+                  <Link
+                    to={`/notes?departmentId=${this.state.department}&courseId=${this.state.course}`}
+                    className={classes.link}
+                  >
                     <ListItem button className={classes.listItem}>
                       <ListItemText primary={'Notes'} />
                     </ListItem>
