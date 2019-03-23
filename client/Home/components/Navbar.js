@@ -60,6 +60,8 @@ class Navbar extends React.Component {
     open: false,
     redirectToSignup: false,
     redirectToLogin: false,
+    department: '',
+    course: '',
   };
 
   toggleDrawer = open => () => {
@@ -79,6 +81,14 @@ class Navbar extends React.Component {
       this.setState (() => ({redirectToLogin: true}));
     });
   };
+
+  componentDidMount () {
+    const {user} = isAuthenticated ();
+    this.setState (() => ({
+      department: user.department._id,
+      course: user.course._id,
+    }));
+  }
 
   render () {
     const {classes} = this.props;
@@ -147,7 +157,10 @@ class Navbar extends React.Component {
                 <Divider variant="middle" />
                 <List>
 
-                  <Link to="/notes" className={classes.link}>
+                  <Link
+                    to={`/notes?departmentId=${this.state.department}&courseId=${this.state.course}`}
+                    className={classes.link}
+                  >
                     <ListItem button className={classes.listItem}>
                       <ListItemText primary={'Notes'} />
                     </ListItem>
