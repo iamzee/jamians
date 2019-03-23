@@ -1,6 +1,8 @@
 import React from 'react';
 
 import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import {withStyles} from '@material-ui/core/styles';
 
 import {getBookmarkedNotes} from '../../api/note.api';
@@ -15,6 +17,17 @@ const styles = theme => ({
   list: {
     maxWidth: 600,
     margin: 'auto',
+  },
+  root: {
+    maxWidth: 600,
+    margin: 'auto',
+  },
+  title: {
+    fontWeight: 300,
+    color: theme.notes.primary,
+  },
+  notesSection: {
+    marginTop: theme.spacing.unit * 2,
   },
 });
 
@@ -39,17 +52,29 @@ class NotesBookmarkPage extends React.Component {
     return (
       <div>
         <Navbar />
-        {this.state.noNotes
-          ? <NoNotes />
-          : <div>
-              {this.state.notes.length === 0
-                ? <Loader color="#00adb5" />
-                : <List className={classes.list}>
-                    {this.state.notes.map (note => (
-                      <NoteItem key={note._id} note={note} />
-                    ))}
-                  </List>}
-            </div>}
+
+        <div className={classes.root}>
+          <Typography className={classes.title} variant="h4" gutterBottom>
+            Bookmarks
+          </Typography>
+          <Divider />
+
+          <div className={classes.notesSection}>
+            {this.state.noNotes
+              ? <NoNotes />
+              : <div>
+                  {this.state.notes.length === 0
+                    ? <Loader color="#00adb5" />
+                    : <List className={classes.list}>
+                        {this.state.notes.map (note => (
+                          <NoteItem key={note._id} note={note} />
+                        ))}
+                      </List>}
+                </div>}
+          </div>
+
+        </div>
+
       </div>
     );
   }

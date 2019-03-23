@@ -78,15 +78,29 @@ class Note extends React.Component {
                     </span>
                   </Typography>
                   <Typography variant="caption">
+                    Uploaded By:
+                    {' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {note.uploadedBy.name}
+                    </span>
+                  </Typography>
+                  <Typography variant="caption">
                     Semester:
                     {' '}
                     <span style={{fontWeight: 'bold'}}>{note.semester}</span>
                   </Typography>
                   <Typography variant="caption">
-                    Uploaded By:
+                    Department:
                     {' '}
                     <span style={{fontWeight: 'bold'}}>
-                      {note.uploadedBy.name}
+                      {note.department.name}
+                    </span>
+                  </Typography>
+                  <Typography variant="caption">
+                    Course:
+                    {' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {note.course.name}
                     </span>
                   </Typography>
                   <Typography variant="caption">

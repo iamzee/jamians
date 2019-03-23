@@ -14,17 +14,24 @@ export const createNote = note => {
 };
 
 export const listNotes = ({departmentId, courseId, subjectId}) => {
-  if (subjectId) {
+  if (courseId && subjectId) {
     return axios ({
       method: 'get',
       url: `/api/note/?department=${departmentId}&course=${courseId}&subject=${subjectId}`,
     }).then (({data}) => {
       return data.notes;
     });
-  } else {
+  } else if (courseId) {
     return axios ({
       method: 'get',
       url: `/api/note/?department=${departmentId}&course=${courseId}`,
+    }).then (({data}) => {
+      return data.notes;
+    });
+  } else {
+    return axios ({
+      method: 'get',
+      url: `/api/note/?department=${departmentId}`,
     }).then (({data}) => {
       return data.notes;
     });

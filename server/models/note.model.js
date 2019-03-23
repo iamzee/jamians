@@ -37,7 +37,7 @@ const NoteSchema = mongoose.Schema ({
   },
   course: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Department',
+    ref: 'Course',
   },
   bookmarks: [
     {

@@ -31,6 +31,22 @@ const styles = theme => ({
     marginBottom: theme.spacing.unit * 2,
     color: theme.notes.primary,
   },
+  filterButton: {
+    backgroundColor: theme.notes.tertiary,
+
+    '&:hover': {
+      backgroundColor: theme.notes.primary,
+      color: '#fff',
+    },
+  },
+  dialogButton: {
+    color: theme.notes.tertiary,
+
+    '&:hover': {
+      backgroundColor: theme.notes.primary,
+      color: '#fff',
+    },
+  },
 });
 
 class NotesFilter extends React.Component {
@@ -76,6 +92,7 @@ class NotesFilter extends React.Component {
       department,
       showCourseLoader: true,
       showCourses: false,
+      showSubjects: false,
     }));
 
     readDepartment (department).then (({courses}) => {
@@ -84,6 +101,7 @@ class NotesFilter extends React.Component {
         showCourseLoader: false,
         showCourses: true,
         course: '',
+        subject: '',
       }));
     });
   };
@@ -112,14 +130,16 @@ class NotesFilter extends React.Component {
   };
 
   onApplyFilter = () => {
-    if (this.state.subject) {
+    if (this.state.subject && this.state.course) {
       this.props.history.push (
         `/notes?departmentId=${this.state.department}&courseId=${this.state.course}&subjectId=${this.state.subject}`
       );
-    } else {
+    } else if (this.state.course) {
       this.props.history.push (
         `/notes?departmentId=${this.state.department}&courseId=${this.state.course}`
       );
+    } else {
+      this.props.history.push (`/notes?departmentId=${this.state.department}`);
     }
     this.setState (() => ({open: false}));
   };
@@ -128,7 +148,13 @@ class NotesFilter extends React.Component {
     const {classes} = this.props;
     return (
       <div>
-        <Button onClick={this.onOpen}>Filter Notes</Button>
+        <Button
+          variant="contained"
+          className={classes.filterButton}
+          onClick={this.onOpen}
+        >
+          Filter Notes
+        </Button>
         <Dialog
           className={classes.dialog}
           open={this.state.open}
@@ -209,8 +235,15 @@ class NotesFilter extends React.Component {
 
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.onClose}>Cancel</Button>
-            <Button onClick={this.onApplyFilter}>Apply Filter</Button>
+            <Button className={classes.dialogButton} onClick={this.onClose}>
+              Cancel
+            </Button>
+            <Button
+              className={classes.dialogButton}
+              onClick={this.onApplyFilter}
+            >
+              Apply Filter
+            </Button>
           </DialogActions>
         </Dialog>
       </div>

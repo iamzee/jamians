@@ -18,10 +18,12 @@ const list = (req, res) => {
   let queryObject = {};
   const {department, subject, course} = req.query;
 
-  if (subject) {
+  if (course && subject) {
     queryObject = {department, course, subject};
-  } else {
+  } else if (course) {
     queryObject = {department, course};
+  } else {
+    queryObject = {department};
   }
 
   Note.find (queryObject)
@@ -91,6 +93,8 @@ const read = (req, res) => {
   const noteId = req.params.noteId;
 
   Note.findById (noteId)
+    .populate ('department', 'name')
+    .populate ('course', 'name')
     .populate ('uploadedBy', 'name')
     .populate ('teacher', 'name')
     .populate ('subject', 'name')

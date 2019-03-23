@@ -29,6 +29,7 @@ class NotesList extends React.Component {
 
   componentDidUpdate (prevProps) {
     if (this.props.queryString !== prevProps.queryString) {
+      this.setState (() => ({notes: []}));
       const parsed = queryString.parse (this.props.queryString);
       listNotes (parsed).then (notes => {
         this.setState (() => ({notes, noNotes: false}));
