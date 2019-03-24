@@ -9,67 +9,20 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
 import {withStyles} from '@material-ui/core/styles';
 
 import {semesters} from '../../helpers/note.helper';
 import {listDepartments, readDepartment} from '../../api/department.api';
+import {readCourse} from '../../api/course.api';
 import {isAuthenticated} from '../../helpers/auth.helper';
 import {years} from '../../helpers/questionPaper.helper';
 import {getSAS, upload} from '../../api/upload.api';
 import {createQuestionPaper} from '../../api/questionPaper.api';
 
+import styles from '../styles/upload.style';
 import Navbar from '../components/Navbar';
-
-const styles = theme => ({
-  card: {
-    maxWidth: 600,
-    margin: 'auto',
-    textAlign: 'center',
-    marginBottom: theme.spacing.unit * 5,
-  },
-  title: {
-    marginBottom: theme.spacing.unit * 2,
-    color: theme.questionPaper.primary,
-  },
-  chooseFileButton: {
-    marginBottom: theme.spacing.unit * 2,
-    backgroundColor: theme.questionPaper.tertiary,
-    '&:hover': {
-      backgroundColor: theme.questionPaper.secondary,
-    },
-  },
-  textField: {
-    width: 300,
-    margin: 'auto',
-    marginBottom: theme.spacing.unit * 2,
-  },
-  select: {
-    width: 300,
-    margin: 'auto',
-    fontFamily: 'Roboto',
-  },
-  fileInput: {
-    display: 'none',
-  },
-  button: {
-    margin: 'auto',
-    marginBottom: theme.spacing.unit * 2,
-    backgroundColor: theme.questionPaper.primary,
-    color: '#fff',
-
-    '&:hover': {
-      backgroundColor: theme.questionPaper.secondary,
-    },
-  },
-  progress: {
-    marginLeft: theme.spacing.unit * 2,
-    marginRight: theme.spacing.unit * 2,
-    color: theme.questionPaper.tertiary,
-  },
-  margin: {
-    margin: theme.spacing.unit,
-  },
-});
+import SnackbarContentWrapper from '../../components/SnackbarContentWrapper';
 
 class Upload extends React.Component {
   state = {
@@ -78,11 +31,18 @@ class Upload extends React.Component {
     departments: [],
     subjects: [],
     department: null,
-    subject: null,
+    subject: '',
+    courses: [],
+    course: '',
     year: '',
     error: '',
     progressPercent: 0,
     uploading: false,
+    showCourseLoader: false,
+    showCourses: true,
+    showSubjectLoader: false,
+    showSubjects: true,
+    openSnackbar: false,
   };
 
   componentDidMount () {
@@ -94,6 +54,10 @@ class Upload extends React.Component {
     this.setState (() => ({
       subjects: user.department.subjects,
       department: {value: user.department._id, label: user.department.name},
+      courses: user.department.courses,
+      teachers: user.department.teachers,
+      course: user.course._id,
+      subjects: user.course.subjects,
     }));
   }
 
@@ -109,14 +73,44 @@ class Upload extends React.Component {
   };
 
   onDepartmentChange = department => {
-    this.setState (() => ({department, subject: null}));
-
-    readDepartment (department.value).then (({subjects}) => {
-      this.setState (() => ({subjects}));
+    this.setState (() => ({
+      department,
+      course: '',
+      teacher: '',
+      showCourseLoader: true,
+      showCourses: false,
+    }));
+    readDepartment (department.value).then (({courses, teachers}) => {
+      this.setState (() => ({
+        courses,
+        teachers,
+        showCourseLoader: false,
+        showCourses: true,
+        showSubjects: false,
+      }));
     });
   };
 
-  onSubjectChange = subject => {
+  onCourseChange = e => {
+    const course = e.target.value;
+    this.setState (() => ({
+      course,
+      subject: '',
+      showSubjectLoader: true,
+      showSubjects: false,
+    }));
+
+    readCourse (course).then (({subjects}) => {
+      this.setState (() => ({
+        subjects,
+        showSubjectLoader: false,
+        showSubjects: true,
+      }));
+    });
+  };
+
+  onSubjectChange = e => {
+    const subject = e.target.value;
     this.setState (() => ({subject}));
   };
 
@@ -155,19 +149,24 @@ class Upload extends React.Component {
             const questionPaper = {
               name: blobName,
               department: this.state.department.value,
-              subject: this.state.subject.value,
+              course: this.state.course,
+              subject: this.state.subject,
               semester: this.state.semester,
               year: this.state.year,
               uploadedBy: user._id,
             };
 
             createQuestionPaper (questionPaper).then (data => {
-              this.setState (() => ({uploading: false, open: true}));
+              this.setState (() => ({uploading: false, openSnackbar: true}));
             });
           }
         });
       });
     }
+  };
+
+  handleSnackbarClose = () => {
+    this.setState (() => ({openSnackbar: false}));
   };
 
   render () {
@@ -179,9 +178,11 @@ class Upload extends React.Component {
 
         <Card className={classes.card}>
           <CardContent>
-            <Typography className={classes.title} variant="h5">
+
+            <Typography className={classes.title} variant="h4">
               Upload Question Paper
             </Typography>
+
             <input
               accept="application/pdf"
               type="file"
@@ -203,6 +204,7 @@ class Upload extends React.Component {
                 {this.state.file.name}
               </Typography>}
             <br />
+
             <TextField
               value={this.state.semester}
               onChange={this.onSemesterChange}
@@ -219,6 +221,7 @@ class Upload extends React.Component {
               ))}
             </TextField>
             <br />
+
             <TextField
               className={classes.textField}
               select
@@ -235,15 +238,13 @@ class Upload extends React.Component {
               ))}
             </TextField>
             <br />
+
             <Select
-              className={classes.select}
               value={this.state.department}
-              placeholder="Select Department"
+              placeholder="Department"
+              className={classes.select}
               options={this.state.departments.map (department => {
-                return {
-                  value: department._id,
-                  label: department.name,
-                };
+                return {value: department._id, label: department.name};
               })}
               onChange={this.onDepartmentChange}
               theme={theme => ({
@@ -256,27 +257,59 @@ class Upload extends React.Component {
               })}
             />
             <br />
-            <Select
-              className={classes.select}
-              value={this.state.subject}
-              placeholder="Select Subject"
-              options={this.state.subjects.map (subject => {
-                return {
-                  value: subject._id,
-                  label: subject.name,
-                };
-              })}
-              onChange={this.onSubjectChange}
-              theme={theme => ({
-                ...theme,
-                colors: {
-                  ...theme.colors,
-                  primary25: '#e23e57',
-                  primary: '#522546',
-                },
-              })}
-            />
-            <br />
+
+            {this.state.showCourseLoader &&
+              <CircularProgress
+                className={classes.progress}
+                size={24}
+                variant="indeterminate"
+              />}
+
+            {this.state.showCourses &&
+              <div>
+                <TextField
+                  className={classes.textField}
+                  select
+                  value={this.state.course}
+                  onChange={this.onCourseChange}
+                  margin="normal"
+                  label="Course"
+                  variant="outlined"
+                >
+                  {this.state.courses.map (course => (
+                    <MenuItem key={course._id} value={course._id}>
+                      {course.name}
+                    </MenuItem>
+                  ))}
+                </TextField><br />
+
+                {this.state.showSubjectLoader &&
+                  <CircularProgress
+                    className={classes.progress}
+                    size={24}
+                    variant="indeterminate"
+                  />}
+
+                {this.state.showSubjects &&
+                  <TextField
+                    className={classes.textField}
+                    select
+                    value={this.state.subject}
+                    onChange={this.onSubjectChange}
+                    margin="normal"
+                    label="Subject"
+                    variant="outlined"
+                  >
+                    {this.state.subjects.map (subject => (
+                      <MenuItem key={subject._id} value={subject._id}>
+                        {subject.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>}
+
+                <br />
+              </div>}
+
             {this.state.error && <Typography>{this.state.error}</Typography>}
           </CardContent>
           <CardActions>
@@ -302,6 +335,23 @@ class Upload extends React.Component {
                 </Button>}
           </CardActions>
         </Card>
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.openSnackbar}
+          onClose={this.handleClose}
+        >
+          <SnackbarContentWrapper
+            onClose={this.handleSnackbarClose}
+            variant="success"
+            message="Question Paper Uploaded!!"
+            className={classes.margin}
+          />
+        </Snackbar>
+
       </div>
     );
   }

@@ -8,6 +8,10 @@ const questionPaperSchema = mongoose.Schema ({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Department',
   },
+  course: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
+  },
   subject: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Subject',
