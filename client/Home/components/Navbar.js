@@ -83,11 +83,13 @@ class Navbar extends React.Component {
   };
 
   componentDidMount () {
-    const {user} = isAuthenticated ();
-    this.setState (() => ({
-      department: user.department._id,
-      course: user.course._id,
-    }));
+    if (isAuthenticated ()) {
+      const {user} = isAuthenticated ();
+      this.setState (() => ({
+        department: user.department._id,
+        course: user.course._id,
+      }));
+    }
   }
 
   render () {
@@ -155,24 +157,27 @@ class Navbar extends React.Component {
                 </div>
 
                 <Divider variant="middle" />
-                <List>
 
-                  <Link
-                    to={`/notes?departmentId=${this.state.department}&courseId=${this.state.course}`}
-                    className={classes.link}
-                  >
-                    <ListItem button className={classes.listItem}>
-                      <ListItemText primary={'Notes'} />
-                    </ListItem>
-                  </Link>
+                {isAuthenticated () &&
+                  <List>
 
-                  <Link to="/question_papers/upload" className={classes.link}>
-                    <ListItem button className={classes.listItem}>
-                      <ListItemText primary={'Question Papers'} />
-                    </ListItem>
-                  </Link>
+                    <Link
+                      to={`/notes?departmentId=${this.state.department}&courseId=${this.state.course}`}
+                      className={classes.link}
+                    >
+                      <ListItem button className={classes.listItem}>
+                        <ListItemText primary={'Notes'} />
+                      </ListItem>
+                    </Link>
 
-                </List>
+                    <Link to="/question_papers/upload" className={classes.link}>
+                      <ListItem button className={classes.listItem}>
+                        <ListItemText primary={'Question Papers'} />
+                      </ListItem>
+                    </Link>
+
+                  </List>}
+
               </div>
             </div>
           </Drawer>
