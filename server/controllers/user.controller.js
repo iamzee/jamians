@@ -2,27 +2,13 @@ import User from '../models/user.model';
 import jwt from 'jsonwebtoken';
 
 export const create = (req, res) => {
-  new User (req.body)
+  const user = new User (req.body);
+  user
     .save ()
     .then (doc => {
-      jwt.sign (
-        {
-          _id: doc._id,
-        },
-        process.env.JWT_SECRET,
-        function (err, token) {
-          if (err) {
-            return res.status (400).json ({
-              err,
-              errorMessage: 'Unable to create account',
-            });
-          }
-          res.status (200).json ({
-            token,
-            user: doc,
-          });
-        }
-      );
+      res.status (200).json ({
+        message: 'Account created',
+      });
     })
     .catch (err => {
       let errorMessage = 'Unable to create User';

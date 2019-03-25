@@ -166,10 +166,7 @@ class SignupPage extends React.Component {
           this.setState (() => ({error: data.errorMessage, loading: false}));
         } else {
           this.setState (() => ({loading: false}));
-
-          authenticate (data, () => {
-            this.props.history.push ('/');
-          });
+          this.props.history.push ('/login?new=true');
         }
       });
     }

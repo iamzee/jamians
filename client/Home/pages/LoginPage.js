@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import queryString from 'query-string';
 
+import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
@@ -17,6 +19,18 @@ import Navbar from '../components/Navbar';
 
 const styles = theme => {
   return {
+    newAccount: {
+      ...theme.mixins.gutters (),
+      paddingTop: theme.spacing.unit * 2,
+      paddingBottom: theme.spacing.unit * 2,
+      maxWidth: 400,
+      margin: 'auto',
+      marginBottom: theme.spacing.unit * 5,
+      textAlign: 'center',
+    },
+    newAccount__title: {
+      color: theme.home.primary,
+    },
     card: {
       maxWidth: 400,
       margin: 'auto',
@@ -107,10 +121,23 @@ class LoginPage extends React.Component {
   };
 
   render () {
+    const parsed = queryString.parse (this.props.location.search);
     const {classes} = this.props;
     return (
       <div>
         <Navbar />
+        {parsed.new &&
+          <Paper className={classes.newAccount}>
+            <Typography variant="h6" className={classes.newAccount__title}>
+              Account created
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              className={classes.newAccount__subtitle}
+            >
+              Login to your account
+            </Typography>
+          </Paper>}
         <Card className={classes.card}>
           <CardContent>
             <Typography className={classes.title} variant="h5">
