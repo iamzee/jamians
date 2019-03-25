@@ -170,7 +170,10 @@ class Navbar extends React.Component {
                       </ListItem>
                     </Link>
 
-                    <Link to="/question_papers/upload" className={classes.link}>
+                    <Link
+                      to={`/question_papers?departmentId=${this.state.department}&courseId=${this.state.course}`}
+                      className={classes.link}
+                    >
                       <ListItem button className={classes.listItem}>
                         <ListItemText primary={'Question Papers'} />
                       </ListItem>
