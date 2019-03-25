@@ -11,6 +11,7 @@ import {isAuthenticated} from '../../helpers/auth.helper';
 import QuestionPaperItem from '../components/QuestionPaperItem';
 import Loader from '../../components/Loader';
 import Navbar from '../components/Navbar';
+import NoQuestionPaper from '../components/NoQuestionPaper';
 
 const styles = theme => ({
   root: {
@@ -55,7 +56,7 @@ class QuestionPaperBookmarkPage extends React.Component {
           </Typography>
           <Divider />
           {this.state.noBookmarks
-            ? <div>No bookmarks</div>
+            ? <NoQuestionPaper />
             : <div>
                 {this.state.questionPapers.length === 0
                   ? <Loader color={'#e23e57'} />

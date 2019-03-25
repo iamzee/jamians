@@ -144,11 +144,19 @@ class QuestionPaperFilter extends React.Component {
           </DialogContent>
 
           <DialogActions>
-            <Button onClick={this.onClose}>
+            <Button className={classes.actionButton} onClick={this.onClose}>
               Cancel
             </Button>
-            <Button onClick={this.handleClearFilter}>Clear Filter</Button>
-            <Button onClick={this.onApplyFilter}>
+            <Button
+              className={classes.actionButton}
+              onClick={this.handleClearFilter}
+            >
+              Clear Filter
+            </Button>
+            <Button
+              className={classes.actionButton}
+              onClick={this.onApplyFilter}
+            >
               Apply Filter
             </Button>
           </DialogActions>

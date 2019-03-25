@@ -7,17 +7,23 @@ import {listQuestionPapers} from '../../api/questionPaper.api';
 
 import QuestionPaperItem from './QuestionPaperItem';
 import Loader from '../../components/Loader';
+import NoQuestionPaper from './NoQuestionPaper';
 
 class QuestionPaperList extends React.Component {
   state = {
     questionPapers: [],
+    noQuestionPaper: false,
   };
 
   componentDidMount () {
     const parsed = queryString.parse (this.props.queryString);
 
     listQuestionPapers (parsed).then (questionPapers => {
-      this.setState (() => ({questionPapers}));
+      this.setState (() => ({questionPapers, noQuestionPaper: false}));
+
+      if (questionPapers.length === 0) {
+        this.setState (() => ({noQuestionPaper: true}));
+      }
     });
   }
 
@@ -26,7 +32,11 @@ class QuestionPaperList extends React.Component {
       this.setState (() => ({questionPapers: []}));
       const parsed = queryString.parse (this.props.queryString);
       listQuestionPapers (parsed).then (questionPapers => {
-        this.setState (() => ({questionPapers}));
+        this.setState (() => ({questionPapers, noQuestionPaper: false}));
+
+        if (questionPapers.length === 0) {
+          this.setState (() => ({noQuestionPaper: true}));
+        }
       });
     }
   }
@@ -35,7 +45,7 @@ class QuestionPaperList extends React.Component {
     return (
       <div>
         {this.state.noQuestionPaper
-          ? <p>No question paper</p>
+          ? <NoQuestionPaper />
           : <div>
               {this.state.questionPapers.length === 0
                 ? <Loader color={'#e23e57'} />

@@ -17,4 +17,12 @@ export default theme => ({
       color: '#fff',
     },
   },
+  actionButton: {
+    color: theme.questionPaper.tertiary,
+
+    '&:hover': {
+      backgroundColor: theme.questionPaper.tertiary,
+      color: '#fff',
+    },
+  },
 });
