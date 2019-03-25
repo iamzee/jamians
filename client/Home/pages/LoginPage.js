@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
+import validator from 'validator';
 
 import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
@@ -100,6 +101,11 @@ class LoginPage extends React.Component {
     if (!this.state.email || !this.state.password) {
       this.setState (() => ({
         error: 'All fields are necessary!',
+        loading: false,
+      }));
+    } else if (!validator.isEmail (this.state.email)) {
+      this.setState (() => ({
+        error: 'Enter a valid email address!',
         loading: false,
       }));
     } else {

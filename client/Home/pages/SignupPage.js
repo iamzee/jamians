@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import validator from 'validator';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -14,7 +15,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import {withStyles} from '@material-ui/core/styles';
 
 import {listDepartments, readDepartment} from '../../api/department.api';
-import {authenticate} from '../../helpers/auth.helper';
 import {signup} from '../../api/auth.api';
 import Navbar from '../components/Navbar';
 
@@ -150,6 +150,11 @@ class SignupPage extends React.Component {
     ) {
       this.setState (() => ({
         error: 'All fields are necessary!',
+        loading: false,
+      }));
+    } else if (!validator.isEmail (this.state.email)) {
+      this.setState (() => ({
+        error: 'Enter a valid email address!',
         loading: false,
       }));
     } else {
