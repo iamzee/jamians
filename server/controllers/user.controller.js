@@ -86,3 +86,16 @@ export const userById = (req, res, next, id) => {
 export const read = (req, res) => {
   res.status (200).json (req.profile);
 };
+
+export const count = (req, res) => {
+  User.count ()
+    .then (count => {
+      res.status (200).json ({count});
+    })
+    .catch (err => {
+      res.status (400).json ({
+        err,
+        errorMessage: 'Unable to get count',
+      });
+    });
+};

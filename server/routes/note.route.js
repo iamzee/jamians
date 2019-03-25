@@ -10,6 +10,8 @@ router
   .route ('/api/note/bookmarks')
   .get (authCtrl.requireSignin, noteCtrl.getBookmarkedNotes);
 
+router.route ('/api/note/count').get (noteCtrl.count);
+
 router.route ('/api/note/:noteId').get (noteCtrl.read);
 
 router.route ('/api/note/addBookmark').post (noteCtrl.addBookmark);

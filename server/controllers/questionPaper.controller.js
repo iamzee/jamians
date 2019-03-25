@@ -143,3 +143,16 @@ export const listBookmarks = (req, res) => {
       });
     });
 };
+
+export const count = (req, res) => {
+  QuestionPaper.count ()
+    .then (count => {
+      res.status (200).json ({count});
+    })
+    .catch (err => {
+      res.status (400).json ({
+        err,
+        errorMessage: 'Unable to count notes.',
+      });
+    });
+};

@@ -115,6 +115,19 @@ const read = (req, res) => {
     });
 };
 
+const count = (req, res) => {
+  Note.count ()
+    .then (count => {
+      res.status (200).json ({count});
+    })
+    .catch (err => {
+      res.status (400).json ({
+        err,
+        errorMessage: 'Unable to count notes.',
+      });
+    });
+};
+
 export default {
   create,
   list,
@@ -122,4 +135,5 @@ export default {
   removeBookmark,
   getBookmarkedNotes,
   read,
+  count,
 };
