@@ -65,6 +65,7 @@ export const read = (req, res) => {
 
   QuestionPaper.findById (questionPaperId)
     .populate ('department', 'name')
+    .populate ('course', 'name')
     .populate ('subject', 'name')
     .populate ('uploadedBy', 'name')
     .then (doc => {

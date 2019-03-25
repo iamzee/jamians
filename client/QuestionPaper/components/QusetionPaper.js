@@ -73,6 +73,13 @@ class QuestionPaper extends React.Component {
                     </span>
                   </Typography>
                   <Typography variant="caption">
+                    Course:
+                    {' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {questionPaper.course.name}
+                    </span>
+                  </Typography>
+                  <Typography variant="caption">
                     Subject:
                     {' '}
                     <span style={{fontWeight: 'bold'}}>
