@@ -13,16 +13,16 @@ export const createQuestionPaper = data => {
   });
 };
 
-export const getQuestionPapers = payload => {
-  const {departmentId, subjectId, semester} = payload;
-  let query = `department=${departmentId}`;
+export const listQuestionPapers = payload => {
+  const {departmentId, courseId, subjectId, semester} = payload;
+  let query = `department=${departmentId}&course=${courseId}`;
 
   if (subjectId && semester) {
-    query = `department=${departmentId}&subject=${subjectId}&semester=${semester}`;
+    query = `department=${departmentId}&course=${courseId}&subject=${subjectId}&semester=${semester}`;
   } else if (subjectId) {
-    query = `department=${departmentId}&subject=${subjectId}`;
+    query = `department=${departmentId}&course=${courseId}&subject=${subjectId}`;
   } else if (semester) {
-    query = `department=${departmentId}&semester=${semester}`;
+    query = `department=${departmentId}&course=${courseId}&semester=${semester}`;
   }
 
   return axios ({

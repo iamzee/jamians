@@ -15,24 +15,34 @@ export const create = (req, res) => {
 };
 
 export const list = (req, res) => {
-  const {department, semester, subject} = req.query;
-  let queryObject = {department};
+  const {department, course, subject, semester} = req.query;
+  let queryObject = {};
+
+  console.log (req.query);
 
   if (subject && semester) {
     queryObject = {
       department,
+      course,
       subject,
       semester,
     };
   } else if (subject) {
     queryObject = {
       department,
+      course,
       subject,
     };
   } else if (semester) {
     queryObject = {
       department,
+      course,
       semester,
+    };
+  } else {
+    queryObject = {
+      department,
+      course,
     };
   }
 

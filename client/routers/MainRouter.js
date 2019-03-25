@@ -11,7 +11,8 @@ import NotesPage from '../Notes/pages/NotesPage';
 import NotesBookmarkPage from '../Notes/pages/NotesBookmarkPage';
 import Note from '../Notes/components/Note';
 import Upload from '../QuestionPaper/pages/Upload';
-import QuestionPaperList from '../QuestionPaper/pages/QuestionPaperList';
+import QuestionPaperDashboard
+  from '../QuestionPaper/pages/QuestionPaperDashboard';
 import QuestionPaper from '../QuestionPaper/components/QusetionPaper';
 import QuestionPaperBookmarkPage
   from '../QuestionPaper/pages/QuestionPaperBookmarkPage';
@@ -30,7 +31,10 @@ const MainRouter = () => (
         path="/question_papers/:questionPaperId"
         component={QuestionPaper}
       />
-      <PrivateRoute path="/question_papers" component={QuestionPaperList} />
+      <PrivateRoute
+        path="/question_papers"
+        component={QuestionPaperDashboard}
+      />
       <PrivateRoute path="/notes/upload" component={UploadNotesPage} />
       <PrivateRoute path="/notes/bookmarks" component={NotesBookmarkPage} />
       <PrivateRoute path="/notes/:noteId" component={Note} />

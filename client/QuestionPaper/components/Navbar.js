@@ -14,6 +14,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 
+import {isAuthenticated} from '../../helpers/auth.helper';
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -55,7 +57,18 @@ class Navbar extends React.Component {
   state = {
     open: false,
     redirectToHome: false,
+    department: '',
+    course: '',
   };
+
+  componentDidMount () {
+    const {user} = isAuthenticated ();
+
+    this.setState (() => ({
+      department: user.department._id,
+      course: user.course._id,
+    }));
+  }
 
   toggleDrawer = open => () => {
     this.setState (() => ({open}));
@@ -114,7 +127,10 @@ class Navbar extends React.Component {
                 <Divider variant="middle" />
                 <List>
 
-                  <Link to="/question_papers" className={classes.link}>
+                  <Link
+                    to={`/question_papers?departmentId=${this.state.department}&courseId=${this.state.course}`}
+                    className={classes.link}
+                  >
                     <ListItem button className={classes.listItem}>
                       <ListItemText primary={'Question Papers'} />
                     </ListItem>
