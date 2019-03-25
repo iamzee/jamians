@@ -56,7 +56,7 @@ export const download = (sasToken, containerName, blobName) => {
     token
   );
 
-  const downloadLink = blobService.getUrl (containerName, blobName);
+  const downloadLink = blobService.getUrl (containerName, blobName, sasToken);
 
   return downloadLink;
 };

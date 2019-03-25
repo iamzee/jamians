@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
 import {readQuestionPaper} from '../../api/questionPaper.api';
+import {getSAS, download} from '../../api/upload.api';
 
 import Navbar from '../components/Navbar';
 import Loader from '../../components/Loader';
@@ -46,6 +47,18 @@ class QuestionPaper extends React.Component {
       this.setState (() => ({questionPaper}));
     });
   }
+
+  handleView = () => {
+    getSAS ('question-papers').then (token => {
+      console.log (token);
+      const downloadLink = download (
+        token,
+        'question-papers',
+        this.state.questionPaper.name
+      );
+      window.open (downloadLink, '_blank');
+    });
+  };
 
   render () {
     const {questionPaper} = this.state;
@@ -103,7 +116,9 @@ class QuestionPaper extends React.Component {
                 </div>
               </CardContent>
               <CardActions>
-                <Button className={classes.button}>View</Button>
+                <Button onClick={this.handleView} className={classes.button}>
+                  View
+                </Button>
                 <BookmarkButton questionPaper={questionPaper} />
               </CardActions>
             </Card>

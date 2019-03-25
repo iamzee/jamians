@@ -22,7 +22,7 @@ const styles = theme => ({
     textAlign: 'center',
   },
   textField: {
-    width: 300,
+    width: 200,
     margin: 'auto',
     marginBottom: theme.spacing.unit * 2,
   },
