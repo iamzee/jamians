@@ -128,6 +128,8 @@ class Upload extends React.Component {
       !this.state.file
     ) {
       this.setState (() => ({error: 'All fields are necessary!'}));
+    } else if (this.state.file.type !== 'application/pdf') {
+      this.setState (() => ({error: 'Upload only pdf file.'}));
     } else {
       this.setState (() => ({uploading: true, error: ''}));
 
