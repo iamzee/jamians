@@ -5,7 +5,7 @@ import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 
 import MainRouter from './routers/MainRouter';
 
-const theme = createMuiTheme ({
+const theme = createMuiTheme({
   palette: {
     primary: {
       main: '#35234b',
@@ -29,14 +29,17 @@ const theme = createMuiTheme ({
     secondary: '#88304e',
     tertiary: '#e23e57',
   },
+  chat: {
+    primary: '#fff1c1',
+  },
   typography: {
     useNextVariants: true,
   },
 });
 
-ReactDOM.render (
+ReactDOM.render(
   <MuiThemeProvider theme={theme}>
     <MainRouter />
   </MuiThemeProvider>,
-  document.getElementById ('root')
+  document.getElementById('root')
 );

@@ -16,12 +16,12 @@ import {withStyles} from '@material-ui/core/styles';
 
 import {authenticate} from '../../helpers/auth.helper';
 import {login} from '../../api/auth.api';
-import Navbar from '../components/Navbar';
+import Navbar from '../../components/Navbar';
 
 const styles = theme => {
   return {
     newAccount: {
-      ...theme.mixins.gutters (),
+      ...theme.mixins.gutters(),
       paddingTop: theme.spacing.unit * 2,
       paddingBottom: theme.spacing.unit * 2,
       maxWidth: 400,
@@ -87,24 +87,24 @@ class LoginPage extends React.Component {
 
   onEmailChange = e => {
     const email = e.target.value;
-    this.setState (() => ({email}));
+    this.setState(() => ({email}));
   };
 
   onPasswordChange = e => {
     const password = e.target.value;
-    this.setState (() => ({password}));
+    this.setState(() => ({password}));
   };
 
   onSubmit = e => {
-    this.setState (() => ({loading: true}));
+    this.setState(() => ({loading: true}));
 
     if (!this.state.email || !this.state.password) {
-      this.setState (() => ({
+      this.setState(() => ({
         error: 'All fields are necessary!',
         loading: false,
       }));
-    } else if (!validator.isEmail (this.state.email)) {
-      this.setState (() => ({
+    } else if (!validator.isEmail(this.state.email)) {
+      this.setState(() => ({
         error: 'Enter a valid email address!',
         loading: false,
       }));
@@ -113,26 +113,26 @@ class LoginPage extends React.Component {
         email: this.state.email,
         password: this.state.password,
       };
-      login (user).then (data => {
+      login(user).then(data => {
         if (data.errorMessage) {
-          this.setState (() => ({error: data.errorMessage, loading: false}));
+          this.setState(() => ({error: data.errorMessage, loading: false}));
         } else {
-          authenticate (data, () => {
-            this.setState (() => ({loading: false, error: ''}));
-            this.props.history.push ('/');
+          authenticate(data, () => {
+            this.setState(() => ({loading: false, error: ''}));
+            this.props.history.push('/');
           });
         }
       });
     }
   };
 
-  render () {
-    const parsed = queryString.parse (this.props.location.search);
+  render() {
+    const parsed = queryString.parse(this.props.location.search);
     const {classes} = this.props;
     return (
       <div>
-        <Navbar />
-        {parsed.new &&
+        <Navbar title={'Jamians'} />
+        {parsed.new && (
           <Paper className={classes.newAccount}>
             <Typography variant="h6" className={classes.newAccount__title}>
               Account created
@@ -143,7 +143,8 @@ class LoginPage extends React.Component {
             >
               Login to your account
             </Typography>
-          </Paper>}
+          </Paper>
+        )}
         <Card className={classes.card}>
           <CardContent>
             <Typography className={classes.title} variant="h5">
@@ -185,30 +186,31 @@ class LoginPage extends React.Component {
               onChange={this.onPasswordChange}
             />
             <br />
-            {this.state.error &&
+            {this.state.error && (
               <Typography variant="subtitle1" className={classes.error}>
                 {this.state.error}
-              </Typography>}
+              </Typography>
+            )}
           </CardContent>
           <CardActions>
-
-            {this.state.loading
-              ? <Button variant="contained" className={classes.submit}>
-                  Loging in
-                  <CircularProgress
-                    className={classes.progress}
-                    size={24}
-                    variant="indeterminate"
-                  />
-                </Button>
-              : <Button
-                  variant="contained"
-                  className={classes.submit}
-                  onClick={this.onSubmit}
-                >
-                  Login
-                </Button>}
-
+            {this.state.loading ? (
+              <Button variant="contained" className={classes.submit}>
+                Loging in
+                <CircularProgress
+                  className={classes.progress}
+                  size={24}
+                  variant="indeterminate"
+                />
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                className={classes.submit}
+                onClick={this.onSubmit}
+              >
+                Login
+              </Button>
+            )}
           </CardActions>
         </Card>
       </div>
@@ -220,4 +222,4 @@ LoginPage.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles (styles) (LoginPage);
+export default withStyles(styles)(LoginPage);

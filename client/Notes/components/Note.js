@@ -13,7 +13,7 @@ import {read} from '../../api/note.api';
 import {getSAS, download} from '../../api/upload.api';
 
 import BookmarkButton from './BookmarkButton';
-import Navbar from './Navbar';
+import Navbar from '../../components/Navbar';
 import Loader from '../../components/Loader';
 
 const styles = theme => ({
@@ -40,97 +40,87 @@ class Note extends React.Component {
     note: null,
   };
 
-  componentDidMount () {
+  componentDidMount() {
     const {noteId} = this.props.match.params;
-    read (noteId).then (note => {
-      this.setState (() => ({note}));
+    read(noteId).then(note => {
+      this.setState(() => ({note}));
     });
   }
 
   onView = () => {
-    getSAS ('notes').then (token => {
-      const downloadLink = download (token, 'notes', this.state.note.name);
-      window.open (downloadLink, '_blank');
+    getSAS('notes').then(token => {
+      const downloadLink = download(token, 'notes', this.state.note.name);
+      window.open(downloadLink, '_blank');
     });
   };
 
-  render () {
+  render() {
     const {note} = this.state;
     const {classes} = this.props;
 
     return (
       <div>
-        <Navbar />
-        {note
-          ? <Card className={classes.card}>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>{note.topic}</Typography>
-                <Typography variant="subtitle1" gutterBottom>
-                  {note.description}
+        <Navbar title={'Notes'} />
+        {note ? (
+          <Card className={classes.card}>
+            <CardContent>
+              <Typography variant="h5" gutterBottom>
+                {note.topic}
+              </Typography>
+              <Typography variant="subtitle1" gutterBottom>
+                {note.description}
+              </Typography>
+              <Divider />
+              <div className={classes.contentBody}>
+                <Typography variant="caption">
+                  Uploaded On:{' '}
+                  <span style={{fontWeight: 'bold'}}>
+                    {moment(note.uploadedOn).format('Mo MMM YYYY')}
+                  </span>
                 </Typography>
-                <Divider />
-                <div className={classes.contentBody}>
-                  <Typography variant="caption">
-                    Uploaded On:
-                    {' '}
-                    <span style={{fontWeight: 'bold'}}>
-                      {moment (note.uploadedOn).format ('Mo MMM YYYY')}
-                    </span>
-                  </Typography>
-                  <Typography variant="caption">
-                    Uploaded By:
-                    {' '}
-                    <span style={{fontWeight: 'bold'}}>
-                      {note.uploadedBy.name}
-                    </span>
-                  </Typography>
-                  <Typography variant="caption">
-                    Semester:
-                    {' '}
-                    <span style={{fontWeight: 'bold'}}>{note.semester}</span>
-                  </Typography>
-                  <Typography variant="caption">
-                    Department:
-                    {' '}
-                    <span style={{fontWeight: 'bold'}}>
-                      {note.department.name}
-                    </span>
-                  </Typography>
-                  <Typography variant="caption">
-                    Course:
-                    {' '}
-                    <span style={{fontWeight: 'bold'}}>
-                      {note.course.name}
-                    </span>
-                  </Typography>
-                  <Typography variant="caption">
-                    Subject:
-                    {' '}
-                    <span style={{fontWeight: 'bold'}}>
-                      {note.subject.name}
-                    </span>
-                  </Typography>
-                  <Typography variant="caption">
-                    Teacher:
-                    {' '}
-                    <span style={{fontWeight: 'bold'}}>
-                      {note.teacher.name}
-                    </span>
-                  </Typography>
-                </div>
-              </CardContent>
-              <CardActions>
-                <Button className={classes.button} onClick={this.onView}>
-                  View
-                </Button>
-                <BookmarkButton note={note} />
-              </CardActions>
-            </Card>
-          : <Loader color="#00adb5" />}
-
+                <Typography variant="caption">
+                  Uploaded By:{' '}
+                  <span style={{fontWeight: 'bold'}}>
+                    {note.uploadedBy.name}
+                  </span>
+                </Typography>
+                <Typography variant="caption">
+                  Semester:{' '}
+                  <span style={{fontWeight: 'bold'}}>{note.semester}</span>
+                </Typography>
+                <Typography variant="caption">
+                  Department:{' '}
+                  <span style={{fontWeight: 'bold'}}>
+                    {note.department.name}
+                  </span>
+                </Typography>
+                <Typography variant="caption">
+                  Course:{' '}
+                  <span style={{fontWeight: 'bold'}}>{note.course.name}</span>
+                </Typography>
+                <Typography variant="caption">
+                  Subject:{' '}
+                  <span style={{fontWeight: 'bold'}}>{note.subject.name}</span>
+                </Typography>
+                <Typography variant="caption">
+                  Teacher:{' '}
+                  <span style={{fontWeight: 'bold'}}>{note.teacher.name}</span>
+                </Typography>
+              </div>
+            </CardContent>
+            <CardActions>
+              <Button className={classes.button} onClick={this.onView}>
+                View
+              </Button>
+              <BookmarkButton note={note} />
+            </CardActions>
+          </Card>
+        ) : (
+          <Loader color="#00adb5" />
+        )}
       </div>
     );
   }
 }
 
-export default withStyles (styles) (Note);
+export default withStyles(styles)(Note);

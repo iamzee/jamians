@@ -3,6 +3,7 @@ import '../config';
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+import socketIO from 'socket.io';
 
 import courseRoutes from './routes/course.route';
 import teacherRoutes from './routes/teacher.route';
@@ -13,8 +14,12 @@ import userRoutes from './routes/user.route';
 import authRoutes from './routes/auth.route';
 import uploadRoutes from './routes/upload.route';
 import questionPaperRoutes from './routes/questionPaper.route';
+import chatRoutes from './routes/chat.route';
+import discussionRoutes from './routes/discussion.route';
 
 import template from '../template';
+
+import socketio from './socketio/socketio';
 
 mongoose.Promise = global.Promise;
 console.log ('mongodb_url', process.env.MONGODB_URI);
@@ -34,6 +39,8 @@ app.use ('/', userRoutes);
 app.use ('/', authRoutes);
 app.use ('/', uploadRoutes);
 app.use ('/', questionPaperRoutes);
+app.use ('/', chatRoutes);
+app.use ('/', discussionRoutes);
 
 app.get ('*', (req, res) => {
   res.send (template ());
@@ -41,6 +48,9 @@ app.get ('*', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen (PORT, () => {
+const expressServer = app.listen (PORT, () => {
   console.log (`Server is up at port ${PORT}`);
 });
+
+const io = socketIO (expressServer);
+socketio (io);

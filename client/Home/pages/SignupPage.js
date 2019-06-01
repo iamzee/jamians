@@ -16,7 +16,7 @@ import {withStyles} from '@material-ui/core/styles';
 
 import {listDepartments, readDepartment} from '../../api/department.api';
 import {signup} from '../../api/auth.api';
-import Navbar from '../components/Navbar';
+import Navbar from '../../components/Navbar';
 
 const styles = theme => {
   return {
@@ -97,35 +97,35 @@ class SignupPage extends React.Component {
     showCourses: false,
   };
 
-  componentDidMount () {
-    listDepartments ().then (departments => {
-      this.setState (() => ({departments}));
+  componentDidMount() {
+    listDepartments().then(departments => {
+      this.setState(() => ({departments}));
     });
   }
 
   onNameChange = e => {
     const name = e.target.value;
-    this.setState (() => ({name}));
+    this.setState(() => ({name}));
   };
 
   onEmailChange = e => {
     const email = e.target.value;
-    this.setState (() => ({email}));
+    this.setState(() => ({email}));
   };
 
   onPasswordChange = e => {
     const password = e.target.value;
-    this.setState (() => ({password}));
+    this.setState(() => ({password}));
   };
 
   onDepartmentChange = e => {
-    this.setState (() => ({
+    this.setState(() => ({
       department: e.value,
       showCourseLoader: true,
       showCourses: false,
     }));
-    readDepartment (e.value).then (({courses}) => {
-      this.setState (() => ({
+    readDepartment(e.value).then(({courses}) => {
+      this.setState(() => ({
         courses,
         showCourseLoader: false,
         showCourses: true,
@@ -135,11 +135,11 @@ class SignupPage extends React.Component {
 
   onCourseChange = e => {
     const course = e.target.value;
-    this.setState (() => ({course}));
+    this.setState(() => ({course}));
   };
 
   onSubmit = e => {
-    this.setState (() => ({loading: true}));
+    this.setState(() => ({loading: true}));
 
     if (
       !this.state.name ||
@@ -148,12 +148,12 @@ class SignupPage extends React.Component {
       !this.state.department ||
       !this.state.course
     ) {
-      this.setState (() => ({
+      this.setState(() => ({
         error: 'All fields are necessary!',
         loading: false,
       }));
-    } else if (!validator.isEmail (this.state.email)) {
-      this.setState (() => ({
+    } else if (!validator.isEmail(this.state.email)) {
+      this.setState(() => ({
         error: 'Enter a valid email address!',
         loading: false,
       }));
@@ -166,23 +166,23 @@ class SignupPage extends React.Component {
         course: this.state.course,
       };
 
-      signup (user).then (data => {
+      signup(user).then(data => {
         if (data.errorMessage) {
-          this.setState (() => ({error: data.errorMessage, loading: false}));
+          this.setState(() => ({error: data.errorMessage, loading: false}));
         } else {
-          this.setState (() => ({loading: false}));
-          this.props.history.push ('/login?new=true');
+          this.setState(() => ({loading: false}));
+          this.props.history.push('/login?new=true');
         }
       });
     }
   };
 
-  render () {
+  render() {
     const {classes} = this.props;
 
     return (
       <div>
-        <Navbar />
+        <Navbar title={'Jamians'} />
         <Card className={classes.card}>
           <CardContent>
             <Typography className={classes.title} variant="h5">
@@ -246,7 +246,7 @@ class SignupPage extends React.Component {
             <Select
               className={classes.select}
               placeholder="Department"
-              options={this.state.departments.map (department => {
+              options={this.state.departments.map(department => {
                 return {
                   value: department._id,
                   label: department.name,
@@ -261,16 +261,18 @@ class SignupPage extends React.Component {
                 },
               })}
               onChange={this.onDepartmentChange}
-            /><br />
+            />
+            <br />
 
-            {this.state.showCourseLoader &&
+            {this.state.showCourseLoader && (
               <CircularProgress
                 className={classes.progress}
                 size={24}
                 variant="indeterminate"
-              />}
+              />
+            )}
 
-            {this.state.showCourses &&
+            {this.state.showCourses && (
               <TextField
                 className={classes.textField}
                 select
@@ -293,35 +295,39 @@ class SignupPage extends React.Component {
                   },
                 }}
               >
-                {this.state.courses.map (course => (
+                {this.state.courses.map(course => (
                   <MenuItem key={course._id} value={course._id}>
                     {course.name}
                   </MenuItem>
                 ))}
-              </TextField>}
+              </TextField>
+            )}
 
-            {this.state.error &&
+            {this.state.error && (
               <Typography variant="subtitle1" className={classes.error}>
                 {this.state.error}
-              </Typography>}
+              </Typography>
+            )}
           </CardContent>
           <CardActions>
-            {this.state.loading
-              ? <Button variant="contained" className={classes.submit}>
-                  Signing up
-                  <CircularProgress
-                    className={classes.progress}
-                    size={24}
-                    variant="indeterminate"
-                  />
-                </Button>
-              : <Button
-                  variant="contained"
-                  className={classes.submit}
-                  onClick={this.onSubmit}
-                >
-                  Signup
-                </Button>}
+            {this.state.loading ? (
+              <Button variant="contained" className={classes.submit}>
+                Signing up
+                <CircularProgress
+                  className={classes.progress}
+                  size={24}
+                  variant="indeterminate"
+                />
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                className={classes.submit}
+                onClick={this.onSubmit}
+              >
+                Signup
+              </Button>
+            )}
           </CardActions>
         </Card>
       </div>
@@ -333,4 +339,4 @@ SignupPage.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles (styles) (SignupPage);
+export default withStyles(styles)(SignupPage);

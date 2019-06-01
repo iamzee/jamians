@@ -11,17 +11,24 @@ import NotesPage from '../Notes/pages/NotesPage';
 import NotesBookmarkPage from '../Notes/pages/NotesBookmarkPage';
 import Note from '../Notes/components/Note';
 import Upload from '../QuestionPaper/pages/Upload';
-import QuestionPaperDashboard
-  from '../QuestionPaper/pages/QuestionPaperDashboard';
+import QuestionPaperDashboard from '../QuestionPaper/pages/QuestionPaperDashboard';
 import QuestionPaper from '../QuestionPaper/components/QusetionPaper';
-import QuestionPaperBookmarkPage
-  from '../QuestionPaper/pages/QuestionPaperBookmarkPage';
+import QuestionPaperBookmarkPage from '../QuestionPaper/pages/QuestionPaperBookmarkPage';
 
-const history = createHistory ();
+import DiscussionList from '../Discussion/pages/DiscussionList';
+import NewDiscussionPage from '../Discussion/pages/NewDiscussionPage';
+import Discussion from '../Discussion/pages/Discussion';
+import Settings from '../Settings/pages/Settings';
+
+const history = createHistory();
 
 const MainRouter = () => (
   <Router history={history}>
     <Switch>
+      <PrivateRoute path="/settings" component={Settings} />
+      <PrivateRoute path="/discussion/new" component={NewDiscussionPage} />
+      <PrivateRoute path="/discussion/:discussionId" component={Discussion} />
+      <PrivateRoute path="/discussion" component={DiscussionList} />
       <PrivateRoute path="/question_papers/upload" component={Upload} />
       <PrivateRoute
         path="/question_papers/bookmarks"
