@@ -6,8 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
-import {isAuthenticated} from '../../api/auth.api';
-
 const styles = theme => ({
   appbar: {background: theme.home.primary},
   title: {flexGrow: 1},
@@ -15,7 +13,6 @@ const styles = theme => ({
 });
 
 const StartPage = props => {
-  console.log (isAuthenticated ());
   const {classes} = props;
   return (
     <div>

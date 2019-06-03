@@ -3,8 +3,6 @@ import {Router, Switch, Route} from 'react-router-dom';
 import createHistory from 'history/createBrowserHistory';
 
 import PrivateRoute from './PrivateRouter';
-import HomePage from '../Home/pages/HomePage';
-import SignupPage from '../Home/pages/SignupPage';
 import UploadNotesPage from '../Notes/pages/UploadNotesPage';
 import NotesPage from '../Notes/pages/NotesPage';
 import NotesBookmarkPage from '../Notes/pages/NotesBookmarkPage';
@@ -53,9 +51,7 @@ const MainRouter = () => (
       <PrivateRoute path="/notes/bookmarks" component={NotesBookmarkPage} />
       <PrivateRoute path="/notes/:noteId" component={Note} />
       <PrivateRoute exact path="/notes" component={NotesPage} />
-      <Route exact path="/signup" component={SignupPage} />
       <HomeRoutes />
-      <PrivateRoute path="/" component={HomePage} />
     </Switch>
   </Router>
 );
