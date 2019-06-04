@@ -22,6 +22,7 @@ import NewEventPage from '../Events/pages/NewEventPage';
 import EventsListPage from '../Events/pages/EventsListPage';
 
 import HomeRoutes from './HomeRoutes';
+import NoteRoutes from './NoteRoutes';
 
 const history = createHistory ();
 
@@ -47,7 +48,8 @@ const MainRouter = () => (
         path="/question_papers"
         component={QuestionPaperDashboard}
       />
-      <PrivateRoute path="/notes/upload" component={UploadNotesPage} />
+      {/* <PrivateRoute path="/notes/upload" component={UploadNotesPage} /> */}
+      <NoteRoutes />
       <PrivateRoute path="/notes/bookmarks" component={NotesBookmarkPage} />
       <PrivateRoute path="/notes/:noteId" component={Note} />
       <PrivateRoute exact path="/notes" component={NotesPage} />

@@ -7,7 +7,7 @@ const create = (req, res) => {
       res.status (200).send (doc);
     })
     .catch (err => {
-      exports.status (400).send ({
+      res.status (400).send ({
         err,
         errorMessage: 'Unable to create Note',
       });

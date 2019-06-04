@@ -6,6 +6,10 @@ const SubjectSchema = mongoose.Schema ({
     require: 'Name is required',
     trim: true,
   },
+  semester: {
+    type: Number,
+    required: 'Semester is required',
+  },
 });
 
 const Subject = mongoose.model ('Subject', SubjectSchema);

@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 export const isAuthenticated = () => {
-  return axios ({
+  return axios({
     method: 'get',
     url: '/api/current_user',
-  }).then (({data}) => {
+  }).then(({data}) => {
     if (data) {
-      return true;
+      return data;
     }
     return false;
   });

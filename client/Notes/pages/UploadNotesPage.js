@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -17,73 +16,23 @@ import {getSAS, upload} from '../../api/upload.api';
 import {listDepartments, readDepartment} from '../../api/department.api';
 import {readCourse} from '../../api/course.api';
 import {createNote} from '../../api/note.api';
-import {isAuthenticated} from '../../helpers/auth.helper';
+import {isAuthenticated} from '../../api/auth.api';
 import {semesters} from '../../helpers/note.helper';
 
 import SnackbarContentWrapper from '../../components/SnackbarContentWrapper';
 import Navbar from '../../components/Navbar';
 import NotesNav from '../components/NotesNav';
 
-const styles = theme => ({
-  card: {
-    maxWidth: 600,
-    margin: 'auto',
-    textAlign: 'center',
-    marginBottom: theme.spacing.unit * 5,
-    marginTop: theme.spacing.unit * 20,
-    [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing.unit * 15,
-      padding: theme.spacing.unit * 2,
-    },
-  },
-  title: {
-    fontWeight: 300,
-    marginBottom: theme.spacing.unit * 2,
-  },
-  chooseFileButton: {
-    marginBottom: theme.spacing.unit * 2,
-    backgroundColor: theme.notes.tertiary,
-    '&:hover': {
-      backgroundColor: theme.notes.secondary,
-      color: theme.notes.quaternary,
-    },
-  },
-  textField: {
-    width: 300,
-    margin: 'auto',
-    marginBottom: theme.spacing.unit * 2,
-  },
-  select: {
-    width: 300,
-    margin: 'auto',
-    marginBottom: theme.spacing.unit * 2,
-    fontFamily: 'Roboto',
-  },
-  fileInput: {
-    display: 'none',
-  },
-  button: {
-    margin: 'auto',
-    marginBottom: theme.spacing.unit * 2,
-  },
-  progress: {
-    marginLeft: theme.spacing.unit * 2,
-    marginRight: theme.spacing.unit * 2,
-  },
-  margin: {
-    margin: theme.spacing.unit,
-  },
-});
+import styles from '../styles/UploadNotesPageStyles';
 
 class UploadNotesPage extends React.Component {
   state = {
     file: null,
-    teachers: [],
-    teacher: '',
     subjects: [],
+    filteredSubjects: [],
     subject: '',
     departments: [],
-    department: {},
+    department: '',
     courses: [],
     course: '',
     topic: '',
@@ -93,24 +42,18 @@ class UploadNotesPage extends React.Component {
     progressPercent: 0,
     uploading: false,
     open: false,
-    showLoader: false,
-    showTextFields: true,
+    showCourseLoader: false,
+    showSubjectLoader: false,
+    showCourses: false,
+    showSubjects: false,
   };
 
   componentDidMount() {
     listDepartments().then(departments => {
-      this.setState(() => ({departments}));
+      this.setState(() => ({
+        departments,
+      }));
     });
-
-    const {user} = isAuthenticated();
-    this.setState(() => ({
-      subjects: user.department.subjects,
-      department: {value: user.department._id, label: user.department.name},
-      courses: user.department.courses,
-      teachers: user.department.teachers,
-      course: user.course._id,
-      subjects: user.course.subjects,
-    }));
   }
 
   onFileChange = e => {
@@ -128,27 +71,23 @@ class UploadNotesPage extends React.Component {
     this.setState(() => ({description}));
   };
 
-  onDepartmentChange = department => {
+  onDepartmentChange = e => {
     this.setState(() => ({
       department,
       course: '',
-      teacher: '',
-      showLoader: true,
-      showTextFields: false,
+      showCourseLoader: true,
+      showCourses: false,
     }));
-    readDepartment(department.value).then(({courses, teachers}) => {
+
+    const department = e.target.value;
+    this.setState(() => ({department}));
+    readDepartment(department).then(({courses}) => {
       this.setState(() => ({
         courses,
-        teachers,
-        showLoader: false,
-        showTextFields: true,
+        showCourseLoader: false,
+        showCourses: true,
       }));
     });
-  };
-
-  onTeacherChange = e => {
-    const teacher = e.target.value;
-    this.setState(() => ({teacher}));
   };
 
   onSubjectChange = e => {
@@ -157,8 +96,16 @@ class UploadNotesPage extends React.Component {
   };
 
   onSemesterChange = e => {
+    this.setState(() => ({showSubjectLoader: true}));
     const semester = e.target.value;
-    this.setState(() => ({semester}));
+    this.setState(() => ({
+      semester,
+      filteredSubjects: this.state.subjects.filter(s => {
+        return s.semester === semester;
+      }),
+      showSubjects: true,
+      showSubjectLoader: false,
+    }));
   };
 
   onCourseChange = e => {
@@ -166,7 +113,7 @@ class UploadNotesPage extends React.Component {
     this.setState(() => ({course, subject: ''}));
 
     readCourse(course).then(({subjects}) => {
-      this.setState(() => ({subjects}));
+      this.setState(() => ({subjects, filteredSubjects: subjects}));
     });
   };
 
@@ -174,9 +121,10 @@ class UploadNotesPage extends React.Component {
     if (
       !this.state.file ||
       !this.state.topic ||
-      !this.state.teacher ||
       !this.state.subject ||
-      !this.state.semester
+      !this.state.semester ||
+      !this.state.course ||
+      !this.state.department
     ) {
       this.setState(() => ({error: 'All fields are necessary!'}));
     } else if (this.state.file.type !== 'application/pdf') {
@@ -198,21 +146,21 @@ class UploadNotesPage extends React.Component {
           }));
 
           if (progressPercent == 100) {
-            const {user} = isAuthenticated();
-            const note = {
-              name: blobName,
-              topic: this.state.topic,
-              description: this.state.description,
-              department: this.state.department.value,
-              course: this.state.course,
-              teacher: this.state.teacher,
-              subject: this.state.subject,
-              semester: this.state.semester,
-              uploadedBy: user._id,
-            };
+            isAuthenticated().then(user => {
+              const note = {
+                name: blobName,
+                topic: this.state.topic,
+                description: this.state.description,
+                department: this.state.department.value,
+                course: this.state.course,
+                subject: this.state.subject,
+                semester: this.state.semester,
+                uploadedBy: user._id,
+              };
 
-            createNote(note).then(data => {
-              this.setState(() => ({uploading: false, open: true}));
+              createNote(note).then(data => {
+                this.setState(() => ({uploading: false, open: true}));
+              });
             });
           }
         });
@@ -278,34 +226,25 @@ class UploadNotesPage extends React.Component {
               rows="2"
             />
             <br />
+
             <TextField
               className={classes.textField}
               select
-              value={this.state.semester}
-              onChange={this.onSemesterChange}
+              value={this.state.department}
+              onChange={this.onDepartmentChange}
               margin="normal"
-              label="Semester"
+              label="Department"
               variant="outlined"
             >
-              {semesters.map(semester => (
-                <MenuItem key={semester.value} value={semester.value}>
-                  {semester.label}
+              {this.state.departments.map(d => (
+                <MenuItem key={d._id} value={d._id}>
+                  {d.name}
                 </MenuItem>
               ))}
             </TextField>
             <br />
-            <Select
-              value={this.state.department}
-              placeholder="Select Department"
-              className={classes.select}
-              options={this.state.departments.map(department => {
-                return {value: department._id, label: department.name};
-              })}
-              onChange={this.onDepartmentChange}
-            />
-            <br />
 
-            {this.state.showLoader && (
+            {this.state.showCourseLoader && (
               <CircularProgress
                 className={classes.progress}
                 size={24}
@@ -313,7 +252,7 @@ class UploadNotesPage extends React.Component {
               />
             )}
 
-            {this.state.showTextFields && (
+            {this.state.showCourses && (
               <div>
                 <TextField
                   className={classes.textField}
@@ -334,34 +273,44 @@ class UploadNotesPage extends React.Component {
                 <TextField
                   className={classes.textField}
                   select
-                  value={this.state.teacher}
-                  onChange={this.onTeacherChange}
+                  value={this.state.semester}
+                  onChange={this.onSemesterChange}
                   margin="normal"
-                  label="Teacher"
+                  label="Semester"
                   variant="outlined"
                 >
-                  {this.state.teachers.map(teacher => (
-                    <MenuItem key={teacher._id} value={teacher._id}>
-                      {teacher.name}
+                  {semesters.map(semester => (
+                    <MenuItem key={semester.value} value={semester.value}>
+                      {semester.label}
                     </MenuItem>
                   ))}
                 </TextField>
                 <br />
-                <TextField
-                  className={classes.textField}
-                  select
-                  value={this.state.subject}
-                  onChange={this.onSubjectChange}
-                  margin="normal"
-                  label="Subject"
-                  variant="outlined"
-                >
-                  {this.state.subjects.map(subject => (
-                    <MenuItem key={subject._id} value={subject._id}>
-                      {subject.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                {this.state.showSubjectLoader && (
+                  <CircularProgress
+                    className={classes.progress}
+                    size={24}
+                    variant="indeterminate"
+                  />
+                )}
+
+                {this.state.showSubjects && (
+                  <TextField
+                    className={classes.textField}
+                    select
+                    value={this.state.subject}
+                    onChange={this.onSubjectChange}
+                    margin="normal"
+                    label="Subject"
+                    variant="outlined"
+                  >
+                    {this.state.filteredSubjects.map(subject => (
+                      <MenuItem key={subject._id} value={subject._id}>
+                        {subject.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
                 <br />
               </div>
             )}

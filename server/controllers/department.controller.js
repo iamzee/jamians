@@ -7,11 +7,15 @@ export const create = (req, res) => {
 };
 
 export const list = (req, res) => {
-  Department.find ({}).sort ('name').then (docs => {
-    res.status (200).json ({
-      departments: docs,
+  Department.find ({})
+    .then (docs => {
+      res.status (200).json ({
+        departments: docs,
+      });
+    })
+    .catch (err => {
+      console.log (err);
     });
-  });
 };
 
 export const read = (req, res) => {
@@ -19,7 +23,6 @@ export const read = (req, res) => {
 
   Department.findById (departmentId)
     .populate ('courses', '_id name')
-    .populate ('teachers', '_id name')
     .then (doc => {
       res.status (200).json (doc);
     })

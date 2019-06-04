@@ -18,7 +18,7 @@ export const getSAS = containerName => {
 };
 
 export const upload = (sasToken, file, containerName) => {
-  const blobUri = 'https://practice99.blob.core.windows.net';
+  const blobUri = 'https://jamiansdev.blob.core.windows.net';
   const token = `?${sasToken}`;
 
   const blobService = AzureStorage.Blob.createBlobServiceWithSas (

@@ -20,7 +20,7 @@ export const read = (req, res) => {
   Course.findById (courseId)
     .populate ({
       path: 'subjects',
-      select: '_id name',
+      select: '_id name semester',
     })
     .then (doc => {
       res.status (200).json (doc);
