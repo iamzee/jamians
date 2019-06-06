@@ -15,46 +15,64 @@ class NotesList extends React.Component {
     noNotes: false,
   };
 
-  componentDidMount () {
-    const parsed = queryString.parse (this.props.queryString);
+  componentDidMount() {
+    // const parsed = queryString.parse (this.props.queryString);
 
-    listNotes (parsed).then (notes => {
-      this.setState (() => ({notes, noNotes: false}));
+    // listNotes (parsed).then (notes => {
+    //   this.setState (() => ({notes, noNotes: false}));
+
+    //   if (notes.length === 0) {
+    //     this.setState (() => ({noNotes: true}));
+    //   }
+    // });
+
+    const query = queryString.parse(this.props.queryString);
+    console.log('First', query);
+
+    listNotes(query).then(notes => {
+      console.log(notes);
+      this.setState(() => ({notes}));
 
       if (notes.length === 0) {
-        this.setState (() => ({noNotes: true}));
+        this.setState(() => ({noNotes: true}));
       }
     });
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     if (this.props.queryString !== prevProps.queryString) {
-      this.setState (() => ({notes: []}));
-      const parsed = queryString.parse (this.props.queryString);
-      listNotes (parsed).then (notes => {
-        this.setState (() => ({notes, noNotes: false}));
+      this.setState(() => ({notes: []}));
+      const parsed = queryString.parse(this.props.queryString);
+      listNotes(parsed).then(notes => {
+        this.setState(() => ({notes, noNotes: false}));
 
         if (notes.length === 0) {
-          this.setState (() => ({noNotes: true}));
+          this.setState(() => ({noNotes: true}));
         }
       });
+
+      console.log('Second', this.props.queryString);
     }
   }
 
-  render () {
+  render() {
     return (
       <div>
-        {this.state.noNotes
-          ? <NoNotes />
-          : <div>
-              {this.state.notes.length === 0
-                ? <Loader color="#00adb5" />
-                : <List>
-                    {this.state.notes.map (note => (
-                      <NoteItem key={note._id} note={note} />
-                    ))}
-                  </List>}
-            </div>}
+        {this.state.noNotes ? (
+          <NoNotes />
+        ) : (
+          <div>
+            {this.state.notes.length === 0 ? (
+              <Loader color="#00adb5" />
+            ) : (
+              <List>
+                {this.state.notes.map(note => (
+                  <NoteItem key={note._id} note={note} />
+                ))}
+              </List>
+            )}
+          </div>
+        )}
       </div>
     );
   }

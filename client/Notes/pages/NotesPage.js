@@ -10,6 +10,7 @@ import NotesFilter from '../components/NotesFilter';
 import NotesList from '../components/NotesList';
 
 import NotesNav from '../components/NotesNav';
+import Filter from '../components/Filter';
 
 const styles = theme => ({
   root: {
@@ -57,7 +58,7 @@ class NotesPage extends React.Component {
           <Divider />
 
           <div className={classes.filters}>
-            <NotesFilter history={this.props.history} />
+            <Filter history={this.props.history} queryString={queryString} />
           </div>
 
           <NotesList queryString={queryString} />

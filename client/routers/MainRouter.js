@@ -3,16 +3,14 @@ import {Router, Switch, Route} from 'react-router-dom';
 import createHistory from 'history/createBrowserHistory';
 
 import PrivateRoute from './PrivateRouter';
-import UploadNotesPage from '../Notes/pages/UploadNotesPage';
 import NotesPage from '../Notes/pages/NotesPage';
 import NotesBookmarkPage from '../Notes/pages/NotesBookmarkPage';
 import Note from '../Notes/components/Note';
 import Upload from '../QuestionPaper/pages/Upload';
-import QuestionPaperDashboard
-  from '../QuestionPaper/pages/QuestionPaperDashboard';
+import QuestionPaperDashboard from '../QuestionPaper/pages/QuestionPaperDashboard';
 import QuestionPaper from '../QuestionPaper/components/QusetionPaper';
-import QuestionPaperBookmarkPage
-  from '../QuestionPaper/pages/QuestionPaperBookmarkPage';
+import QuestionPaperBookmarkPage from '../QuestionPaper/pages/QuestionPaperBookmarkPage';
+import UploadNotesPage from '../Notes/pages/UploadNotesPage';
 
 import DiscussionList from '../Discussion/pages/DiscussionList';
 import NewDiscussionPage from '../Discussion/pages/NewDiscussionPage';
@@ -20,11 +18,10 @@ import Discussion from '../Discussion/pages/Discussion';
 import Settings from '../Settings/pages/Settings';
 import NewEventPage from '../Events/pages/NewEventPage';
 import EventsListPage from '../Events/pages/EventsListPage';
+import StartPage from '../Home/pages/StartPage';
+import HomePage from '../Home/pages/HomePage';
 
-import HomeRoutes from './HomeRoutes';
-import NoteRoutes from './NoteRoutes';
-
-const history = createHistory ();
+const history = createHistory();
 
 const MainRouter = () => (
   <Router history={history}>
@@ -48,12 +45,16 @@ const MainRouter = () => (
         path="/question_papers"
         component={QuestionPaperDashboard}
       />
-      {/* <PrivateRoute path="/notes/upload" component={UploadNotesPage} /> */}
-      <NoteRoutes />
+
+      {/* NOTE ROUTES */}
+      <PrivateRoute path="/notes/upload" component={UploadNotesPage} />
       <PrivateRoute path="/notes/bookmarks" component={NotesBookmarkPage} />
       <PrivateRoute path="/notes/:noteId" component={Note} />
       <PrivateRoute exact path="/notes" component={NotesPage} />
-      <HomeRoutes />
+
+      {/* HOME ROUTES */}
+      <Route path="/login" component={StartPage} />
+      <PrivateRoute exact path="/" component={HomePage} />
     </Switch>
   </Router>
 );

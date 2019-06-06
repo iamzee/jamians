@@ -77,6 +77,7 @@ class UploadNotesPage extends React.Component {
       course: '',
       showCourseLoader: true,
       showCourses: false,
+      showSubjects: false,
     }));
 
     const department = e.target.value;
@@ -113,7 +114,11 @@ class UploadNotesPage extends React.Component {
     this.setState(() => ({course, subject: ''}));
 
     readCourse(course).then(({subjects}) => {
-      this.setState(() => ({subjects, filteredSubjects: subjects}));
+      this.setState(() => ({
+        subjects,
+        filteredSubjects: subjects,
+        showSubjects: false,
+      }));
     });
   };
 
@@ -151,7 +156,7 @@ class UploadNotesPage extends React.Component {
                 name: blobName,
                 topic: this.state.topic,
                 description: this.state.description,
-                department: this.state.department.value,
+                department: this.state.department,
                 course: this.state.course,
                 subject: this.state.subject,
                 semester: this.state.semester,

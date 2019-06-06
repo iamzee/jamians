@@ -1,48 +1,36 @@
 import axios from 'axios';
 
 export const createNote = note => {
-  return axios ({
+  return axios({
     method: 'post',
     url: '/api/note',
-    data: JSON.stringify (note),
+    data: JSON.stringify(note),
     headers: {
       'Content-Type': 'application/json',
     },
-  }).then (({data}) => {
+  }).then(({data}) => {
     return data;
   });
 };
 
-export const listNotes = ({departmentId, courseId, subjectId}) => {
-  if (courseId && subjectId) {
-    return axios ({
-      method: 'get',
-      url: `/api/note/?department=${departmentId}&course=${courseId}&subject=${subjectId}`,
-    }).then (({data}) => {
-      return data.notes;
-    });
-  } else if (courseId) {
-    return axios ({
-      method: 'get',
-      url: `/api/note/?department=${departmentId}&course=${courseId}`,
-    }).then (({data}) => {
-      return data.notes;
-    });
-  } else {
-    return axios ({
-      method: 'get',
-      url: `/api/note/?department=${departmentId}`,
-    }).then (({data}) => {
-      return data.notes;
-    });
-  }
+export const listNotes = ({department, course, semester, subject}) => {
+  const url = `/api/note?department=${department || ''}&course=${course ||
+    ''}&semester=${semester || ''}&subject=${subject || ''}`;
+  console.log(url);
+  return axios({
+    method: 'get',
+    url,
+  }).then(({data}) => {
+    console.log(data.notes);
+    return data.notes;
+  });
 };
 
 export const addBookmark = (userId, noteId) => {
-  return axios ({
+  return axios({
     method: 'post',
     url: '/api/note/addBookmark',
-    data: JSON.stringify ({
+    data: JSON.stringify({
       userId,
       noteId,
     }),
@@ -50,19 +38,19 @@ export const addBookmark = (userId, noteId) => {
       'Content-Type': 'application/json',
     },
   })
-    .then (doc => {
-      console.log (doc);
+    .then(doc => {
+      console.log(doc);
     })
-    .catch (err => {
-      console.log (err);
+    .catch(err => {
+      console.log(err);
     });
 };
 
 export const removeBookmark = (userId, noteId) => {
-  return axios ({
+  return axios({
     method: 'post',
     url: '/api/note/removeBookmark',
-    data: JSON.stringify ({
+    data: JSON.stringify({
       userId,
       noteId,
     }),
@@ -70,19 +58,19 @@ export const removeBookmark = (userId, noteId) => {
       'Content-Type': 'application/json',
     },
   })
-    .then (({data}) => {
-      console.log (data);
+    .then(({data}) => {
+      console.log(data);
     })
-    .catch (err => {
-      console.log (err);
+    .catch(err => {
+      console.log(err);
     });
 };
 
 export const getBookmarkedNotes = (token, userId) => {
-  return axios ({
+  return axios({
     method: 'get',
     url: '/api/note/bookmarks',
-    data: JSON.stringify ({
+    data: JSON.stringify({
       userId,
     }),
     headers: {
@@ -90,19 +78,19 @@ export const getBookmarkedNotes = (token, userId) => {
       Authorization: 'Bearer ' + token,
     },
   })
-    .then (({data}) => {
+    .then(({data}) => {
       return data.notes;
     })
-    .catch (err => {
-      console.log (err);
+    .catch(err => {
+      console.log(err);
     });
 };
 
 export const read = noteId => {
-  return axios ({
+  return axios({
     methos: 'get',
     url: '/api/note/' + noteId,
-  }).then (({data}) => {
+  }).then(({data}) => {
     return data;
   });
 };
