@@ -9,18 +9,26 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
-import {read} from '../../api/note.api';
+import {readNote} from '../../api/note.api';
 import {getSAS, download} from '../../api/upload.api';
 
 import BookmarkButton from './BookmarkButton';
 import Navbar from '../../components/Navbar';
 import Loader from '../../components/Loader';
+import NotesNav from './NotesNav';
 
 const styles = theme => ({
   card: {
     maxWidth: 600,
     margin: 'auto',
-    padding: theme.spacing.unit * 2,
+  },
+
+  container: {
+    marginTop: theme.spacing.unit * 15,
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing.unit * 15,
+      padding: theme.spacing.unit * 2,
+    },
   },
   contentBody: {
     marginTop: theme.spacing.unit * 2,
@@ -42,7 +50,7 @@ class Note extends React.Component {
 
   componentDidMount() {
     const {noteId} = this.props.match.params;
-    read(noteId).then(note => {
+    readNote(noteId).then(note => {
       this.setState(() => ({note}));
     });
   }
@@ -61,63 +69,64 @@ class Note extends React.Component {
     return (
       <div>
         <Navbar title={'Notes'} />
-        {note ? (
-          <Card className={classes.card}>
-            <CardContent>
-              <Typography variant="h5" gutterBottom>
-                {note.topic}
-              </Typography>
-              <Typography variant="subtitle1" gutterBottom>
-                {note.description}
-              </Typography>
-              <Divider />
-              <div className={classes.contentBody}>
-                <Typography variant="caption">
-                  Uploaded On:{' '}
-                  <span style={{fontWeight: 'bold'}}>
-                    {moment(note.uploadedOn).format('Mo MMM YYYY')}
-                  </span>
+        <NotesNav />
+        <div className={classes.container}>
+          {note ? (
+            <Card className={classes.card}>
+              <CardContent>
+                <Typography variant="h5" gutterBottom>
+                  {note.topic}
                 </Typography>
-                <Typography variant="caption">
-                  Uploaded By:{' '}
-                  <span style={{fontWeight: 'bold'}}>
-                    {note.uploadedBy.name}
-                  </span>
+                <Typography variant="subtitle1" gutterBottom>
+                  {note.description}
                 </Typography>
-                <Typography variant="caption">
-                  Semester:{' '}
-                  <span style={{fontWeight: 'bold'}}>{note.semester}</span>
-                </Typography>
-                <Typography variant="caption">
-                  Department:{' '}
-                  <span style={{fontWeight: 'bold'}}>
-                    {note.department.name}
-                  </span>
-                </Typography>
-                <Typography variant="caption">
-                  Course:{' '}
-                  <span style={{fontWeight: 'bold'}}>{note.course.name}</span>
-                </Typography>
-                <Typography variant="caption">
-                  Subject:{' '}
-                  <span style={{fontWeight: 'bold'}}>{note.subject.name}</span>
-                </Typography>
-                <Typography variant="caption">
-                  Teacher:{' '}
-                  <span style={{fontWeight: 'bold'}}>{note.teacher.name}</span>
-                </Typography>
-              </div>
-            </CardContent>
-            <CardActions>
-              <Button className={classes.button} onClick={this.onView}>
-                View
-              </Button>
-              <BookmarkButton note={note} />
-            </CardActions>
-          </Card>
-        ) : (
-          <Loader color="#00adb5" />
-        )}
+                <Divider />
+                <div className={classes.contentBody}>
+                  <Typography variant="caption">
+                    Uploaded On:{' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {moment(note.uploadedOn).format('Mo MMM YYYY')}
+                    </span>
+                  </Typography>
+                  <Typography variant="caption">
+                    Uploaded By:{' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {note.uploadedBy.name}
+                    </span>
+                  </Typography>
+                  <Typography variant="caption">
+                    Semester:{' '}
+                    <span style={{fontWeight: 'bold'}}>{note.semester}</span>
+                  </Typography>
+                  <Typography variant="caption">
+                    Department:{' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {note.department.name}
+                    </span>
+                  </Typography>
+                  <Typography variant="caption">
+                    Course:{' '}
+                    <span style={{fontWeight: 'bold'}}>{note.course.name}</span>
+                  </Typography>
+                  <Typography variant="caption">
+                    Subject:{' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {note.subject.name}
+                    </span>
+                  </Typography>
+                </div>
+              </CardContent>
+              <CardActions>
+                <Button className={classes.button} onClick={this.onView}>
+                  View
+                </Button>
+                <BookmarkButton note={note} />
+              </CardActions>
+            </Card>
+          ) : (
+            <Loader color="#00adb5" />
+          )}
+        </div>
       </div>
     );
   }

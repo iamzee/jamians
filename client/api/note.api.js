@@ -86,7 +86,7 @@ export const getBookmarkedNotes = (token, userId) => {
     });
 };
 
-export const read = noteId => {
+export const readNote = noteId => {
   return axios({
     methos: 'get',
     url: '/api/note/' + noteId,
