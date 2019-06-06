@@ -63,7 +63,7 @@ const read = (req, res) => {
 };
 
 const addBookmark = (req, res) => {
-  const userId = req.body.userId;
+  const userId = req.user._id;
   const noteId = req.body.noteId;
 
   Note.findById(noteId).then(note => {
@@ -82,7 +82,7 @@ const addBookmark = (req, res) => {
 };
 
 const removeBookmark = (req, res) => {
-  const userId = req.body.userId;
+  const userId = req.user._id;
   const noteId = req.body.noteId;
 
   Note.findByIdAndUpdate(noteId, {$pull: {bookmarks: userId}}, {new: true})
@@ -98,13 +98,18 @@ const removeBookmark = (req, res) => {
 };
 
 const getBookmarkedNotes = (req, res) => {
-  console.log(req.auth);
-  const userId = req.auth._id;
-  Note.find({bookmarks: {$eq: userId}}).then(docs => {
-    res.status(200).json({
-      notes: docs,
+  const userId = req.user._id;
+  console.log(typeof userId);
+  Note.find({bookmarks: {$eq: userId}})
+    .then(docs => {
+      console.log(docs);
+      res.status(200).json({
+        notes: docs,
+      });
+    })
+    .catch(err => {
+      console.log(err);
     });
-  });
 };
 
 const count = (req, res) => {

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const NoteSchema = mongoose.Schema ({
+const NoteSchema = mongoose.Schema({
   name: {
     type: String,
   },
@@ -14,15 +14,11 @@ const NoteSchema = mongoose.Schema ({
   },
   uploadedOn: {
     type: Date,
-    default: Date.now (),
+    default: Date.now(),
   },
   uploadedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-  },
-  teacher: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Teacher',
   },
   subject: {
     type: mongoose.Schema.Types.ObjectId,
@@ -47,6 +43,6 @@ const NoteSchema = mongoose.Schema ({
   ],
 });
 
-const Note = mongoose.model ('Note', NoteSchema);
+const Note = mongoose.model('Note', NoteSchema);
 
 export default Note;

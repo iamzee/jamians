@@ -26,12 +26,11 @@ export const listNotes = ({department, course, semester, subject}) => {
   });
 };
 
-export const addBookmark = (userId, noteId) => {
+export const addBookmark = noteId => {
   return axios({
     method: 'post',
     url: '/api/note/addBookmark',
     data: JSON.stringify({
-      userId,
       noteId,
     }),
     headers: {
@@ -46,12 +45,11 @@ export const addBookmark = (userId, noteId) => {
     });
 };
 
-export const removeBookmark = (userId, noteId) => {
+export const removeBookmark = noteId => {
   return axios({
     method: 'post',
     url: '/api/note/removeBookmark',
     data: JSON.stringify({
-      userId,
       noteId,
     }),
     headers: {
@@ -66,19 +64,13 @@ export const removeBookmark = (userId, noteId) => {
     });
 };
 
-export const getBookmarkedNotes = (token, userId) => {
+export const getBookmarkedNotes = () => {
   return axios({
     method: 'get',
     url: '/api/note/bookmarks',
-    data: JSON.stringify({
-      userId,
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token,
-    },
   })
     .then(({data}) => {
+      console.log('data', data);
       return data.notes;
     })
     .catch(err => {
