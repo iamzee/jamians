@@ -1,4 +1,10 @@
 export default theme => ({
+  container: {
+    marginTop: theme.spacing.unit * 20,
+    [theme.breakpoints.down('xs')]: {
+      marginTop: theme.spacing.unit * 15,
+    },
+  },
   card: {
     maxWidth: 600,
     margin: 'auto',

@@ -72,6 +72,7 @@ class UploadNotesPage extends React.Component {
   };
 
   onDepartmentChange = e => {
+    const department = e.target.value;
     this.setState(() => ({
       department,
       course: '',
@@ -79,9 +80,6 @@ class UploadNotesPage extends React.Component {
       showCourses: false,
       showSubjects: false,
     }));
-
-    const department = e.target.value;
-    this.setState(() => ({department}));
     readDepartment(department).then(({courses}) => {
       this.setState(() => ({
         courses,

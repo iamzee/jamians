@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import {withStyles} from '@material-ui/core/styles';
 
-import Navbar from '../components/Navbar';
+// import Navbar from '../components/Navbar';
 import QuestionPaperFilter from '../components/QuestionPaperFilter';
 import QuestionPaperList from '../components/QuestionPaperList';
 
@@ -24,14 +24,13 @@ const styles = theme => ({
 });
 
 class QuestionPaperDashboard extends React.Component {
-  render () {
+  render() {
     const {classes} = this.props;
     const queryString = this.props.location.search;
     return (
       <div>
-        <Navbar />
+        {/* <Navbar /> */}
         <div className={classes.root}>
-
           <Typography className={classes.title} variant="h4" gutterBottom>
             Question Papers
           </Typography>
@@ -42,11 +41,10 @@ class QuestionPaperDashboard extends React.Component {
           </div>
 
           <QuestionPaperList queryString={queryString} />
-
         </div>
       </div>
     );
   }
 }
 
-export default withStyles (styles) (QuestionPaperDashboard);
+export default withStyles(styles)(QuestionPaperDashboard);

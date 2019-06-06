@@ -32,6 +32,8 @@ const MainRouter = () => (
       <PrivateRoute path="/discussion/new" component={NewDiscussionPage} />
       <PrivateRoute path="/discussion/:discussionId" component={Discussion} />
       <PrivateRoute path="/discussion" component={DiscussionList} />
+
+      {/* QUESTION PAPER ROUTES */}
       <PrivateRoute path="/question_papers/upload" component={Upload} />
       <PrivateRoute
         path="/question_papers/bookmarks"

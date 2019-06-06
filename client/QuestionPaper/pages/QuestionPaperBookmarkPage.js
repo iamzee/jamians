@@ -10,7 +10,7 @@ import {isAuthenticated} from '../../helpers/auth.helper';
 
 import QuestionPaperItem from '../components/QuestionPaperItem';
 import Loader from '../../components/Loader';
-import Navbar from '../components/Navbar';
+// import Navbar from '../components/Navbar';
 import NoQuestionPaper from '../components/NoQuestionPaper';
 
 const styles = theme => ({
@@ -33,48 +33,51 @@ class QuestionPaperBookmarkPage extends React.Component {
     noBookmarks: false,
   };
 
-  componentDidMount () {
-    const {token} = isAuthenticated ();
-    getBookmarkedQuestionPapers (token).then (questionPapers => {
-      this.setState (() => ({questionPapers}));
+  componentDidMount() {
+    const {token} = isAuthenticated();
+    getBookmarkedQuestionPapers(token).then(questionPapers => {
+      this.setState(() => ({questionPapers}));
 
       if (questionPapers.length === 0) {
-        this.setState (() => ({noBookmarks: true}));
+        this.setState(() => ({noBookmarks: true}));
       }
     });
   }
 
-  render () {
+  render() {
     const {classes} = this.props;
     return (
       <div>
-        <Navbar />
+        {/* <Navbar /> */}
 
         <div className={classes.root}>
           <Typography variant="h4" className={classes.title} gutterBottom>
             Bookmarks
           </Typography>
           <Divider />
-          {this.state.noBookmarks
-            ? <NoQuestionPaper />
-            : <div>
-                {this.state.questionPapers.length === 0
-                  ? <Loader color={'#e23e57'} />
-                  : <List className={classes.list}>
-                      {this.state.questionPapers.map ((questionPaper, i) => (
-                        <QuestionPaperItem
-                          key={questionPaper._id}
-                          i={i}
-                          questionPaper={questionPaper}
-                        />
-                      ))}
-                    </List>}
-              </div>}
+          {this.state.noBookmarks ? (
+            <NoQuestionPaper />
+          ) : (
+            <div>
+              {this.state.questionPapers.length === 0 ? (
+                <Loader color={'#e23e57'} />
+              ) : (
+                <List className={classes.list}>
+                  {this.state.questionPapers.map((questionPaper, i) => (
+                    <QuestionPaperItem
+                      key={questionPaper._id}
+                      i={i}
+                      questionPaper={questionPaper}
+                    />
+                  ))}
+                </List>
+              )}
+            </div>
+          )}
         </div>
-
       </div>
     );
   }
 }
 
-export default withStyles (styles) (QuestionPaperBookmarkPage);
+export default withStyles(styles)(QuestionPaperBookmarkPage);
