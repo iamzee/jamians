@@ -129,24 +129,14 @@ class Navbar extends React.Component {
 
                 <List className={classes.navList} style={{height: '88%'}}>
                   <div className={classes.listPrimary}>
-                    <Link
-                      to={`/notes?departmentId=${
-                        this.state.department
-                      }&courseId=${this.state.course}`}
-                      className={classes.link}
-                    >
+                    <Link to="/notes">
                       <ListItem button className={classes.listItem}>
                         <NotesIcon />
                         <ListItemText primary={'Notes'} />
                       </ListItem>
                     </Link>
 
-                    <Link
-                      to={`/question_papers?departmentId=${
-                        this.state.department
-                      }&courseId=${this.state.course}`}
-                      className={classes.link}
-                    >
+                    <Link to="/question_papers">
                       <ListItem button className={classes.listItem}>
                         <QuestionPaperIcon />
                         <ListItemText primary={'Question Papers'} />

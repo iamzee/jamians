@@ -59,14 +59,15 @@ export const read = (req, res) => {
 };
 
 export const update = (req, res) => {
-  const {type, data} = req.body;
+  const {type} = req.body;
+  const {user} = req;
   const {questionPaperId} = req.params;
 
   switch (type) {
     case 'ADD_BOOKMARK': {
       return QuestionPaper.findByIdAndUpdate(
         questionPaperId,
-        {$push: {bookmarks: data.userId}},
+        {$push: {bookmarks: user._id}},
         {new: true}
       )
         .then(doc => {
@@ -82,7 +83,7 @@ export const update = (req, res) => {
     case 'REMOVE_BOOKMARK': {
       return QuestionPaper.findByIdAndUpdate(
         questionPaperId,
-        {$pull: {bookmarks: data.userId}},
+        {$pull: {bookmarks: user._id}},
         {new: true}
       )
         .then(doc => {
@@ -104,7 +105,7 @@ export const update = (req, res) => {
 };
 
 export const listBookmarks = (req, res) => {
-  const user = req.auth;
+  const user = req.user;
 
   QuestionPaper.find({bookmarks: {$eq: user._id}})
     .populate('department', 'name')

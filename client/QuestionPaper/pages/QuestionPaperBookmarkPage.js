@@ -6,16 +6,22 @@ import Divider from '@material-ui/core/Divider';
 import {withStyles} from '@material-ui/core/styles';
 
 import {getBookmarkedQuestionPapers} from '../../api/questionPaper.api';
-import {isAuthenticated} from '../../helpers/auth.helper';
 
 import QuestionPaperItem from '../components/QuestionPaperItem';
 import Loader from '../../components/Loader';
 import NoQuestionPaper from '../components/NoQuestionPaper';
+import Navbar from '../../components/Navbar';
+import QuestionPaperNav from '../components/QuestionPaperNav';
 
 const styles = theme => ({
   root: {
     maxWidth: 600,
     margin: 'auto',
+    marginTop: theme.spacing.unit * 20,
+    [theme.breakpoints.down('xs')]: {
+      marginTop: theme.spacing.unit * 15,
+      padding: theme.spacing.unit * 2,
+    },
   },
   title: {
     fontWeight: 300,
@@ -33,8 +39,7 @@ class QuestionPaperBookmarkPage extends React.Component {
   };
 
   componentDidMount() {
-    const {token} = isAuthenticated();
-    getBookmarkedQuestionPapers(token).then(questionPapers => {
+    getBookmarkedQuestionPapers().then(questionPapers => {
       this.setState(() => ({questionPapers}));
 
       if (questionPapers.length === 0) {
@@ -47,7 +52,8 @@ class QuestionPaperBookmarkPage extends React.Component {
     const {classes} = this.props;
     return (
       <div>
-        {/* <Navbar /> */}
+        <Navbar title={'Question Papers'} />
+        <QuestionPaperNav />
 
         <div className={classes.root}>
           <Typography variant="h4" className={classes.title} gutterBottom>

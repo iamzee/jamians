@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import {withStyles} from '@material-ui/core/styles';
 
-import {isAuthenticated} from '../../helpers/auth.helper';
+import {isAuthenticated} from '../../api/auth.api';
 import {addBookmark, removeBookmark} from '../../api/questionPaper.api';
 
 import SnackbarContentWrapper from '../../components/SnackbarContentWrapper';
@@ -28,35 +28,33 @@ class BookmarkButton extends React.Component {
     openRemoveBookmarkSnackbar: false,
   };
 
-  componentDidMount () {
-    const {questionPaper} = this.props;
+  componentDidMount() {
+    isAuthenticated().then(user => {
+      const matchedUser = this.props.questionPaper.bookmarks.find(
+        bookmark => bookmark === user._id
+      );
 
-    const {user} = isAuthenticated ();
-    const matchedUser = questionPaper.bookmarks.find (
-      bookmark => bookmark === user._id
-    );
-
-    if (matchedUser) {
-      this.setState (() => ({bookmarked: true}));
-    }
+      if (matchedUser) {
+        this.setState(() => ({bookmarked: true}));
+      }
+    });
   }
 
   handleAddBookmarkSnackbarClose = () => {
-    this.setState (() => ({openAddBookmarkSnackbar: false}));
+    this.setState(() => ({openAddBookmarkSnackbar: false}));
   };
 
   handleRemoveBookmarkSnackbarClose = () => {
-    this.setState (() => ({openRemoveBookmarkSnackbar: false}));
+    this.setState(() => ({openRemoveBookmarkSnackbar: false}));
   };
 
   onAddBookmark = () => {
-    this.setState (() => ({loading: true}));
+    this.setState(() => ({loading: true}));
 
     const {questionPaper} = this.props;
-    const {user} = isAuthenticated ();
 
-    addBookmark (questionPaper._id, user._id).then (() => {
-      this.setState (() => ({
+    addBookmark(questionPaper._id).then(() => {
+      this.setState(() => ({
         bookmarked: true,
         loading: false,
         openAddBookmarkSnackbar: true,
@@ -65,13 +63,12 @@ class BookmarkButton extends React.Component {
   };
 
   onRemoveBookmark = () => {
-    this.setState (() => ({loading: true}));
+    this.setState(() => ({loading: true}));
 
     const {questionPaper} = this.props;
-    const {user} = isAuthenticated ();
 
-    removeBookmark (questionPaper._id, user._id).then (() => {
-      this.setState (() => ({
+    removeBookmark(questionPaper._id).then(() => {
+      this.setState(() => ({
         bookmarked: false,
         loading: false,
         openRemoveBookmarkSnackbar: true,
@@ -79,17 +76,19 @@ class BookmarkButton extends React.Component {
     });
   };
 
-  render () {
+  render() {
     const {classes} = this.props;
     return (
       <div>
-        {this.state.bookmarked
-          ? <Button className={classes.button} onClick={this.onRemoveBookmark}>
-              {this.state.loading ? 'Removing...' : 'Remove Bookmark'}
-            </Button>
-          : <Button className={classes.button} onClick={this.onAddBookmark}>
-              {this.state.loading ? 'Adding...' : 'Add Bookmark'}
-            </Button>}
+        {this.state.bookmarked ? (
+          <Button className={classes.button} onClick={this.onRemoveBookmark}>
+            {this.state.loading ? 'Removing...' : 'Remove Bookmark'}
+          </Button>
+        ) : (
+          <Button className={classes.button} onClick={this.onAddBookmark}>
+            {this.state.loading ? 'Adding...' : 'Add Bookmark'}
+          </Button>
+        )}
 
         <Snackbar
           anchorOrigin={{
@@ -127,4 +126,4 @@ class BookmarkButton extends React.Component {
   }
 }
 
-export default withStyles (styles) (BookmarkButton);
+export default withStyles(styles)(BookmarkButton);

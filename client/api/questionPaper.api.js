@@ -35,17 +35,12 @@ export const readQuestionPaper = questionPaperId => {
   });
 };
 
-export const addBookmark = (questionPaperId, userId) => {
-  console.log(questionPaperId);
-  console.log(userId);
+export const addBookmark = questionPaperId => {
   return axios({
     method: 'post',
     url: '/api/questionPaper/' + questionPaperId,
     data: JSON.stringify({
       type: 'ADD_BOOKMARK',
-      data: {
-        userId,
-      },
     }),
     headers: {
       'Content-Type': 'application/json',
@@ -60,15 +55,12 @@ export const addBookmark = (questionPaperId, userId) => {
     });
 };
 
-export const removeBookmark = (questionPaperId, userId) => {
+export const removeBookmark = questionPaperId => {
   return axios({
     method: 'post',
     url: '/api/questionPaper/' + questionPaperId,
     data: JSON.stringify({
       type: 'REMOVE_BOOKMARK',
-      data: {
-        userId,
-      },
     }),
     headers: {
       'Content-Type': 'application/json',
@@ -78,13 +70,10 @@ export const removeBookmark = (questionPaperId, userId) => {
   });
 };
 
-export const getBookmarkedQuestionPapers = token => {
+export const getBookmarkedQuestionPapers = () => {
   return axios({
     method: 'get',
     url: '/api/questionPaper/bookmarks',
-    headers: {
-      Authorization: 'Bearer ' + token,
-    },
   }).then(({data}) => {
     console.log(data);
     return data.questionPapers;
