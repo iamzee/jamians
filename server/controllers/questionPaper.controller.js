@@ -1,13 +1,13 @@
 import QuestionPaper from '../models/questionPaper.model';
 
 export const create = (req, res) => {
-  new QuestionPaper (req.body)
-    .save ()
-    .then (doc => {
-      res.status (200).json (doc);
+  new QuestionPaper(req.body)
+    .save()
+    .then(doc => {
+      res.status(200).json(doc);
     })
-    .catch (err => {
-      res.status (400).json ({
+    .catch(err => {
+      res.status(400).json({
         err,
         errorMessage: 'Unable to create questionPaper',
       });
@@ -15,47 +15,26 @@ export const create = (req, res) => {
 };
 
 export const list = (req, res) => {
-  const {department, course, subject, semester} = req.query;
+  const {department, course, semester, subject} = req.query;
   let queryObject = {};
 
-  console.log (req.query);
+  if (department && course && semester && subject)
+    queryObject = {department, course, semester, subject};
+  else if (department && course && semester)
+    queryObject = {department, course, semester};
+  else if (department && course) queryObject = {department, course};
+  else if (department) queryObject = {department};
 
-  if (subject && semester) {
-    queryObject = {
-      department,
-      course,
-      subject,
-      semester,
-    };
-  } else if (subject) {
-    queryObject = {
-      department,
-      course,
-      subject,
-    };
-  } else if (semester) {
-    queryObject = {
-      department,
-      course,
-      semester,
-    };
-  } else {
-    queryObject = {
-      department,
-      course,
-    };
-  }
-
-  QuestionPaper.find (queryObject)
-    .then (docs => {
-      res.status (200).json ({
+  QuestionPaper.find(queryObject)
+    .then(docs => {
+      res.status(200).json({
         questionPapers: docs,
       });
     })
-    .catch (err => {
-      res.status (400).json ({
+    .catch(err => {
+      res.status(400).json({
         err,
-        errorMessage: 'Unable to fetch notes',
+        errorMessage: 'Unable to fetch question papers',
       });
     });
 };
@@ -63,16 +42,16 @@ export const list = (req, res) => {
 export const read = (req, res) => {
   const {questionPaperId} = req.params;
 
-  QuestionPaper.findById (questionPaperId)
-    .populate ('department', 'name')
-    .populate ('course', 'name')
-    .populate ('subject', 'name')
-    .populate ('uploadedBy', 'name')
-    .then (doc => {
-      res.status (200).json (doc);
+  QuestionPaper.findById(questionPaperId)
+    .populate('department', 'name')
+    .populate('course', 'name')
+    .populate('subject', 'name')
+    .populate('uploadedBy', 'name')
+    .then(doc => {
+      res.status(200).json(doc);
     })
-    .catch (err => {
-      res.status (400).json ({
+    .catch(err => {
+      res.status(400).json({
         err,
         errorMessage: 'Unable to fetch Question Paper',
       });
@@ -85,39 +64,39 @@ export const update = (req, res) => {
 
   switch (type) {
     case 'ADD_BOOKMARK': {
-      return QuestionPaper.findByIdAndUpdate (
+      return QuestionPaper.findByIdAndUpdate(
         questionPaperId,
         {$push: {bookmarks: data.userId}},
         {new: true}
       )
-        .then (doc => {
-          res.status (200).json (doc);
+        .then(doc => {
+          res.status(200).json(doc);
         })
-        .catch (err => {
-          res.status (400).json ({
+        .catch(err => {
+          res.status(400).json({
             err,
             errorMessage: 'Unable to update question paper!',
           });
         });
     }
     case 'REMOVE_BOOKMARK': {
-      return QuestionPaper.findByIdAndUpdate (
+      return QuestionPaper.findByIdAndUpdate(
         questionPaperId,
         {$pull: {bookmarks: data.userId}},
         {new: true}
       )
-        .then (doc => {
-          res.status (200).json (doc);
+        .then(doc => {
+          res.status(200).json(doc);
         })
-        .catch (err => {
-          res.status (400).json ({
+        .catch(err => {
+          res.status(400).json({
             err,
             errorMessage: 'Unable to update question paper!',
           });
         });
     }
     default: {
-      return res.status (400).json ({
+      return res.status(400).json({
         errorMessage: 'Invalid action type!',
       });
     }
@@ -127,17 +106,17 @@ export const update = (req, res) => {
 export const listBookmarks = (req, res) => {
   const user = req.auth;
 
-  QuestionPaper.find ({bookmarks: {$eq: user._id}})
-    .populate ('department', 'name')
-    .populate ('subject', 'name')
-    .populate ('uploadedBy', 'name')
-    .then (docs => {
-      res.status (200).json ({
+  QuestionPaper.find({bookmarks: {$eq: user._id}})
+    .populate('department', 'name')
+    .populate('subject', 'name')
+    .populate('uploadedBy', 'name')
+    .then(docs => {
+      res.status(200).json({
         questionPapers: docs,
       });
     })
-    .catch (err => {
-      res.status (400).json ({
+    .catch(err => {
+      res.status(400).json({
         err,
         errorMessage: 'Unable to list bookmarked question papers',
       });
@@ -145,12 +124,12 @@ export const listBookmarks = (req, res) => {
 };
 
 export const count = (req, res) => {
-  QuestionPaper.count ()
-    .then (count => {
-      res.status (200).json ({count});
+  QuestionPaper.count()
+    .then(count => {
+      res.status(200).json({count});
     })
-    .catch (err => {
-      res.status (400).json ({
+    .catch(err => {
+      res.status(400).json({
         err,
         errorMessage: 'Unable to count notes.',
       });

@@ -10,7 +10,6 @@ import {isAuthenticated} from '../../helpers/auth.helper';
 
 import QuestionPaperItem from '../components/QuestionPaperItem';
 import Loader from '../../components/Loader';
-// import Navbar from '../components/Navbar';
 import NoQuestionPaper from '../components/NoQuestionPaper';
 
 const styles = theme => ({

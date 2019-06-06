@@ -5,6 +5,8 @@ import Divider from '@material-ui/core/Divider';
 import {withStyles} from '@material-ui/core/styles';
 
 // import Navbar from '../components/Navbar';
+import Navbar from '../../components/Navbar';
+import QuestionPaperNav from '../components/QuestionPaperNav';
 import QuestionPaperFilter from '../components/QuestionPaperFilter';
 import QuestionPaperList from '../components/QuestionPaperList';
 
@@ -12,6 +14,11 @@ const styles = theme => ({
   root: {
     maxWidth: 600,
     margin: 'auto',
+    marginTop: theme.spacing.unit * 20,
+    [theme.breakpoints.down('xs')]: {
+      marginTop: theme.spacing.unit * 15,
+      padding: theme.spacing.unit * 2,
+    },
   },
   title: {
     fontWeight: 300,
@@ -29,7 +36,9 @@ class QuestionPaperDashboard extends React.Component {
     const queryString = this.props.location.search;
     return (
       <div>
-        {/* <Navbar /> */}
+        <Navbar title={'Question Papers'} />
+        <QuestionPaperNav />
+
         <div className={classes.root}>
           <Typography className={classes.title} variant="h4" gutterBottom>
             Question Papers

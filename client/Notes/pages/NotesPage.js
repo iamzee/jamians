@@ -6,7 +6,6 @@ import Divider from '@material-ui/core/Divider';
 import {withStyles} from '@material-ui/core/styles';
 
 import Navbar from '../../components/Navbar';
-import NotesFilter from '../components/NotesFilter';
 import NotesList from '../components/NotesList';
 
 import NotesNav from '../components/NotesNav';
@@ -17,7 +16,7 @@ const styles = theme => ({
     maxWidth: 600,
     margin: 'auto',
     marginTop: theme.spacing.unit * 20,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       marginTop: theme.spacing.unit * 15,
       padding: theme.spacing.unit * 2,
     },

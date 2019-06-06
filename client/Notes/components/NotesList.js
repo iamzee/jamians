@@ -16,16 +16,6 @@ class NotesList extends React.Component {
   };
 
   componentDidMount() {
-    // const parsed = queryString.parse (this.props.queryString);
-
-    // listNotes (parsed).then (notes => {
-    //   this.setState (() => ({notes, noNotes: false}));
-
-    //   if (notes.length === 0) {
-    //     this.setState (() => ({noNotes: true}));
-    //   }
-    // });
-
     const query = queryString.parse(this.props.queryString);
     console.log('First', query);
 

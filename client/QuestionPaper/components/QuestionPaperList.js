@@ -15,50 +15,54 @@ class QuestionPaperList extends React.Component {
     noQuestionPaper: false,
   };
 
-  componentDidMount () {
-    const parsed = queryString.parse (this.props.queryString);
+  componentDidMount() {
+    const query = queryString.parse(this.props.queryString);
 
-    listQuestionPapers (parsed).then (questionPapers => {
-      this.setState (() => ({questionPapers, noQuestionPaper: false}));
+    listQuestionPapers(query).then(questionPapers => {
+      this.setState(() => ({questionPapers}));
 
       if (questionPapers.length === 0) {
-        this.setState (() => ({noQuestionPaper: true}));
+        this.setState(() => ({noQuestionPaper: true}));
       }
     });
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     if (this.props.queryString !== prevProps.queryString) {
-      this.setState (() => ({questionPapers: []}));
-      const parsed = queryString.parse (this.props.queryString);
-      listQuestionPapers (parsed).then (questionPapers => {
-        this.setState (() => ({questionPapers, noQuestionPaper: false}));
+      this.setState(() => ({questionPapers: []}));
+      const parsed = queryString.parse(this.props.queryString);
+      listQuestionPapers(parsed).then(questionPapers => {
+        this.setState(() => ({questionPapers, noQuestionPaper: false}));
 
         if (questionPapers.length === 0) {
-          this.setState (() => ({noQuestionPaper: true}));
+          this.setState(() => ({noQuestionPaper: true}));
         }
       });
     }
   }
 
-  render () {
+  render() {
     return (
       <div>
-        {this.state.noQuestionPaper
-          ? <NoQuestionPaper />
-          : <div>
-              {this.state.questionPapers.length === 0
-                ? <Loader color={'#e23e57'} />
-                : <List>
-                    {this.state.questionPapers.map ((questionPaper, i) => (
-                      <QuestionPaperItem
-                        key={questionPaper._id}
-                        questionPaper={questionPaper}
-                        i={i}
-                      />
-                    ))}
-                  </List>}
-            </div>}
+        {this.state.noQuestionPaper ? (
+          <NoQuestionPaper />
+        ) : (
+          <div>
+            {this.state.questionPapers.length === 0 ? (
+              <Loader color={'#e23e57'} />
+            ) : (
+              <List>
+                {this.state.questionPapers.map((questionPaper, i) => (
+                  <QuestionPaperItem
+                    key={questionPaper._id}
+                    questionPaper={questionPaper}
+                    i={i}
+                  />
+                ))}
+              </List>
+            )}
+          </div>
+        )}
       </div>
     );
   }

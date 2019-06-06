@@ -16,7 +16,6 @@ const create = (req, res) => {
 
 const list = (req, res) => {
   const {department, course, semester, subject} = req.query;
-  console.log('req.query', req.query);
   let queryObject = {};
 
   if (department && course && semester && subject)
@@ -25,8 +24,6 @@ const list = (req, res) => {
     queryObject = {department, course, semester};
   else if (department && course) queryObject = {department, course};
   else if (department) queryObject = {department};
-
-  console.log(queryObject);
 
   Note.find(queryObject)
     .then(docs => {

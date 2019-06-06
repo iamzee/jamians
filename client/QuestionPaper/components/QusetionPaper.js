@@ -11,11 +11,18 @@ import {withStyles} from '@material-ui/core/styles';
 import {readQuestionPaper} from '../../api/questionPaper.api';
 import {getSAS, download} from '../../api/upload.api';
 
-// import Navbar from '../components/Navbar';
+import Navbar from '../../components/Navbar';
+import QuestionPaperNav from '../components/QuestionPaperNav';
 import Loader from '../../components/Loader';
 import BookmarkButton from '../components/BookmarkButton';
 
 const styles = theme => ({
+  container: {
+    marginTop: theme.spacing.unit * 20,
+    [theme.breakpoints.down('xs')]: {
+      marginTop: theme.spacing.unit * 15,
+    },
+  },
   card: {
     maxWidth: 600,
     margin: 'auto',
@@ -66,60 +73,64 @@ class QuestionPaper extends React.Component {
 
     return (
       <div>
-        {/* <Navbar /> */}
-        {questionPaper ? (
-          <Card className={classes.card}>
-            <CardContent>
-              <Typography variant="h5" gutterBottom>
-                Question Paper
-              </Typography>
-              <Typography variant="subtitle1" gutterBottom>
-                {questionPaper.year}
-              </Typography>
-              <Divider />
-              <div className={classes.contentBody}>
-                <Typography variant="caption">
-                  Department:{' '}
-                  <span style={{fontWeight: 'bold'}}>
-                    {questionPaper.department.name}
-                  </span>
+        <Navbar title={'Question Papers'} />
+        <QuestionPaperNav />
+
+        <div className={classes.container}>
+          {questionPaper ? (
+            <Card className={classes.card}>
+              <CardContent>
+                <Typography variant="h5" gutterBottom>
+                  Question Paper
                 </Typography>
-                <Typography variant="caption">
-                  Course:{' '}
-                  <span style={{fontWeight: 'bold'}}>
-                    {questionPaper.course.name}
-                  </span>
+                <Typography variant="subtitle1" gutterBottom>
+                  {questionPaper.year}
                 </Typography>
-                <Typography variant="caption">
-                  Subject:{' '}
-                  <span style={{fontWeight: 'bold'}}>
-                    {questionPaper.subject.name}
-                  </span>
-                </Typography>
-                <Typography variant="caption">
-                  Semester:{' '}
-                  <span style={{fontWeight: 'bold'}}>
-                    {questionPaper.semester}
-                  </span>
-                </Typography>
-                <Typography variant="caption">
-                  Uploaded By:{' '}
-                  <span style={{fontWeight: 'bold'}}>
-                    {questionPaper.uploadedBy.name}
-                  </span>
-                </Typography>
-              </div>
-            </CardContent>
-            <CardActions>
-              <Button onClick={this.handleView} className={classes.button}>
-                View
-              </Button>
-              <BookmarkButton questionPaper={questionPaper} />
-            </CardActions>
-          </Card>
-        ) : (
-          <Loader color={'#e23e57'} />
-        )}
+                <Divider />
+                <div className={classes.contentBody}>
+                  <Typography variant="caption">
+                    Department:{' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {questionPaper.department.name}
+                    </span>
+                  </Typography>
+                  <Typography variant="caption">
+                    Course:{' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {questionPaper.course.name}
+                    </span>
+                  </Typography>
+                  <Typography variant="caption">
+                    Subject:{' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {questionPaper.subject.name}
+                    </span>
+                  </Typography>
+                  <Typography variant="caption">
+                    Semester:{' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {questionPaper.semester}
+                    </span>
+                  </Typography>
+                  <Typography variant="caption">
+                    Uploaded By:{' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {questionPaper.uploadedBy.name}
+                    </span>
+                  </Typography>
+                </div>
+              </CardContent>
+              <CardActions>
+                <Button onClick={this.handleView} className={classes.button}>
+                  View
+                </Button>
+                <BookmarkButton questionPaper={questionPaper} />
+              </CardActions>
+            </Card>
+          ) : (
+            <Loader color={'#e23e57'} />
+          )}
+        </div>
       </div>
     );
   }
