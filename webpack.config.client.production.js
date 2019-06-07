@@ -33,7 +33,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new BundleAnalyzerPlugin (),
+    // new BundleAnalyzerPlugin (),
     new webpack.ContextReplacementPlugin (/moment[\/\\]locale$/, /en/),
   ],
   devtool: 'source-map',

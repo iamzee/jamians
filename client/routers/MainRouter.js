@@ -7,9 +7,11 @@ import NotesPage from '../Notes/pages/NotesPage';
 import NotesBookmarkPage from '../Notes/pages/NotesBookmarkPage';
 import Note from '../Notes/components/Note';
 import Upload from '../QuestionPaper/pages/Upload';
-import QuestionPaperDashboard from '../QuestionPaper/pages/QuestionPaperDashboard';
+import QuestionPaperDashboard
+  from '../QuestionPaper/pages/QuestionPaperDashboard';
 import QuestionPaper from '../QuestionPaper/components/QusetionPaper';
-import QuestionPaperBookmarkPage from '../QuestionPaper/pages/QuestionPaperBookmarkPage';
+import QuestionPaperBookmarkPage
+  from '../QuestionPaper/pages/QuestionPaperBookmarkPage';
 import UploadNotesPage from '../Notes/pages/UploadNotesPage';
 
 import DiscussionList from '../Discussion/pages/DiscussionList';
@@ -21,14 +23,20 @@ import EventsListPage from '../Events/pages/EventsListPage';
 import StartPage from '../Home/pages/StartPage';
 import HomePage from '../Home/pages/HomePage';
 
-const history = createHistory();
+const history = createHistory ();
 
 const MainRouter = () => (
   <Router history={history}>
     <Switch>
+
+      {/* EVENT ROUTES */}
       <PrivateRoute path="/events/new" component={NewEventPage} />
       <PrivateRoute path="/events" component={EventsListPage} />
+
+      {/* SETTINGS ROUTES */}
       <PrivateRoute path="/settings" component={Settings} />
+
+      {/* DISCUSSION ROUTES */}
       <PrivateRoute path="/discussion/new" component={NewDiscussionPage} />
       <PrivateRoute path="/discussion/:discussionId" component={Discussion} />
       <PrivateRoute path="/discussion" component={DiscussionList} />
