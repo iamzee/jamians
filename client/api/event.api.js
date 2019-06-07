@@ -48,3 +48,12 @@ export const removeBookmark = eventId => {
     return doc;
   });
 };
+
+export const getBookmarks = () => {
+  return axios ({
+    method: 'get',
+    url: '/api/event/bookmarks',
+  }).then (({data}) => {
+    return data.events;
+  });
+};

@@ -17,4 +17,8 @@ router
   .route ('/api/event/removeBookmark')
   .post (authCtrl.requireSignin, eventCtrl.removeBookmark);
 
+router
+  .route ('/api/event/bookmarks')
+  .get (authCtrl.requireSignin, eventCtrl.getBookmarks);
+
 export default router;

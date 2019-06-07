@@ -47,7 +47,7 @@ const EventsNav = props => {
           <Button className={classes.hide}>New</Button>
         </Link>
 
-        <Link to="/events/new" className={classes.link}>
+        <Link to="/events/bookmarks" className={classes.link}>
           <BookmarksIcon />
           <Button className={classes.hide}>Bookmarks</Button>
         </Link>

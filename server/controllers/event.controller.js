@@ -61,4 +61,20 @@ const removeBookmark = (req, res) => {
     });
 };
 
-export default {create, list, addBookmark, removeBookmark};
+const getBookmarks = (req, res) => {
+  const userId = req.user._id;
+  Event.find ({bookmarks: {$eq: userId}})
+    .then (docs => {
+      res.status (200).json ({
+        events: docs,
+      });
+    })
+    .catch (err => {
+      res.status (400).json ({
+        err,
+        errorMessage: 'Unable to fetch event bookmarks',
+      });
+    });
+};
+
+export default {create, list, addBookmark, removeBookmark, getBookmarks};
