@@ -22,10 +22,15 @@ export default () => {
       <body>
         <div id="root"></div>
         <script src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="/main.bundle.js"></script>
         <script type="text/javascript" src="/js/azure-storage.blob.js"></script>
-        <script type="text/javascript" src="/bundles/vendor.client.bundle.js"></script>
-        <script type="text/javascript" src="/bundles/client.bundle.js"></script>
+        
+        
       </body>
     </html>  
   `;
 };
+
+/* <script type="text/javascript" src="/bundles/client.bundle.js"></script>  */
+
+/*<script type="text/javascript" src="/bundles/vendor.client.bundle.js"></script> */

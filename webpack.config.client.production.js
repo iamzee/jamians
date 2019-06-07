@@ -7,9 +7,10 @@ module.exports = {
   mode: 'production',
   entry: './client/client.js',
   output: {
-    filename: 'client.bundle.js',
-    path: path.resolve (__dirname, 'public', 'bundles'),
-    publicPath: '/public',
+    filename: '[name].bundle.js',
+    chunkFilename: '[name].bundle.js',
+    path: path.resolve (__dirname, 'public'),
+    publicPath: '',
   },
   module: {
     rules: [

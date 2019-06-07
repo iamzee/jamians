@@ -6,4 +6,4 @@ const router = express.Router ();
 
 router.route ('/api/chat').post (authCtrl.requireSignin, chatCtrl.create);
 
-module.exports = router;
+export default router;

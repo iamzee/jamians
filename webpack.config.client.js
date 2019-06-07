@@ -1,12 +1,13 @@
-const path = require('path');
+const path = require ('path');
 
 module.exports = {
   mode: 'development',
   entry: './client/client.js',
   output: {
-    filename: 'client.bundle.js',
-    path: path.resolve(__dirname, 'public', 'bundles'),
-    publicPath: '/public',
+    filename: '[name].bundle.js',
+    chunkFilename: '[name].bundle.js',
+    path: path.resolve (__dirname, 'public'),
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -29,16 +30,16 @@ module.exports = {
       },
     ],
   },
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendor',
-          chunks: 'all',
-        },
-      },
-    },
-  },
+  // optimization: {
+  //   splitChunks: {
+  //     cacheGroups: {
+  //       vendor: {
+  //         test: /[\\/]node_modules[\\/]/,
+  //         name: 'vendor',
+  //         chunks: 'all',
+  //       },
+  //     },
+  //   },
+  // },
   devtool: 'inline-source-map',
 };

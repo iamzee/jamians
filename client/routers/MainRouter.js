@@ -1,71 +1,94 @@
-import React from 'react';
+import React, {Suspense, lazy} from 'react';
 import {Router, Switch, Route} from 'react-router-dom';
 import createHistory from 'history/createBrowserHistory';
 
 import PrivateRoute from './PrivateRouter';
-import NotesPage from '../Notes/pages/NotesPage';
-import NotesBookmarkPage from '../Notes/pages/NotesBookmarkPage';
-import Note from '../Notes/components/Note';
-import Upload from '../QuestionPaper/pages/Upload';
-import QuestionPaperDashboard
-  from '../QuestionPaper/pages/QuestionPaperDashboard';
-import QuestionPaper from '../QuestionPaper/components/QusetionPaper';
-import QuestionPaperBookmarkPage
-  from '../QuestionPaper/pages/QuestionPaperBookmarkPage';
-import UploadNotesPage from '../Notes/pages/UploadNotesPage';
 
-import DiscussionList from '../Discussion/pages/DiscussionList';
-import NewDiscussionPage from '../Discussion/pages/NewDiscussionPage';
-import Discussion from '../Discussion/pages/Discussion';
-import Settings from '../Settings/pages/Settings';
-import NewEventPage from '../Events/pages/NewEventPage';
-import EventsListPage from '../Events/pages/EventsListPage';
-import StartPage from '../Home/pages/StartPage';
-import HomePage from '../Home/pages/HomePage';
+// NOTE IMPORTS
+const NotesPage = lazy (() => import ('../Notes/pages/NotesPage'));
+const NotesBookmarkPage = lazy (() =>
+  import ('../Notes/pages/NotesBookmarkPage')
+);
+const Note = lazy (() => import ('../Notes/components/Note'));
+const UploadNotesPage = lazy (() => import ('../Notes/pages/UploadNotesPage'));
+
+// QUESTION PAPER IMPORTS
+const Upload = lazy (() => import ('../QuestionPaper/pages/Upload'));
+const QuestionPaperDashboard = lazy (() =>
+  import ('../QuestionPaper/pages/QuestionPaperDashboard')
+);
+const QuestionPaper = lazy (() =>
+  import ('../QuestionPaper/components/QusetionPaper')
+);
+const QuestionPaperBookmarkPage = lazy (() =>
+  import ('../QuestionPaper/pages/QuestionPaperBookmarkPage')
+);
+
+// DISCUSSION IMPORTS
+const DiscussionList = lazy (() =>
+  import ('../Discussion/pages/DiscussionList')
+);
+const NewDiscussionPage = lazy (() =>
+  import ('../Discussion/pages/NewDiscussionPage')
+);
+const Discussion = lazy (() => import ('../Discussion/pages/Discussion'));
+
+// SETTINGS IMPORTS
+const Settings = lazy (() => import ('../Settings/pages/Settings'));
+
+// EVENT IMPORTS
+const NewEventPage = lazy (() => import ('../Events/pages/NewEventPage'));
+const EventsListPage = lazy (() => import ('../Events/pages/EventsListPage'));
+
+// HOME IMPORTS
+const StartPage = lazy (() => import ('../Home/pages/StartPage'));
+const HomePage = lazy (() => import ('../Home/pages/HomePage'));
 
 const history = createHistory ();
 
 const MainRouter = () => (
   <Router history={history}>
-    <Switch>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Switch>
 
-      {/* EVENT ROUTES */}
-      <PrivateRoute path="/events/new" component={NewEventPage} />
-      <PrivateRoute path="/events" component={EventsListPage} />
+        {/* EVENT ROUTES */}
+        <PrivateRoute path="/events/new" component={NewEventPage} />
+        <PrivateRoute path="/events" component={EventsListPage} />
 
-      {/* SETTINGS ROUTES */}
-      <PrivateRoute path="/settings" component={Settings} />
+        {/* SETTINGS ROUTES */}
+        <PrivateRoute path="/settings" component={Settings} />
 
-      {/* DISCUSSION ROUTES */}
-      <PrivateRoute path="/discussion/new" component={NewDiscussionPage} />
-      <PrivateRoute path="/discussion/:discussionId" component={Discussion} />
-      <PrivateRoute path="/discussion" component={DiscussionList} />
+        {/* DISCUSSION ROUTES */}
+        <PrivateRoute path="/discussion/new" component={NewDiscussionPage} />
+        <PrivateRoute path="/discussion/:discussionId" component={Discussion} />
+        <PrivateRoute path="/discussion" component={DiscussionList} />
 
-      {/* QUESTION PAPER ROUTES */}
-      <PrivateRoute path="/question_papers/upload" component={Upload} />
-      <PrivateRoute
-        path="/question_papers/bookmarks"
-        component={QuestionPaperBookmarkPage}
-      />
-      <PrivateRoute
-        path="/question_papers/:questionPaperId"
-        component={QuestionPaper}
-      />
-      <PrivateRoute
-        path="/question_papers"
-        component={QuestionPaperDashboard}
-      />
+        {/* QUESTION PAPER ROUTES */}
+        <PrivateRoute path="/question_papers/upload" component={Upload} />
+        <PrivateRoute
+          path="/question_papers/bookmarks"
+          component={QuestionPaperBookmarkPage}
+        />
+        <PrivateRoute
+          path="/question_papers/:questionPaperId"
+          component={QuestionPaper}
+        />
+        <PrivateRoute
+          path="/question_papers"
+          component={QuestionPaperDashboard}
+        />
 
-      {/* NOTE ROUTES */}
-      <PrivateRoute path="/notes/upload" component={UploadNotesPage} />
-      <PrivateRoute path="/notes/bookmarks" component={NotesBookmarkPage} />
-      <PrivateRoute path="/notes/:noteId" component={Note} />
-      <PrivateRoute exact path="/notes" component={NotesPage} />
+        {/* NOTE ROUTES */}
+        <PrivateRoute path="/notes/upload" component={UploadNotesPage} />
+        <PrivateRoute path="/notes/bookmarks" component={NotesBookmarkPage} />
+        <PrivateRoute path="/notes/:noteId" component={Note} />
+        <PrivateRoute exact path="/notes" component={NotesPage} />
 
-      {/* HOME ROUTES */}
-      <Route path="/login" component={StartPage} />
-      <PrivateRoute exact path="/" component={HomePage} />
-    </Switch>
+        {/* HOME ROUTES */}
+        <Route path="/login" component={StartPage} />
+        <PrivateRoute exact path="/" component={HomePage} />
+      </Switch>
+    </Suspense>
   </Router>
 );
 

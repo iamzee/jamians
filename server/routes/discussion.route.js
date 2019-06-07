@@ -13,4 +13,4 @@ router
   .route ('/api/discussion/:discussionId')
   .get (authCtrl.requireSignin, discussionCtrl.read);
 
-module.exports = router;
+export default router;
