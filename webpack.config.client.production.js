@@ -1,11 +1,14 @@
-const path = require('path');
+const path = require ('path');
+const BundleAnalyzerPlugin = require ('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
+const webpack = require ('webpack');
 
 module.exports = {
   mode: 'production',
   entry: './client/client.js',
   output: {
     filename: 'client.bundle.js',
-    path: path.resolve(__dirname, 'public', 'bundles'),
+    path: path.resolve (__dirname, 'public', 'bundles'),
     publicPath: '/public',
   },
   module: {
@@ -29,5 +32,9 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new BundleAnalyzerPlugin (),
+    new webpack.ContextReplacementPlugin (/moment[\/\\]locale$/, /en/),
+  ],
   devtool: 'source-map',
 };
