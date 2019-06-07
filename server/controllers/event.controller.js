@@ -19,4 +19,46 @@ const list = (req, res) => {
   });
 };
 
-export default {create, list};
+const addBookmark = (req, res) => {
+  const {eventId} = req.body;
+  const userId = req.user._id;
+  console.log (req.body);
+
+  Event.findById (eventId).then (event => {
+    if (!event) {
+      return res.status (400).json ({
+        errorMessage: 'Event not found',
+      });
+    }
+
+    event.bookmarks.push (userId);
+
+    event
+      .save ()
+      .then (doc => {
+        console.log (doc);
+        res.json (doc);
+      })
+      .catch (err => {
+        console.log (err);
+      });
+  });
+};
+
+const removeBookmark = (req, res) => {
+  const userId = req.user._id;
+  const eventId = req.body.eventId;
+
+  Event.findByIdAndUpdate (eventId, {$pull: {bookmarks: userId}}, {new: true})
+    .then (doc => {
+      res.status (200).json (doc);
+    })
+    .catch (err => {
+      res.status (400).json ({
+        err,
+        errorMessage: 'Unable to update event',
+      });
+    });
+};
+
+export default {create, list, addBookmark, removeBookmark};

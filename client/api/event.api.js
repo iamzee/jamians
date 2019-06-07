@@ -22,3 +22,29 @@ export const listEvents = token => {
     return data.events;
   });
 };
+
+export const addBookmark = eventId => {
+  return axios ({
+    method: 'post',
+    url: '/api/event/addBookmark',
+    data: JSON.stringify ({eventId}),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then (doc => {
+    return doc;
+  });
+};
+
+export const removeBookmark = eventId => {
+  return axios ({
+    method: 'post',
+    url: '/api/event/removeBookmark',
+    data: JSON.stringify ({eventId}),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then (doc => {
+    return doc;
+  });
+};

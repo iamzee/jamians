@@ -17,6 +17,7 @@ import {withStyles} from '@material-ui/core/styles';
 import {getSAS, download} from '../../api/upload.api';
 import MyEditor from './MyEditor';
 import {isAuthenticated} from '../../api/auth.api';
+import BookmarkButton from './BookmarkButton';
 
 const styles = theme => ({
   card: {
@@ -62,9 +63,7 @@ class EventsList extends React.Component {
           </Typography>
         </CardContent>
         <CardActions>
-          <IconButton aria-label="Bookmark">
-            <BookmarkIcon />
-          </IconButton>
+          <BookmarkButton event={event} />
           <IconButton aria-label="Bookmark">
             <EditIcon />
           </IconButton>

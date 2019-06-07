@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const eventSchema = mongoose.Schema({
+const eventSchema = mongoose.Schema ({
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -8,7 +8,7 @@ const eventSchema = mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now (),
   },
   title: {
     type: String,
@@ -21,8 +21,14 @@ const eventSchema = mongoose.Schema({
   poster: {
     type: String,
   },
+  bookmarks: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
 });
 
-const Event = mongoose.model('Event', eventSchema);
+const Event = mongoose.model ('Event', eventSchema);
 
 export default Event;
