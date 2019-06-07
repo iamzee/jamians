@@ -10,21 +10,23 @@ import BoldIcon from '@material-ui/icons/FormatBoldOutlined';
 import ItalicIcon from '@material-ui/icons/FormatItalicOutlined';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import {withStyles} from '@material-ui/core/styles';
 
 import Navbar from '../../components/Navbar';
 import EventsNav from '../components/EventsNav';
 import {createEvent} from '../../api/event.api';
-import {isAuthenticated} from '../../helpers/auth.helper';
-import {Typography, Divider} from '@material-ui/core';
+import {isAuthenticated} from '../../api/auth.api';
+import {getSAS, upload} from '../../api/upload.api';
 
-const linkifyPlugin = createLinkifyPlugin();
+const linkifyPlugin = createLinkifyPlugin ();
 
 const styles = theme => ({
   root: {
     marginTop: theme.spacing.unit * 15,
     padding: theme.spacing.unit * 5,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down ('sm')]: {
       marginTop: theme.spacing.unit * 15,
       padding: theme.spacing.unit * 2,
     },
@@ -61,55 +63,89 @@ const styles = theme => ({
 
 class NewEventPage extends React.Component {
   state = {
-    editorState: EditorState.createEmpty(),
-    text: EditorState.createEmpty(),
+    editorState: EditorState.createEmpty (),
+    text: EditorState.createEmpty (),
     title: '',
     file: null,
   };
 
   onTitleChange = e => {
     const title = e.target.value;
-    this.setState(() => ({title}));
+    this.setState (() => ({title}));
   };
 
   onFileChange = e => {
     const file = e.target.files[0];
-    console.log(file);
-    this.setState(() => ({file}));
+    console.log (file);
+    this.setState (() => ({file}));
   };
 
   onChange = editorState => {
-    this.setState(() => ({editorState}));
+    this.setState (() => ({editorState}));
   };
 
   handleKeyCommand = (command, editorState) => {
-    const newState = RichUtils.handleKeyCommand(editorState, command);
+    const newState = RichUtils.handleKeyCommand (editorState, command);
 
     if (newState) {
-      this.onChange(newState);
+      this.onChange (newState);
       return 'handled';
     }
     return 'not-handled';
   };
 
   _onBoldClick = () => {
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
+    this.onChange (
+      RichUtils.toggleInlineStyle (this.state.editorState, 'BOLD')
+    );
   };
 
   _onItalicClick = () => {
-    this.onChange(
-      RichUtils.toggleInlineStyle(this.state.editorState, 'ITALIC')
+    this.onChange (
+      RichUtils.toggleInlineStyle (this.state.editorState, 'ITALIC')
     );
   };
 
   onSubmit = () => {
-    const {token} = isAuthenticated();
-    const rawContent = convertToRaw(this.state.editorState.getCurrentContent());
-    const rawContentString = JSON.stringify(rawContent);
-    createEvent(token, {article: rawContentString, title: this.state.title});
+    const rawContent = convertToRaw (
+      this.state.editorState.getCurrentContent ()
+    );
+    const rawContentString = JSON.stringify (rawContent);
+
+    if (this.state.file) {
+      getSAS ('events').then (sasToken => {
+        const {speedSummary, blobName} = upload (
+          sasToken,
+          this.state.file,
+          'events'
+        );
+
+        speedSummary.on ('progress', () => {
+          const progressPercent = speedSummary.getCompletePercent ();
+
+          if (progressPercent == 100) {
+            isAuthenticated ().then (user => {
+              const event = {
+                title: this.state.title,
+                article: rawContentString,
+                poster: blobName,
+              };
+
+              createEvent (event);
+            });
+          }
+        });
+      });
+    } else {
+      const event = {
+        title: this.state.title,
+        article: rawContentString,
+      };
+      createEvent (event);
+    }
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
     return (
       <div>
@@ -155,7 +191,7 @@ class NewEventPage extends React.Component {
           <div className={classes.fileUploadSection}>
             <img
               className={classes.image}
-              src={this.state.file && URL.createObjectURL(this.state.file)}
+              src={this.state.file && URL.createObjectURL (this.state.file)}
             />
             <br />
             <input
@@ -180,4 +216,4 @@ class NewEventPage extends React.Component {
   }
 }
 
-export default withStyles(styles)(NewEventPage);
+export default withStyles (styles) (NewEventPage);

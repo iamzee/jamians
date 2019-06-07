@@ -2,17 +2,17 @@ import axios from 'axios';
 import uuid from 'uuid/v1';
 
 export const getSAS = containerName => {
-  console.log(containerName);
-  return axios({
+  console.log (containerName);
+  return axios ({
     method: 'post',
     url: '/generateSAS',
-    data: JSON.stringify({
+    data: JSON.stringify ({
       containerName,
     }),
     headers: {
       'Content-Type': 'application/json',
     },
-  }).then(({data}) => {
+  }).then (({data}) => {
     return data.sasToken;
   });
 };
@@ -21,23 +21,23 @@ export const upload = (sasToken, file, containerName) => {
   const blobUri = 'https://jamiansdev.blob.core.windows.net';
   const token = `?${sasToken}`;
 
-  const blobService = AzureStorage.Blob.createBlobServiceWithSas(
+  const blobService = AzureStorage.Blob.createBlobServiceWithSas (
     blobUri,
     token
   );
   // const containerName = 'questionPapers';
-  const blobName = `${uuid()}.pdf`;
+  const blobName = `${uuid ()}.pdf`;
 
-  const speedSummary = blobService.createBlockBlobFromBrowserFile(
+  const speedSummary = blobService.createBlockBlobFromBrowserFile (
     containerName,
     blobName,
     file,
     (err, results) => {
       if (err) {
-        return console.log(err);
+        return console.log (err);
       }
 
-      console.log(results);
+      console.log (results);
     }
   );
 
@@ -51,12 +51,12 @@ export const download = (sasToken, containerName, blobName) => {
   const blobUri = 'https://jamiansdev.blob.core.windows.net';
   const token = `?${sasToken}`;
 
-  const blobService = AzureStorage.Blob.createBlobServiceWithSas(
+  const blobService = AzureStorage.Blob.createBlobServiceWithSas (
     blobUri,
     token
   );
 
-  const downloadLink = blobService.getUrl(containerName, blobName, sasToken);
+  const downloadLink = blobService.getUrl (containerName, blobName, sasToken);
 
   return downloadLink;
 };
