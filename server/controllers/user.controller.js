@@ -1,5 +1,4 @@
 import User from '../models/user.model';
-import jwt from 'jsonwebtoken';
 
 export const create = (req, res) => {
   const user = new User (req.body);
@@ -70,7 +69,17 @@ export const userById = (req, res, next, id) => {
 };
 
 export const read = (req, res) => {
-  res.status (200).json (req.profile);
+  const {userId} = req.params;
+
+  User.findById (userId)
+    .then (user => {
+      res.status (200).json (user);
+    })
+    .catch (err => {
+      res.status (400).json ({
+        errorMessage: 'Unable to fetch User',
+      });
+    });
 };
 
 export const count = (req, res) => {

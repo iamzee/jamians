@@ -16,6 +16,7 @@ import {withStyles} from '@material-ui/core/styles';
 
 import {getSAS, download} from '../../api/upload.api';
 import {isAuthenticated} from '../../api/auth.api';
+import {readUser} from '../../api/user.api';
 import BookmarkButton from './BookmarkButton';
 import ArticleEditor from './ArticleEditor';
 
@@ -40,10 +41,13 @@ class EventsList extends React.Component {
       });
     }
     isAuthenticated ().then (user => {
-      this.setState (() => ({user}));
       if (user._id === this.props.event.createdBy) {
         this.setState (() => ({showEdit: true}));
       }
+    });
+    readUser (this.props.event.createdBy).then (user => {
+      console.log ('READ USER', user);
+      this.setState (() => ({user}));
     });
   }
 

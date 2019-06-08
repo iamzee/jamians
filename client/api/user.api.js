@@ -1,13 +1,12 @@
 import axios from 'axios';
 
-export const read = userId => {
+export const readUser = userId => {
   return axios ({
     method: 'get',
     url: '/api/user/' + userId,
   })
     .then (({data}) => {
       return data;
-      // console.log (data);
     })
     .catch (err => {
       console.log (err);
