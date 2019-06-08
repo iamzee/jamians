@@ -21,4 +21,9 @@ router
   .route ('/api/event/bookmarks')
   .get (authCtrl.requireSignin, eventCtrl.getBookmarks);
 
+router
+  .route ('/api/event/:eventId')
+  .get (authCtrl.requireSignin, eventCtrl.read)
+  .post (authCtrl.requireSignin, eventCtrl.update);
+
 export default router;

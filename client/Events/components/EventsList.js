@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import moment from 'moment';
 
 import Card from '@material-ui/core/Card';
@@ -7,7 +8,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
-import BookmarkIcon from '@material-ui/icons/BookmarkBorderOutlined';
 import EditIcon from '@material-ui/icons/EditOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -15,9 +15,9 @@ import Avatar from '@material-ui/core/Avatar';
 import {withStyles} from '@material-ui/core/styles';
 
 import {getSAS, download} from '../../api/upload.api';
-import MyEditor from './MyEditor';
 import {isAuthenticated} from '../../api/auth.api';
 import BookmarkButton from './BookmarkButton';
+import ArticleEditor from './ArticleEditor';
 
 const styles = theme => ({
   card: {
@@ -29,22 +29,27 @@ class EventsList extends React.Component {
   state = {
     posterLink: '',
     user: {},
+    showEdit: false,
   };
 
   componentDidMount () {
-    getSAS ('events').then (token => {
-      const posterLink = download (token, 'events', this.props.event.poster);
-      this.setState (() => ({posterLink}));
-    });
+    if (this.props.event.poster) {
+      getSAS ('events').then (token => {
+        const posterLink = download (token, 'events', this.props.event.poster);
+        this.setState (() => ({posterLink}));
+      });
+    }
     isAuthenticated ().then (user => {
       this.setState (() => ({user}));
+      if (user._id === this.props.event.createdBy) {
+        this.setState (() => ({showEdit: true}));
+      }
     });
   }
 
   render () {
     const {classes, event} = this.props;
     const {user} = this.state;
-    console.log (this.props.event.poster);
     return (
       <Card key={event._id} className={classes.card}>
         <CardHeader
@@ -59,17 +64,26 @@ class EventsList extends React.Component {
             {event.title}
           </Typography>
           <Typography variant="subtitle2" style={{fontWeight: 400}}>
-            <MyEditor rawContent={event.article} />
+            <ArticleEditor
+              readOnly={true}
+              rawContent={event.article}
+              onChange={() => {}}
+            />
           </Typography>
         </CardContent>
         <CardActions>
           <BookmarkButton event={event} />
-          <IconButton aria-label="Bookmark">
-            <EditIcon />
-          </IconButton>
-          <IconButton aria-label="Bookmark">
-            <DeleteIcon />
-          </IconButton>
+          {this.state.showEdit &&
+            <React.Fragment>
+              <Link to={`/events/${event._id}/edit`}>
+                <IconButton aria-label="Edit">
+                  <EditIcon />
+                </IconButton>
+              </Link>
+              <IconButton aria-label="Bookmark">
+                <DeleteIcon />
+              </IconButton>
+            </React.Fragment>}
         </CardActions>
       </Card>
     );

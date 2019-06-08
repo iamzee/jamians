@@ -57,3 +57,26 @@ export const getBookmarks = () => {
     return data.events;
   });
 };
+
+export const updateEvent = (eventId, payload) => {
+  return axios ({
+    method: 'post',
+    url: `/api/event/${eventId}`,
+    data: JSON.stringify (payload),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then (({data}) => {
+    return data;
+  });
+};
+
+export const readEvent = eventId => {
+  console.log ('EVENT_ID', eventId);
+  return axios ({
+    mrthod: 'get',
+    url: `/api/event/${eventId}`,
+  }).then (({data}) => {
+    return data;
+  });
+};
