@@ -5,11 +5,11 @@ const create = (req, res) => {
 
   const discussion = {
     title,
-    createdBy: req.auth._id,
+    createdBy: req.user._id,
   };
 
   new Discussion (discussion).save ().then (doc => {
-    console.log (doc);
+    return doc;
   });
 };
 

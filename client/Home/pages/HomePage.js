@@ -65,7 +65,7 @@ const HomePage = props => {
             </Link>
           </Grid>
           <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Link className={classes.link} to="/notes">
+            <Link className={classes.link} to="/question_papers">
               <QuestionPaperIcon />
               <Typography className={classes.linkText} variant="h6">
                 QuestionPapers
@@ -89,7 +89,7 @@ const HomePage = props => {
             </Link>
           </Grid>
           <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Link className={classes.link} to="/notes">
+            <Link className={classes.link} to="/discussion">
               <DiscussionIcon />
               <Typography className={classes.linkText} variant="h6">
                 Discussion
@@ -97,7 +97,7 @@ const HomePage = props => {
             </Link>
           </Grid>
           <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Link className={classes.link} to="/notes">
+            <Link className={classes.link} to="/events">
               <EventIcon />
               <Typography className={classes.linkText} variant="h6">
                 Events

@@ -1,14 +1,13 @@
 import axios from 'axios';
 
-export const newDiscussion = (token, discussionTitle) => {
+export const newDiscussion = title => {
   return axios ({
     method: 'post',
     url: '/api/discussion',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token,
     },
-    data: JSON.stringify ({title: discussionTitle}),
+    data: JSON.stringify ({title}),
   });
 };
 

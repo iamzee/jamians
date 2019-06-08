@@ -2,19 +2,29 @@ import React from 'react';
 
 import DiscussionNav from '../components/DiscussionNav';
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
 import {newDiscussion} from '../../api/discussion.api';
-import {isAuthenticated} from '../../helpers/auth.helper';
+import Navbar from '../../components/Navbar';
 
 const styles = theme => ({
   container: {
-    margin: theme.spacing.unit * 5,
+    marginTop: theme.spacing.unit * 15,
+    padding: theme.spacing.unit * 5,
+    [theme.breakpoints.down ('sm')]: {
+      marginTop: theme.spacing.unit * 15,
+      padding: theme.spacing.unit * 2,
+    },
   },
   textField: {
+    marginTop: theme.spacing.unit * 2,
     width: '100%',
+  },
+  title: {
+    fontWeight: 300,
   },
 });
 
@@ -29,21 +39,23 @@ class NewDiscussionPage extends React.Component {
   };
 
   handleSubmit = e => {
-    const {token} = isAuthenticated ();
     const {title} = this.state;
-    newDiscussion (token, title);
+    newDiscussion (title);
   };
 
   render () {
     const {classes} = this.props;
     return (
       <div>
+        <Navbar title={'Discussions'} />
         <DiscussionNav />
 
         <div className={classes.container}>
-          <Typography variant="h6">
+          <Typography className={classes.title} variant="h4" gutterBottom>
             Start Discussion
           </Typography>
+
+          <Divider />
           <TextField
             value={this.state.title}
             onChange={this.onTitleChange}
