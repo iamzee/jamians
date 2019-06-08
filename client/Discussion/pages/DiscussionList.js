@@ -2,22 +2,28 @@ import React from 'react';
 
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
 import {withStyles} from '@material-ui/core/styles';
 
 import DiscussionNav from '../components/DiscussionNav';
 import {listDiscussions} from '../../api/discussion.api';
-import {isAuthenticated} from '../../helpers/auth.helper';
 import DiscussionListItem from '../components/DiscussionListItem';
+import Navbar from '../../components/Navbar';
 
 const styles = theme => ({
   container: {
-    margin: theme.spacing.unit * 5,
-    [theme.breakpoints.down ('sm')]: {
-      margin: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 15,
+    padding: theme.spacing.unit * 5,
+    [theme.breakpoints.down ('xs')]: {
+      marginTop: theme.spacing.unit * 15,
+      padding: theme.spacing.unit * 2,
     },
   },
   list: {
     marginTop: theme.spacing.unit * 2,
+  },
+  title: {
+    fontWeight: 300,
   },
 });
 
@@ -27,9 +33,7 @@ class DiscussionList extends React.Component {
   };
 
   componentDidMount () {
-    const {token} = isAuthenticated ();
-
-    listDiscussions (token).then (discussions => {
+    listDiscussions ().then (discussions => {
       this.setState (() => ({discussions}));
     });
   }
@@ -38,12 +42,15 @@ class DiscussionList extends React.Component {
     const {classes} = this.props;
     return (
       <div>
+        <Navbar title={'Discussions'} />
         <DiscussionNav />
 
         <div className={classes.container}>
-          <Typography variant="h6">
-            Discussions
+          <Typography className={classes.title} variant="h4" gutterBottom>
+            Dashboard
           </Typography>
+
+          <Divider />
           <List className={classes.list}>
             {this.state.discussions.map (d => {
               return <DiscussionListItem key={d._id} discussion={d} />;

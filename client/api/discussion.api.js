@@ -11,25 +11,19 @@ export const newDiscussion = title => {
   });
 };
 
-export const listDiscussions = token => {
+export const listDiscussions = () => {
   return axios ({
     method: 'get',
     url: '/api/discussion',
-    headers: {
-      Authorization: 'Bearer ' + token,
-    },
   }).then (({data}) => {
     return data.discussions;
   });
 };
 
-export const readDiscussion = (token, discussionId) => {
+export const readDiscussion = discussionId => {
   return axios ({
     method: 'get',
     url: '/api/discussion/' + discussionId,
-    headers: {
-      Authorization: 'Bearer ' + token,
-    },
   }).then (({data}) => {
     return data;
   });

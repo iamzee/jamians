@@ -14,7 +14,7 @@ const styles = theme => ({
   container: {
     marginTop: theme.spacing.unit * 15,
     padding: theme.spacing.unit * 5,
-    [theme.breakpoints.down ('sm')]: {
+    [theme.breakpoints.down ('xs')]: {
       marginTop: theme.spacing.unit * 15,
       padding: theme.spacing.unit * 2,
     },

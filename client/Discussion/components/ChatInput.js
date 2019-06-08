@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
-import {isAuthenticated} from '../../helpers/auth.helper';
+import {isAuthenticated} from '../../api/auth.api';
 
 const styles = theme => ({
   inputContainer: {
@@ -34,19 +34,21 @@ class ChatInput extends React.Component {
 
   onMessageChange = e => {
     const message = e.target.value;
-    this.setState(() => ({message}));
+    this.setState (() => ({message}));
   };
 
   handleSubmit = () => {
-    const message = {
-      text: this.state.message,
-      createdBy: isAuthenticated().user._id,
-    };
+    isAuthenticated ().then (user => {
+      const message = {
+        text: this.state.message,
+        createdBy: user._id,
+      };
 
-    this.props.socket.emit('messageToServer', message);
+      this.props.socket.emit ('messageToServer', message);
+    });
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
     return (
       <div className={classes.inputContainer}>
@@ -65,4 +67,4 @@ class ChatInput extends React.Component {
   }
 }
 
-export default withStyles(styles)(ChatInput);
+export default withStyles (styles) (ChatInput);
