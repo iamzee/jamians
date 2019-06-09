@@ -3,6 +3,7 @@ import {Router, Switch, Route} from 'react-router-dom';
 import createHistory from 'history/createBrowserHistory';
 
 import PrivateRoute from './PrivateRouter';
+import PageLoader from '../components/PageLoader';
 
 // NOTE IMPORTS
 const NotesPage = lazy (() => import ('../Notes/pages/NotesPage'));
@@ -52,7 +53,7 @@ const history = createHistory ();
 
 const MainRouter = () => (
   <Router history={history}>
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<PageLoader />}>
       <Switch>
 
         {/* EVENT ROUTES */}
