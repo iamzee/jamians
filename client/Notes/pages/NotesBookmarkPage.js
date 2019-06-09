@@ -22,14 +22,13 @@ const styles = theme => ({
     maxWidth: 600,
     margin: 'auto',
     marginTop: theme.spacing.unit * 20,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down ('sm')]: {
       marginTop: theme.spacing.unit * 15,
       padding: theme.spacing.unit * 2,
     },
   },
   title: {
     fontWeight: 300,
-    color: theme.notes.primary,
   },
   notesSection: {
     marginTop: theme.spacing.unit * 2,
@@ -42,16 +41,16 @@ class NotesBookmarkPage extends React.Component {
     noNotes: false,
   };
 
-  componentDidMount() {
-    getBookmarkedNotes().then(notes => {
-      this.setState(() => ({notes}));
+  componentDidMount () {
+    getBookmarkedNotes ().then (notes => {
+      this.setState (() => ({notes}));
       if (notes.length === 0) {
-        this.setState(() => ({noNotes: true}));
+        this.setState (() => ({noNotes: true}));
       }
     });
   }
 
-  render() {
+  render () {
     const {classes} = this.props;
     return (
       <div>
@@ -66,21 +65,17 @@ class NotesBookmarkPage extends React.Component {
           <Divider />
 
           <div className={classes.notesSection}>
-            {this.state.noNotes ? (
-              <NoNotes />
-            ) : (
-              <div>
-                {this.state.notes.length === 0 ? (
-                  <Loader color="#00adb5" />
-                ) : (
-                  <List className={classes.list}>
-                    {this.state.notes.map(note => (
-                      <NoteItem key={note._id} note={note} />
-                    ))}
-                  </List>
-                )}
-              </div>
-            )}
+            {this.state.noNotes
+              ? <NoNotes />
+              : <div>
+                  {this.state.notes.length === 0
+                    ? <Loader color="#00adb5" />
+                    : <List className={classes.list}>
+                        {this.state.notes.map (note => (
+                          <NoteItem key={note._id} note={note} />
+                        ))}
+                      </List>}
+                </div>}
           </div>
         </div>
       </div>
@@ -88,4 +83,4 @@ class NotesBookmarkPage extends React.Component {
   }
 }
 
-export default withStyles(styles)(NotesBookmarkPage);
+export default withStyles (styles) (NotesBookmarkPage);

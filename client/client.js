@@ -2,44 +2,30 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+import teal from '@material-ui/core/colors/teal';
+import cyan from '@material-ui/core/colors/cyan';
+import lightBlue from '@material-ui/core/colors/lightBlue';
 
 import MainRouter from './routers/MainRouter';
 
-const theme = createMuiTheme({
+const theme = createMuiTheme ({
   palette: {
     primary: {
-      main: '#35234b',
+      main: teal[500],
     },
     secondary: {
-      main: '#774898',
+      main: lightBlue[700],
     },
-  },
-  notes: {
-    primary: '#222831',
-    secondary: '#393e46',
-    tertiary: '#00adb5',
-    quaternary: '#eeeeee',
-  },
-  home: {
-    primary: '#1fab89',
-    secondary: '#d7fbe8',
-  },
-  questionPaper: {
-    primary: '#522546',
-    secondary: '#88304e',
-    tertiary: '#e23e57',
-  },
-  chat: {
-    primary: '#fff1c1',
+    tertiary: cyan[200],
   },
   typography: {
     useNextVariants: true,
   },
 });
 
-ReactDOM.render(
+ReactDOM.render (
   <MuiThemeProvider theme={theme}>
     <MainRouter />
   </MuiThemeProvider>,
-  document.getElementById('root')
+  document.getElementById ('root')
 );

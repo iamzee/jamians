@@ -46,16 +46,16 @@ class Filter extends React.Component {
     showSubjects: false,
   };
 
-  componentDidMount() {
-    listDepartments().then(departments => {
-      this.setState(() => ({
+  componentDidMount () {
+    listDepartments ().then (departments => {
+      this.setState (() => ({
         departments,
       }));
     });
   }
 
   onDepartmentChange = e => {
-    this.setState(() => ({
+    this.setState (() => ({
       department,
       course: '',
       showCourseLoader: true,
@@ -64,9 +64,9 @@ class Filter extends React.Component {
     }));
 
     const department = e.target.value;
-    this.setState(() => ({department}));
-    readDepartment(department).then(({courses}) => {
-      this.setState(() => ({
+    this.setState (() => ({department}));
+    readDepartment (department).then (({courses}) => {
+      this.setState (() => ({
         courses,
         showCourseLoader: false,
         showCourses: true,
@@ -76,10 +76,10 @@ class Filter extends React.Component {
 
   onCourseChange = e => {
     const course = e.target.value;
-    this.setState(() => ({course, subject: ''}));
+    this.setState (() => ({course, subject: ''}));
 
-    readCourse(course).then(({subjects}) => {
-      this.setState(() => ({
+    readCourse (course).then (({subjects}) => {
+      this.setState (() => ({
         subjects,
         filteredSubjects: subjects,
         showSubjects: false,
@@ -88,11 +88,11 @@ class Filter extends React.Component {
   };
 
   onSemesterChange = e => {
-    this.setState(() => ({showSubjectLoader: true}));
+    this.setState (() => ({showSubjectLoader: true}));
     const semester = e.target.value;
-    this.setState(() => ({
+    this.setState (() => ({
       semester,
-      filteredSubjects: this.state.subjects.filter(s => {
+      filteredSubjects: this.state.subjects.filter (s => {
         return s.semester === semester;
       }),
       showSubjects: true,
@@ -102,30 +102,36 @@ class Filter extends React.Component {
 
   onSubjectChange = e => {
     const subject = e.target.value;
-    this.setState(() => ({subject}));
+    this.setState (() => ({subject}));
   };
 
   handleClickOpen = () => {
-    this.setState(() => ({open: true}));
+    this.setState (() => ({open: true}));
   };
 
   handleClose = () => {
-    this.setState(() => ({open: false}));
+    this.setState (() => ({open: false}));
   };
 
   submit = () => {
     const {department, course, semester, subject} = this.state;
-    this.props.history.push(
+    this.props.history.push (
       `/notes?department=${department}&course=${course}&semester=${semester}&subject=${subject}`
     );
-    this.setState(() => ({open: false}));
+    this.setState (() => ({open: false}));
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
     return (
       <div>
-        <Button onClick={this.handleClickOpen}>Filter</Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={this.handleClickOpen}
+        >
+          Filter
+        </Button>
 
         <Dialog
           className={classes.dialog}
@@ -144,22 +150,21 @@ class Filter extends React.Component {
               label="Department"
               variant="outlined"
             >
-              {this.state.departments.map(d => (
+              {this.state.departments.map (d => (
                 <MenuItem key={d._id} value={d._id}>
                   {d.name}
                 </MenuItem>
               ))}
             </TextField>
             <br />
-            {this.state.showCourseLoader && (
+            {this.state.showCourseLoader &&
               <CircularProgress
                 className={classes.progress}
                 size={24}
                 variant="indeterminate"
-              />
-            )}
+              />}
 
-            {this.state.showCourses && (
+            {this.state.showCourses &&
               <div>
                 <TextField
                   className={classes.textField}
@@ -170,7 +175,7 @@ class Filter extends React.Component {
                   label="Course"
                   variant="outlined"
                 >
-                  {this.state.courses.map(course => (
+                  {this.state.courses.map (course => (
                     <MenuItem key={course._id} value={course._id}>
                       {course.name}
                     </MenuItem>
@@ -186,7 +191,7 @@ class Filter extends React.Component {
                   label="Semester"
                   variant="outlined"
                 >
-                  {semesters.map(semester => (
+                  {semesters.map (semester => (
                     <MenuItem key={semester.value} value={semester.value}>
                       {semester.label}
                     </MenuItem>
@@ -194,15 +199,14 @@ class Filter extends React.Component {
                 </TextField>
                 <br />
 
-                {this.state.showSubjectLoader && (
+                {this.state.showSubjectLoader &&
                   <CircularProgress
                     className={classes.progress}
                     size={24}
                     variant="indeterminate"
-                  />
-                )}
+                  />}
 
-                {this.state.showSubjects && (
+                {this.state.showSubjects &&
                   <TextField
                     className={classes.textField}
                     select
@@ -212,15 +216,13 @@ class Filter extends React.Component {
                     label="Subject"
                     variant="outlined"
                   >
-                    {this.state.filteredSubjects.map(subject => (
+                    {this.state.filteredSubjects.map (subject => (
                       <MenuItem key={subject._id} value={subject._id}>
                         {subject.name}
                       </MenuItem>
                     ))}
-                  </TextField>
-                )}
-              </div>
-            )}
+                  </TextField>}
+              </div>}
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose}>Cancel</Button>
@@ -232,4 +234,4 @@ class Filter extends React.Component {
   }
 }
 
-export default withStyles(styles)(Filter);
+export default withStyles (styles) (Filter);

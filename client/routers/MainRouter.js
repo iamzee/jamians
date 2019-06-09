@@ -10,7 +10,7 @@ const NotesPage = lazy (() => import ('../Notes/pages/NotesPage'));
 const NotesBookmarkPage = lazy (() =>
   import ('../Notes/pages/NotesBookmarkPage')
 );
-const Note = lazy (() => import ('../Notes/components/Note'));
+const Note = lazy (() => import ('../Notes/pages/Note'));
 const UploadNotesPage = lazy (() => import ('../Notes/pages/UploadNotesPage'));
 
 // QUESTION PAPER IMPORTS

@@ -35,9 +35,6 @@ const styles = theme => ({
     flexGrow: 1,
     color: '#fff',
   },
-  appbar: {
-    backgroundColor: theme.home.primary,
-  },
   iconButton: {
     marginRight: theme.spacing.unit,
     color: '#fff',
@@ -47,7 +44,7 @@ const styles = theme => ({
   },
   listItem: {
     '&:hover': {
-      backgroundColor: theme.home.secondary,
+      backgroundColor: theme.palette.tertiary,
     },
     display: 'flex',
     alignItems: 'center',
@@ -55,7 +52,7 @@ const styles = theme => ({
   },
   listTitle: {
     padding: theme.spacing.unit * 2,
-    backgroundColor: theme.home.primary,
+    backgroundColor: theme.palette.primary.main,
   },
   listTitleText: {
     color: '#fff',
@@ -85,20 +82,19 @@ class Navbar extends React.Component {
   };
 
   toggleDrawer = open => () => {
-    this.setState(() => ({open}));
+    this.setState (() => ({open}));
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
-
     return (
       <div>
         <div className={classes.root}>
-          <AppBar position="fixed" className={classes.appbar}>
+          <AppBar position="fixed" styles={{backgroundColor: this.props.color}}>
             <Toolbar>
               <IconButton
                 className={classes.iconButton}
-                onClick={this.toggleDrawer(true)}
+                onClick={this.toggleDrawer (true)}
               >
                 <MenuIcon />
               </IconButton>
@@ -110,12 +106,12 @@ class Navbar extends React.Component {
         </div>
 
         <div>
-          <Drawer open={this.state.open} onClose={this.toggleDrawer(false)}>
+          <Drawer open={this.state.open} onClose={this.toggleDrawer (false)}>
             <div
               tabIndex={0}
               role="button"
-              onKeyDown={this.toggleDrawer(false)}
-              onClick={this.toggleDrawer(false)}
+              onKeyDown={this.toggleDrawer (false)}
+              onClick={this.toggleDrawer (false)}
               style={{height: '100%'}}
             >
               <div className={classes.list} style={{height: '100%'}}>
@@ -218,4 +214,4 @@ class Navbar extends React.Component {
   }
 }
 
-export default withStyles(styles)(Navbar);
+export default withStyles (styles) (Navbar);

@@ -11,7 +11,7 @@ const styles = theme => ({
   },
   listItem: {
     '&:hover': {
-      backgroundColor: theme.notes.tertiary,
+      backgroundColor: theme.palette.tertiary,
     },
   },
 });
