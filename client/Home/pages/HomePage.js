@@ -22,7 +22,7 @@ import NewFeaturesIcon from '@material-ui/icons/NewReleasesOutlined';
 import {withStyles} from '@material-ui/core/styles';
 
 const styles = theme => ({
-  appbar: {background: theme.home.primary},
+  appbar: {background: theme.palette.primary.main},
   title: {flexGrow: 1},
   container: {
     marginTop: theme.spacing.unit * 10,

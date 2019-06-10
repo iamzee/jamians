@@ -6,10 +6,19 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
+import Counter from '../components/Counter';
+
 const styles = theme => ({
-  appbar: {background: theme.home.primary},
+  appbar: {background: theme.palette.primary.main},
   title: {flexGrow: 1},
   link: {textDecoration: 'none', color: 'white'},
+  container: {
+    marginTop: theme.spacing.unit * 10,
+    padding: theme.spacing.unit * 5,
+    [theme.breakpoints.down ('xs')]: {
+      padding: theme.spacing.unit * 2,
+    },
+  },
 });
 
 const StartPage = props => {
@@ -28,6 +37,13 @@ const StartPage = props => {
           </Button>
         </Toolbar>
       </AppBar>
+
+      <div className={classes.container}>
+        <Counter name={'Jamians'} />
+        <Counter name={'Notes'} />
+        <Counter name={'Question Papers'} />
+      </div>
+
     </div>
   );
 };
