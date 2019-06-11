@@ -12,7 +12,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {withStyles} from '@material-ui/core/styles';
 
 import {listDepartments, readDepartment} from '../../api/department.api';
-import {readCourse} from '../../api/course.api';
+import {listCourses} from '../../api/course.api';
+import {listSubjects} from '../../api/subject.api';
 import {semesters} from '../../helpers/note.helper';
 
 const styles = theme => ({
@@ -55,6 +56,8 @@ class Filter extends React.Component {
   }
 
   onDepartmentChange = e => {
+    const department = e.target.value;
+
     this.setState (() => ({
       department,
       course: '',
@@ -63,9 +66,7 @@ class Filter extends React.Component {
       showSubjects: false,
     }));
 
-    const department = e.target.value;
-    this.setState (() => ({department}));
-    readDepartment (department).then (({courses}) => {
+    listCourses (department).then (courses => {
       this.setState (() => ({
         courses,
         showCourseLoader: false,
@@ -77,27 +78,19 @@ class Filter extends React.Component {
   onCourseChange = e => {
     const course = e.target.value;
     this.setState (() => ({course, subject: ''}));
-
-    readCourse (course).then (({subjects}) => {
-      this.setState (() => ({
-        subjects,
-        filteredSubjects: subjects,
-        showSubjects: false,
-      }));
-    });
   };
 
   onSemesterChange = e => {
-    this.setState (() => ({showSubjectLoader: true}));
     const semester = e.target.value;
-    this.setState (() => ({
-      semester,
-      filteredSubjects: this.state.subjects.filter (s => {
-        return s.semester === semester;
-      }),
-      showSubjects: true,
-      showSubjectLoader: false,
-    }));
+    this.setState (() => ({showSubjectLoader: true, semester}));
+
+    listSubjects (this.state.course, semester).then (subjects => {
+      this.setState (() => ({
+        showSubjects: true,
+        showSubjectLoader: false,
+        subjects,
+      }));
+    });
   };
 
   onSubjectChange = e => {
@@ -216,7 +209,7 @@ class Filter extends React.Component {
                     label="Subject"
                     variant="outlined"
                   >
-                    {this.state.filteredSubjects.map (subject => (
+                    {this.state.subjects.map (subject => (
                       <MenuItem key={subject._id} value={subject._id}>
                         {subject.name}
                       </MenuItem>
