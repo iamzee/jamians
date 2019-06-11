@@ -3,13 +3,13 @@ import mongoose from 'mongoose';
 const courseSchema = mongoose.Schema ({
   name: {
     type: String,
+    required: true,
   },
-  subjects: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Subject',
-    },
-  ],
+  department: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Department',
+    required: true,
+  },
 });
 
 const Course = mongoose.model ('Course', courseSchema);

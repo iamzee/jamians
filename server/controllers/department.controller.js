@@ -14,7 +14,10 @@ export const list = (req, res) => {
       });
     })
     .catch (err => {
-      console.log (err);
+      res.status (400).json ({
+        err,
+        errorMessage: 'Unable to fetch departments',
+      });
     });
 };
 

@@ -5,7 +5,7 @@ export default theme => ({
     textAlign: 'center',
     marginBottom: theme.spacing.unit * 5,
     marginTop: theme.spacing.unit * 20,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down ('xs')]: {
       marginTop: theme.spacing.unit * 15,
       padding: theme.spacing.unit * 2,
     },
@@ -16,10 +16,9 @@ export default theme => ({
   },
   chooseFileButton: {
     marginBottom: theme.spacing.unit * 2,
-    backgroundColor: theme.notes.tertiary,
+    backgroundColor: theme.palette.secondary.main,
     '&:hover': {
-      backgroundColor: theme.notes.secondary,
-      color: theme.notes.quaternary,
+      backgroundColor: theme.palette.tertiary,
     },
   },
   textField: {

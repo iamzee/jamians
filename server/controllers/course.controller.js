@@ -80,3 +80,19 @@ export const update = (req, res) => {
     }
   }
 };
+
+export const list = (req, res) => {
+  const {department} = req.query;
+
+  if (!department) {
+    return res.status (400).json ({
+      errorMessage: 'Bad Request. Department query field is required.',
+    });
+  }
+
+  Course.find ({department}).then (courses => {
+    res.status (200).json ({
+      courses,
+    });
+  });
+};

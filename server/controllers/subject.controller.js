@@ -15,18 +15,17 @@ const create = (req, res) => {
 };
 
 const list = (req, res) => {
-  Subject.find ({})
-    .then (docs => {
-      res.status (200).json ({
-        subjects: docs,
-      });
-    })
-    .catch (err => {
-      res.status (400).json ({
-        err,
-        errorMessage: 'Unable to fetch subjects',
-      });
+  const {course, semester} = req.query;
+
+  if (!course || !semester) {
+    return res.status (400).json ({
+      errorMessage: 'Bad Request. Course and Semester query fields are required.',
     });
+  }
+
+  Subject.find ({course, semester}).then (subjects => {
+    res.status (200).json ({subjects});
+  });
 };
 
 export default {create, list};

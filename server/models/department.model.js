@@ -6,12 +6,6 @@ const DepartmentSchema = mongoose.Schema ({
     required: 'Name is required',
     trim: true,
   },
-  courses: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Course',
-    },
-  ],
 });
 
 const Department = mongoose.model ('Department', DepartmentSchema);

@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-export const readCourse = courseId => {
+export const listCourses = departmentId => {
   return axios ({
     method: 'get',
-    url: '/api/course/' + courseId,
+    url: `/api/course?department=${departmentId}`,
   }).then (({data}) => {
-    return data;
+    return data.courses;
   });
 };
