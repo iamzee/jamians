@@ -1,16 +1,18 @@
 import Discussion from '../models/discussion.model';
 
-const create = (req, res) => {
-  const {title} = req.body;
+const create = async (req, res) => {
+  try {
+    const discussion = new Discussion ({
+      title: req.body.title,
+      createdBy: req.user._id,
+    });
 
-  const discussion = {
-    title,
-    createdBy: req.user._id,
-  };
+    await discussion.save ();
 
-  new Discussion (discussion).save ().then (doc => {
-    return doc;
-  });
+    res.status (201).send (discussion);
+  } catch (e) {
+    res.status (400).send (e);
+  }
 };
 
 const list = (req, res) => {

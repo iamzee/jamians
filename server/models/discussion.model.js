@@ -18,13 +18,6 @@ const discussionSchema = mongoose.Schema ({
     required: true,
     default: true,
   },
-
-  chats: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Chat',
-    },
-  ],
 });
 
 const Discussion = mongoose.model ('Discussion', discussionSchema);

@@ -1,13 +1,11 @@
 import React from 'react';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import {withStyles} from '@material-ui/core/styles';
 
-import {readDiscussion} from '../../api/discussion.api';
-import {isAuthenticated} from '../../helpers/auth.helper';
+// import {readDiscussion} from '../../api/discussion.api';
+import {listChat} from '../../api/chat.api';
 import ChatListItem from '../components/ChatListItem';
 import ChatInput from '../components/ChatInput';
 import Navbar from '../../components/Navbar';
@@ -42,40 +40,42 @@ const styles = theme => ({
 
 class Discussion extends React.Component {
   state = {
-    discussion: null,
+    chats: [],
     date: '',
   };
 
-  componentDidMount () {
+  componentDidMount = async () => {
     const {discussionId} = this.props.match.params;
 
-    readDiscussion (discussionId).then (discussion => {
-      this.setState (() => ({discussion}));
-      window.scrollTo (0, document.body.scrollHeight);
-    });
+    // readDiscussion (discussionId).then (discussion => {
+    //   this.setState (() => ({discussion}));
+    //   window.scrollTo (0, document.body.scrollHeight);
+    // });
+
+    const chats = await listChat (discussionId);
+    this.setState (() => ({chats}));
 
     socket = io ('http://localhost:3000');
 
-    console.log (discussionId);
+    // console.log (discussionId);
     socket.emit ('joinRoom', discussionId);
 
     socket.on ('messageToClients', message => {
-      this.setState (() => ({
-        discussion: {
-          ...this.state.discussion,
-          chats: [...this.state.discussion.chats, message],
-        },
-      }));
+      this.setState (() => ({chats: [...this.state.chats, message]}));
       window.scrollTo (0, document.body.scrollHeight);
     });
-  }
+  };
 
   componentWillUnmount () {
     socket.close ();
   }
 
+  emitMessageToServer = message => {
+    socket.emit ('messageToServer', message);
+  };
+
   render () {
-    const {discussion} = this.state;
+    const {chats} = this.state;
     const {classes} = this.props;
     return (
       <div>
@@ -85,22 +85,21 @@ class Discussion extends React.Component {
 
         <div className={classes.container}>
 
-          <Typography className={classes.title} variant="h4" gutterBottom>
+          {/* <Typography className={classes.title} variant="h4" gutterBottom>
             {discussion && discussion.title}
-          </Typography>
+          </Typography> */}
 
           <Divider />
 
-          <ChatInput socket={socket} />
+          <ChatInput emitMessageToServer={this.emitMessageToServer} />
           <div id="chat-list" className={classes.chatList}>
-            {discussion &&
-              discussion.chats.map (c => {
-                return (
-                  <div key={c._id}>
-                    <ChatListItem chat={c} />
-                  </div>
-                );
-              })}
+            {chats.map (c => {
+              return (
+                <div key={c._id}>
+                  <ChatListItem chat={c} />
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

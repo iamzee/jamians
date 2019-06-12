@@ -12,17 +12,17 @@ const styles = theme => ({
   chat: {
     display: 'inline-block',
     padding: theme.spacing.unit,
-    background: theme.chat.primary,
+    background: theme.palette.tertiary,
   },
 });
 
 let date = '';
 
 const renderDate = createdAt => {
-  if (moment(createdAt).format('Do MMM') === date) {
+  if (moment (createdAt).format ('Do MMM') === date) {
     return;
   } else {
-    date = moment(createdAt).format('Do MMM');
+    date = moment (createdAt).format ('Do MMM');
     return (
       <Paper
         style={{
@@ -34,7 +34,7 @@ const renderDate = createdAt => {
         }}
       >
         <Typography variant="caption" color="inherit">
-          {moment(createdAt).format('Do MMM')}
+          {moment (createdAt).format ('Do MMM')}
         </Typography>
       </Paper>
     );
@@ -44,11 +44,11 @@ const renderDate = createdAt => {
 const ChatListItem = ({chat, classes}) => {
   return (
     <div>
-      {renderDate(chat.createdAt)}
+      {renderDate (chat.createdAt)}
       <div className={classes.chatContainer}>
         <Paper className={classes.chat}>
           <Typography variant="caption">
-            {chat.createdBy.name} - {moment(chat.createdAt).format('hh:mm a')}
+            {chat.createdBy.name} - {moment (chat.createdAt).format ('hh:mm a')}
           </Typography>
           <Typography variant="body2">{chat.text}</Typography>
         </Paper>
@@ -57,4 +57,4 @@ const ChatListItem = ({chat, classes}) => {
   );
 };
 
-export default withStyles(styles)(ChatListItem);
+export default withStyles (styles) (ChatListItem);

@@ -1,18 +1,47 @@
 import Chat from '../models/chat.model';
 
-const create = (req, res) => {
-  const {text} = req.body;
+const create = async (req, res) => {
+  const {discussion} = req.query;
 
-  const chat = {
-    createdBy: req.auth._id,
-    text,
-  };
+  if (!discussion) {
+    return res
+      .status (400)
+      .send ({errorMessage: 'Bad request. Discussion query required.'});
+  }
 
-  console.log (req.auth);
+  try {
+    const chat = new Chat ({
+      text: req.body.text,
+      createdBy: req.user._id,
+      discussion,
+    });
 
-  new Chat (chat).save ().then (doc => {
-    console.log (doc);
-  });
+    await chat.save ();
+
+    res.status (201).send (chat);
+  } catch (e) {
+    res.status (401).send (e);
+  }
 };
 
-export default {create};
+const list = async (req, res) => {
+  const {discussion} = req.query;
+
+  if (!discussion) {
+    return res.status (400).send ('Bad Request. Discussion query required.');
+  }
+
+  try {
+    const chats = await Chat.find ({discussion})
+      .sort ('createdAt')
+      .populate ('createdBy', 'name');
+
+    res.status (200).send ({
+      chats,
+    });
+  } catch (e) {
+    res.status (500).send (e);
+  }
+};
+
+export default {create, list};

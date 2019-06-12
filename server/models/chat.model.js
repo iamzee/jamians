@@ -17,8 +17,13 @@ const ChatSchema = mongoose.Schema ({
     required: true,
     trim: true,
   },
+
+  discussion: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Discussion',
+  },
 });
 
-const Chat = mongoose.model('Chat', ChatSchema);
+const Chat = mongoose.model ('Chat', ChatSchema);
 
 export default Chat;

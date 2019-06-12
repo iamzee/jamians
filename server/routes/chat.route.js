@@ -4,6 +4,9 @@ import chatCtrl from '../controllers/chat.controller';
 
 const router = express.Router ();
 
-router.route ('/api/chat').post (authCtrl.requireSignin, chatCtrl.create);
+router
+  .route ('/api/chat')
+  .get (authCtrl.requireSignin, chatCtrl.list)
+  .post (authCtrl.requireSignin, chatCtrl.create);
 
 export default router;

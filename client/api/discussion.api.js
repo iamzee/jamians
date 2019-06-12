@@ -11,13 +11,13 @@ export const newDiscussion = title => {
   });
 };
 
-export const listDiscussions = () => {
-  return axios ({
+export const listDiscussions = async () => {
+  const {data} = await axios ({
     method: 'get',
     url: '/api/discussion',
-  }).then (({data}) => {
-    return data.discussions;
   });
+
+  return data.discussions;
 };
 
 export const readDiscussion = discussionId => {

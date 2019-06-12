@@ -37,15 +37,15 @@ class ChatInput extends React.Component {
     this.setState (() => ({message}));
   };
 
-  handleSubmit = () => {
-    isAuthenticated ().then (user => {
-      const message = {
-        text: this.state.message,
-        createdBy: user._id,
-      };
+  handleSubmit = async () => {
+    const user = await isAuthenticated ();
 
-      this.props.socket.emit ('messageToServer', message);
-    });
+    const message = {
+      text: this.state.message,
+      createdBy: user._id,
+    };
+
+    this.props.emitMessageToServer (message);
   };
 
   render () {
