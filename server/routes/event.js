@@ -5,13 +5,13 @@ const router = express.Router();
 
 router
   .route('/api/event')
-  .post(create)
+  .post(auth, create)
   .get(auth, list);
 
 router
   .route('/api/event/:id')
-  .get(read)
-  .patch(update)
-  .delete(remove);
+  .get(auth, read)
+  .patch(auth, update)
+  .delete(auth, remove);
 
 export default router;

@@ -2,7 +2,7 @@ import Event from '../models/event';
 
 export const create = async (req, res) => {
   try {
-    const event = new Event(req.body);
+    const event = new Event({...req.body, createdBy: req.user._id});
     await event.save();
     res.status(201).send();
   } catch (e) {
@@ -18,7 +18,7 @@ export const list = async (req, res) => {
         .status(400)
         .send({error: 'skip and limit query fields are required.'});
     }
-    const events = await Event.find({})
+    const events = await Event.find()
       .sort('-createdAt')
       .skip(parseInt(skip, 10))
       .limit(parseInt(limit, 10));
@@ -48,7 +48,11 @@ export const update = async (req, res) => {
   const updates = req.body;
 
   try {
-    const event = await Event.findByIdAndUpdate(id, updates, {new: true});
+    const event = await Event.findOneAndUpdate(
+      {_id: id, createdBy: req.user._id},
+      updates,
+      {new: true}
+    );
 
     if (!event) {
       return res.status(404).send();
@@ -64,7 +68,10 @@ export const remove = async (req, res) => {
   const {id} = req.params;
 
   try {
-    const event = await Event.findByIdAndRemove(id);
+    const event = await Event.findOneAndRemove({
+      _id: id,
+      createdBy: req.user._id,
+    });
 
     if (!event) {
       return res.status(404).send();

@@ -17,6 +17,10 @@ const eventSchema = mongoose.Schema({
       return new Date();
     },
   },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
   poster: {
     type: String,
     trim: true,
