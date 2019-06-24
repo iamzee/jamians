@@ -18,7 +18,7 @@ import uploadRoutes from './routes/upload.route';
 import questionPaperRoutes from './routes/questionPaper.route';
 import chatRoutes from './routes/chat.route';
 import discussionRoutes from './routes/discussion.route';
-import eventRoutes from './routes/event.route';
+import eventRoutes from './routes/event';
 
 import template from '../template';
 
