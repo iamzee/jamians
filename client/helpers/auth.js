@@ -3,23 +3,22 @@ export const isAuthenticated = () => {
     return false;
   }
 
-  if (localStorage.getItem('jwt')) {
-    return JSON.parse(localStorage.getItem('jwt'));
+  if (localStorage.getItem('token')) {
+    return JSON.parse(localStorage.getItem('token'));
   } else {
     return false;
   }
 };
 
-export const authenticate = (jwt, cb) => {
+export const authenticate = token => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem('jwt', JSON.stringify(jwt));
+    localStorage.setItem('token', JSON.stringify(token));
   }
-  cb();
 };
 
 export const logout = cb => {
   if (typeof window !== 'undefined') {
-    localStorage.removeItem('jwt');
+    localStorage.removeItem('token');
   }
   cb();
 };

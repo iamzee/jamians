@@ -7,6 +7,7 @@ import PageLoader from '../components/PageLoader';
 
 // AUTH IMPORTS
 const Signup = lazy(() => import('../Home/pages/Signup'));
+const Login = lazy(() => import('../Home/pages/Login'));
 
 // NOTE IMPORTS
 const NotesPage = lazy(() => import('../Notes/pages/NotesPage'));
@@ -92,7 +93,7 @@ const MainRouter = () => (
         <PrivateRoute exact path="/notes" component={NotesPage} />
 
         {/* HOME ROUTES */}
-        <Route path="/login" component={StartPage} />
+        <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <PrivateRoute exact path="/" component={HomePage} />
       </Switch>
