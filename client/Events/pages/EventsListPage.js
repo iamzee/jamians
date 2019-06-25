@@ -11,7 +11,7 @@ import {withStyles} from '@material-ui/core/styles';
 import Navbar from '../../components/Navbar';
 import EventsNav from '../components/EventsNav';
 import {listEvents} from '../../api/event.api';
-import {isAuthenticated} from '../../helpers/auth.helper';
+// import {isAuthenticated} from '../../helpers/auth.helper';
 
 import EventsList from '../components/EventsList';
 
@@ -21,7 +21,7 @@ const styles = theme => ({
     margin: 'auto',
     marginTop: theme.spacing.unit * 15,
     padding: theme.spacing.unit * 5,
-    [theme.breakpoints.down ('sm')]: {
+    [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing.unit * 15,
       padding: theme.spacing.unit * 2,
     },
@@ -44,15 +44,14 @@ class EventsListPage extends React.Component {
     events: [],
   };
 
-  componentDidMount () {
-    const {token} = isAuthenticated ();
-
-    listEvents (token).then (events => {
-      this.setState (() => ({events}));
-    });
+  componentDidMount() {
+    // const {token} = isAuthenticated ();
+    // listEvents (token).then (events => {
+    //   this.setState (() => ({events}));
+    // });
   }
 
-  render () {
+  render() {
     const {classes} = this.props;
     const settings = {
       dots: true,
@@ -77,7 +76,7 @@ class EventsListPage extends React.Component {
           <div className={classes.container}>
             <Slider {...settings} className={classes.slider}>
               {this.state.events.length > 0 &&
-                this.state.events.map (event => {
+                this.state.events.map(event => {
                   return <EventsList key={event._id} event={event} />;
                 })}
             </Slider>
@@ -88,4 +87,4 @@ class EventsListPage extends React.Component {
   }
 }
 
-export default withStyles (styles) (EventsListPage);
+export default withStyles(styles)(EventsListPage);

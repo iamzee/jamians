@@ -32,15 +32,15 @@ const app = express();
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
-app.use(
-  cookieSession({
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: [process.env.COOKIE_SECRET],
-  })
-);
+// app.use(
+//   cookieSession({
+//     maxAge: 30 * 24 * 60 * 60 * 1000,
+//     keys: [process.env.COOKIE_SECRET],
+//   })
+// );
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 app.use('/', courseRoutes);
 app.use('/', teacherRoutes);

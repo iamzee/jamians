@@ -26,6 +26,14 @@ const userSchema = mongoose.Schema({
     minlength: 6,
     trim: true,
   },
+  department: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Department',
+  },
+  course: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
+  },
   tokens: [
     {
       token: {

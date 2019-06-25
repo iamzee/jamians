@@ -3,8 +3,8 @@ export const isAuthenticated = () => {
     return false;
   }
 
-  if (sessionStorage.getItem ('jwt')) {
-    return JSON.parse (sessionStorage.getItem ('jwt'));
+  if (localStorage.getItem('jwt')) {
+    return JSON.parse(localStorage.getItem('jwt'));
   } else {
     return false;
   }
@@ -12,15 +12,14 @@ export const isAuthenticated = () => {
 
 export const authenticate = (jwt, cb) => {
   if (typeof window !== 'undefined') {
-    console.log ('authenticate', jwt);
-    sessionStorage.setItem ('jwt', JSON.stringify (jwt));
+    localStorage.setItem('jwt', JSON.stringify(jwt));
   }
-  cb ();
+  cb();
 };
 
 export const logout = cb => {
   if (typeof window !== 'undefined') {
-    sessionStorage.removeItem ('jwt');
+    localStorage.removeItem('jwt');
   }
-  cb ();
+  cb();
 };
