@@ -12,7 +12,7 @@ import Navbar from '../../components/Navbar';
 import EventsNav from '../components/EventsNav';
 import {getBookmarks} from '../../api/event.api';
 
-import EventsList from '../components/EventsList';
+// import EventsList from '../components/EventsList';
 
 const styles = theme => ({
   root: {

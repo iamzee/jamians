@@ -11,7 +11,7 @@ import Navbar from '../../components/Navbar';
 import EventsNav from '../components/EventsNav';
 import {listEvents} from '../../api/event';
 import {isAuthenticated} from '../../helpers/auth';
-import EventCard from '../components/EventCard';
+import EventListCard from '../components/EventListCard';
 
 const styles = theme => ({
   root: {
@@ -21,7 +21,7 @@ const styles = theme => ({
     padding: theme.spacing(5),
     [theme.breakpoints.down('xs')]: {
       marginTop: theme.spacing(15),
-      padding: theme.spacing(1),
+      padding: 0,
     },
     fontFamily: 'Roboto',
   },
@@ -37,6 +37,7 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'space-around',
   },
+  eventsList: {marginTop: theme.spacing(2)},
 });
 
 class EventsDashboard extends React.Component {
@@ -47,7 +48,7 @@ class EventsDashboard extends React.Component {
   componentDidMount = async () => {
     let {skip} = queryString.parse(this.props.location.search);
     if (skip === '0' || !skip) {
-      this.props.history.push('/events?skip=0&limit=1');
+      this.props.history.push('/events?skip=0&limit=2');
     }
     const {token} = isAuthenticated();
     const events = await listEvents(skip, token);
@@ -56,12 +57,12 @@ class EventsDashboard extends React.Component {
 
   onPrev = async () => {
     let {skip} = queryString.parse(this.props.location.search);
-    this.props.history.push(`/events?skip=${parseInt(skip, 10) - 1}&limit=1`);
+    this.props.history.push(`/events?skip=${parseInt(skip, 10) - 2}&limit=2`);
   };
 
   onNext = async () => {
     let {skip} = queryString.parse(this.props.location.search);
-    this.props.history.push(`/events?skip=${parseInt(skip, 10) + 1}&limit=1`);
+    this.props.history.push(`/events?skip=${parseInt(skip, 10) + 2}&limit=2`);
   };
 
   componentDidUpdate = async prevProps => {
@@ -87,9 +88,13 @@ class EventsDashboard extends React.Component {
 
           <Divider />
 
-          <div>
+          <div className={classes.eventsList}>
             {this.state.events.length > 0 && (
-              <EventCard event={this.state.events[0]} />
+              <React.Fragment>
+                {this.state.events.map(e => (
+                  <EventListCard key={e._id} event={e} />
+                ))}
+              </React.Fragment>
             )}
           </div>
 
