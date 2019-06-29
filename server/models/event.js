@@ -97,6 +97,12 @@ const eventSchema = mongoose.Schema({
       },
     },
   ],
+  going: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
 });
 
 const Event = mongoose.model('Event', eventSchema);

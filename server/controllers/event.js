@@ -82,3 +82,63 @@ export const remove = async (req, res) => {
     res.status(400).send({error: e.message});
   }
 };
+
+export const addGoing = async (req, res) => {
+  const eventId = req.params.id;
+  const userId = req.user._id;
+
+  try {
+    const eventMatched = await Event.findOne({
+      _id: eventId,
+      going: {$in: userId},
+    });
+
+    if (eventMatched) {
+      return res.status(400).send();
+    }
+
+    const event = await Event.findByIdAndUpdate(
+      eventId,
+      {$push: {going: userId}},
+      {new: true}
+    );
+
+    if (!event) {
+      return res.status(404).send();
+    }
+
+    res.send(event);
+  } catch (e) {
+    res.staus(400).send(e.response);
+  }
+};
+
+export const removeGoing = async (req, res) => {
+  const eventId = req.params.id;
+  const userId = req.user._id;
+
+  try {
+    const eventMatched = await Event.findOne({
+      _id: eventId,
+      going: {$in: userId},
+    });
+
+    if (!eventMatched) {
+      return res.status(400).send();
+    }
+
+    const event = await Event.findByIdAndUpdate(
+      eventId,
+      {$pull: {going: userId}},
+      {new: true}
+    );
+
+    if (!event) {
+      return res.status(404).send();
+    }
+
+    res.send(event);
+  } catch (e) {
+    res.staus(400).send(e.response);
+  }
+};
