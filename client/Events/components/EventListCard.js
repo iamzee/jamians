@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import {Link} from 'react-router-dom';
 
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -17,8 +18,9 @@ const styles = theme => ({
   card: {
     marginBottom: theme.spacing(5),
   },
-  date: {
-    color: theme.palette.primary.main,
+  link: {
+    textDecoration: 'none',
+    color: 'black',
   },
 });
 
@@ -48,15 +50,13 @@ class EventListCard extends React.Component {
           <CardMedia component="img" src={this.state.posterLink} />
         )}
         <CardContent>
-          <Typography gutterBottom variant="h5">
-            {event.title}
-          </Typography>
-          <Typography
-            className={classes.date}
-            variant="body2"
-            color="textSecondary"
-            component="p"
-          >
+          <Link to={`/events/${event._id}`} className={classes.link}>
+            <Typography gutterBottom variant="h5">
+              {event.title}
+            </Typography>
+          </Link>
+
+          <Typography variant="body2" color="primary" component="p">
             {event.startDate && moment(event.startDate).format('ddd, MMMM DD')}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">

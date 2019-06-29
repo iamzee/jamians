@@ -10,6 +10,13 @@ import {CompositeDecorator} from 'draft-js';
 import IconButton from '@material-ui/core/IconButton';
 import BoldIcon from '@material-ui/icons/FormatBoldOutlined';
 import ItalicIcon from '@material-ui/icons/FormatItalicOutlined';
+import {withStyles} from '@material-ui/core/styles';
+
+const styles = theme => ({
+  editor: {
+    fontFamily: 'Roboto',
+  },
+});
 
 const linkifyPlugin = createLinkifyPlugin({
   component: props => <a {...props} target={'_blank'} />,
@@ -88,8 +95,9 @@ class ArticleEditor extends React.Component {
   };
 
   render() {
+    const {classes} = this.props;
     return (
-      <div>
+      <div className={classes.editor}>
         {!this.props.readOnly && (
           <div>
             <IconButton onClick={this._onBoldClick}>
@@ -113,4 +121,4 @@ class ArticleEditor extends React.Component {
   }
 }
 
-export default ArticleEditor;
+export default withStyles(styles)(ArticleEditor);
