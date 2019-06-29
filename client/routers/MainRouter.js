@@ -41,7 +41,7 @@ const Settings = lazy(() => import('../Settings/pages/Settings'));
 
 // EVENT IMPORTS
 const NewEventPage = lazy(() => import('../Events/pages/NewEventPage'));
-const EventsListPage = lazy(() => import('../Events/pages/EventsListPage'));
+const EventsDashboard = lazy(() => import('../Events/pages/EventsDashboard'));
 const EventBookmarksPage = lazy(() =>
   import('../Events/pages/EventBookmarksPage')
 );
@@ -61,7 +61,7 @@ const MainRouter = () => (
         <PrivateRoute path="/events/bookmarks" component={EventBookmarksPage} />
         <PrivateRoute path="/events/new" component={NewEventPage} />
         <PrivateRoute path="/events/:eventId/edit" component={EventEditPage} />
-        <PrivateRoute path="/events" component={EventsListPage} />
+        <PrivateRoute path="/events" component={EventsDashboard} />
 
         {/* SETTINGS ROUTES */}
         <PrivateRoute path="/settings" component={Settings} />

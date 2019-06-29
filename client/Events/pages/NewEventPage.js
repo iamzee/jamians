@@ -55,7 +55,7 @@ class NewEventPage extends React.Component {
         });
       });
     } else {
-      const token = isAuthenticated();
+      const {token} = isAuthenticated();
       await createEvent({...event, poster: null}, token);
       cb();
       this.setState(() => ({done: true}));

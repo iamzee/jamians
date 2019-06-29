@@ -12,7 +12,7 @@ export const login = async user => {
       },
     });
     console.log(data);
-    authenticate(data.token);
+    authenticate(data);
   } catch (e) {
     return e.response.data.error;
   }

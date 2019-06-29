@@ -1,7 +1,7 @@
 import React from 'react';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+// import Slider from 'react-slick';
+// import 'slick-carousel/slick/slick.css';
+// import 'slick-carousel/slick/slick-theme.css';
 
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -20,7 +20,7 @@ const styles = theme => ({
     margin: 'auto',
     marginTop: theme.spacing.unit * 15,
     padding: theme.spacing.unit * 5,
-    [theme.breakpoints.down ('sm')]: {
+    [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing.unit * 15,
       padding: theme.spacing.unit * 2,
     },
@@ -43,13 +43,13 @@ class EventBookmarksPage extends React.Component {
     events: [],
   };
 
-  componentDidMount () {
-    getBookmarks ().then (events => {
-      this.setState (() => ({events}));
+  componentDidMount() {
+    getBookmarks().then(events => {
+      this.setState(() => ({events}));
     });
   }
 
-  render () {
+  render() {
     const {classes} = this.props;
     const settings = {
       dots: true,
@@ -72,12 +72,12 @@ class EventBookmarksPage extends React.Component {
           <Divider />
 
           <div className={classes.container}>
-            <Slider {...settings} className={classes.slider}>
+            {/* <Slider {...settings} className={classes.slider}>
               {this.state.events.length > 0 &&
                 this.state.events.map (event => {
                   return <EventsList key={event._id} event={event} />;
                 })}
-            </Slider>
+            </Slider> */}
           </div>
         </div>
       </div>
@@ -85,4 +85,4 @@ class EventBookmarksPage extends React.Component {
   }
 }
 
-export default withStyles (styles) (EventBookmarksPage);
+export default withStyles(styles)(EventBookmarksPage);

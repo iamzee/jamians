@@ -15,22 +15,24 @@ import Avatar from '@material-ui/core/Avatar';
 import {withStyles} from '@material-ui/core/styles';
 
 import {getSAS, download} from '../../api/upload.api';
-import {isAuthenticated} from '../../api/auth';
+// import {isAuthenticated} from '../../api/auth';
+import {isAuthenticated} from '../../helpers/auth';
 import {readUser} from '../../api/user.api';
 import BookmarkButton from './BookmarkButton';
 import ArticleEditor from './ArticleEditor';
 
 const styles = theme => ({
   card: {
-    maxWidth: 345,
+    marginTop: theme.spacing(2),
+    maxWidth: 350,
+    margin: 'auto',
   },
 });
 
-class EventsList extends React.Component {
+class EventCard extends React.Component {
   state = {
     posterLink: '',
     user: {},
-    showEdit: false,
   };
 
   componentDidMount() {
@@ -39,25 +41,32 @@ class EventsList extends React.Component {
         const posterLink = download(token, 'events', this.props.event.poster);
         this.setState(() => ({posterLink}));
       });
+    } else {
+      this.setState(() => ({posterLink: ''}));
     }
-    isAuthenticated().then(user => {
-      if (user._id === this.props.event.createdBy) {
-        this.setState(() => ({showEdit: true}));
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.event._id !== prevProps.event._id) {
+      if (this.props.event.poster) {
+        getSAS('events').then(token => {
+          const posterLink = download(token, 'events', this.props.event.poster);
+          this.setState(() => ({posterLink}));
+        });
+      } else {
+        this.setState(() => ({posterLink: ''}));
       }
-    });
-    readUser(this.props.event.createdBy).then(user => {
-      console.log('READ USER', user);
-      this.setState(() => ({user}));
-    });
+    }
   }
 
   render() {
     const {classes, event} = this.props;
-    const {user} = this.state;
+    const {user} = isAuthenticated();
+
     return (
       <Card key={event._id} className={classes.card}>
         <CardHeader
-          avatar={<Avatar src={user.profilePicture} />}
+          // avatar={<Avatar src={user.profilePicture} />}
           title={user.name}
           subheader={moment(event.createdAt).format('MMMM MM, YYYY')}
         />
@@ -71,14 +80,14 @@ class EventsList extends React.Component {
           <Typography variant="subtitle2" style={{fontWeight: 400}}>
             <ArticleEditor
               readOnly={true}
-              rawContent={event.article}
+              rawContent={event.body}
               onChange={() => {}}
             />
           </Typography>
         </CardContent>
         <CardActions>
-          <BookmarkButton event={event} />
-          {this.state.showEdit && (
+          {/* <BookmarkButton event={event} /> */}
+          {event.createdBy === isAuthenticated().user._id && (
             <React.Fragment>
               <Link to={`/events/${event._id}/edit`}>
                 <IconButton aria-label="Edit">
@@ -96,4 +105,4 @@ class EventsList extends React.Component {
   }
 }
 
-export default withStyles(styles)(EventsList);
+export default withStyles(styles)(EventCard);
