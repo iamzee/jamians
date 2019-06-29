@@ -10,16 +10,22 @@ import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
 import {getSAS, download} from '../../api/upload.api';
+import {readUser} from '../../api/user';
+import {isAuthenticated} from '../../helpers/auth';
 
 const styles = theme => ({
   card: {
     marginBottom: theme.spacing(5),
+  },
+  date: {
+    color: theme.palette.primary.main,
   },
 });
 
 class EventListCard extends React.Component {
   state = {
     posterLink: '',
+    author: '',
   };
 
   componentDidMount = async () => {
@@ -28,6 +34,10 @@ class EventListCard extends React.Component {
       const posterLink = download(token, 'events', this.props.event.poster);
       this.setState(() => ({posterLink}));
     }
+
+    const {token} = isAuthenticated();
+    const {name} = await readUser(this.props.event.createdBy, token);
+    this.setState(() => ({author: name}));
   };
 
   render() {
@@ -41,11 +51,19 @@ class EventListCard extends React.Component {
           <Typography gutterBottom variant="h5">
             {event.title}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            Created By
+          <Typography
+            className={classes.date}
+            variant="body2"
+            color="textSecondary"
+            component="p"
+          >
+            {event.startDate && moment(event.startDate).format('ddd, MMMM DD')}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            {event.startDate && moment(event.startDate).format('ddd, MMMM DD')}
+            {this.state.author}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+            {event.category}
           </Typography>
         </CardContent>
         <CardActions>
