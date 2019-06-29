@@ -1,6 +1,29 @@
 import mongoose from 'mongoose';
 
-const eventSchema = mongoose.Schema ({
+const eventCategory = [
+  'Art',
+  'Causes',
+  'Coding',
+  'Comedy',
+  'Crafts',
+  'Dance',
+  'Education',
+  'Film',
+  'Fitness',
+  'Food',
+  'Games',
+  'Health',
+  'Literature',
+  'Music',
+  'Networking',
+  'Party',
+  'Religion',
+  'Shopping',
+  'Sports',
+  'Other',
+];
+
+const eventSchema = mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -14,7 +37,7 @@ const eventSchema = mongoose.Schema ({
   createdAt: {
     type: Date,
     default: () => {
-      return new Date ();
+      return new Date();
     },
   },
   createdBy: {
@@ -37,6 +60,16 @@ const eventSchema = mongoose.Schema ({
   },
   fee: {
     type: Number,
+  },
+  category: {
+    type: 'String',
+    required: true,
+    validate: {
+      validator: function(v) {
+        return eventCategory.includes(v);
+      },
+      message: props => `${props.value} is not a valid event category.`,
+    },
   },
   links: [
     {
@@ -66,6 +99,6 @@ const eventSchema = mongoose.Schema ({
   ],
 });
 
-const Event = mongoose.model ('Event', eventSchema);
+const Event = mongoose.model('Event', eventSchema);
 
 export default Event;
