@@ -9,12 +9,14 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import MenuItem from '@material-ui/core/MenuItem';
 import {withStyles} from '@material-ui/core/styles';
 
 import {getSAS, download} from '../../api/upload.api';
 import ArticleEditor from './ArticleEditor';
 import SnackbarComponent from '../../components/SnackbarComponent';
 import getEditorState from '../../helpers/getEditorState';
+import {eventCategory} from '../../helpers/event';
 
 const styles = theme => ({
   root: {
@@ -68,6 +70,7 @@ class EventForm extends React.Component {
     endDateFocused: false,
     error: '',
     adding: false,
+    category: '',
   };
 
   componentDidMount() {
@@ -101,6 +104,11 @@ class EventForm extends React.Component {
     this.setState(() => ({title}));
   };
 
+  onCategoryChange = e => {
+    const category = e.target.value;
+    this.setState(() => ({category}));
+  };
+
   onFileChange = e => {
     const file = e.target.files[0];
     console.log(file);
@@ -112,8 +120,10 @@ class EventForm extends React.Component {
   };
 
   onSubmit = async () => {
-    if (!this.state.title) {
-      this.setState(() => ({error: 'Title is required.'}));
+    if (!this.state.title || !this.state.category) {
+      this.setState(() => ({
+        error: 'Title, Description and Category are required.',
+      }));
     } else {
       if (
         this.state.startDate &&
@@ -135,6 +145,7 @@ class EventForm extends React.Component {
           poster: this.state.file,
           startDate: this.state.startDate && this.state.startDate,
           endDate: this.state.endDate && this.state.endDate,
+          category: this.state.category,
         };
 
         await this.props.onSubmit(
@@ -145,7 +156,7 @@ class EventForm extends React.Component {
             }));
           },
           this.state.fileChange,
-          this.props.event.poster
+          this.props.event && this.props.event.poster
         );
       }
     }
@@ -178,6 +189,23 @@ class EventForm extends React.Component {
             />
           </div>
         </div>
+
+        <TextField
+          select
+          label="Category"
+          value={this.state.category}
+          onChange={this.onCategoryChange}
+          variant="outlined"
+          margin="normal"
+          className={classes.textField}
+        >
+          {eventCategory.map(c => (
+            <MenuItem key={c} value={c}>
+              {c}
+            </MenuItem>
+          ))}
+        </TextField>
+        <br />
 
         <div className={classes.posterUploadSection}>
           {this.state.file || this.state.posterLink ? (
@@ -214,6 +242,7 @@ class EventForm extends React.Component {
             </React.Fragment>
           )}
         </div>
+
         <div className={classes.datePicker}>
           <SingleDatePicker
             date={this.state.startDate}
@@ -225,7 +254,7 @@ class EventForm extends React.Component {
             id="123"
             numberOfMonths={1}
             showClearDate={true}
-            placeholder={'Start Date'}
+            placeholder={'Starts'}
           />
         </div>
 
@@ -240,7 +269,7 @@ class EventForm extends React.Component {
             id="1233"
             numberOfMonths={1}
             showClearDate={true}
-            placeholder={'End Date'}
+            placeholder={'Ends'}
           />
         </div>
 
