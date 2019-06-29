@@ -7,15 +7,19 @@ import {withStyles} from '@material-ui/core/styles';
 import EventForm from '../components/EventForm';
 import Navbar from '../../components/Navbar';
 import EventsNav from '../components/EventsNav';
-import {isAuthenticated} from '../../api/auth.api';
-import {createEvent} from '../../api/event.api';
+// import {isAuthenticated} from '../../api/auth.api';
+import {isAuthenticated} from '../../helpers/auth';
+import {createEvent} from '../../api/event';
 import {getSAS, upload} from '../../api/upload.api';
+import SnackbarComponent from '../../components/SnackbarComponent';
 
 const styles = theme => ({
   root: {
+    maxWidth: 600,
+    margin: 'auto',
     marginTop: theme.spacing.unit * 15,
     padding: theme.spacing.unit * 5,
-    [theme.breakpoints.down ('sm')]: {
+    [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing.unit * 15,
       padding: theme.spacing.unit * 2,
     },
@@ -26,37 +30,43 @@ const styles = theme => ({
 });
 
 class NewEventPage extends React.Component {
-  onSubmit = (title, rawContentString, file) => {
-    if (file) {
-      getSAS ('events').then (sasToken => {
-        const {speedSummary, blobName} = upload (sasToken, file, 'events');
+  state = {
+    done: false,
+  };
 
-        speedSummary.on ('progress', () => {
-          const progressPercent = speedSummary.getCompletePercent ();
+  onSubmit = async (event, cb) => {
+    if (event.poster) {
+      getSAS('events').then(sasToken => {
+        const {speedSummary, blobName} = upload(
+          sasToken,
+          event.poster,
+          'events'
+        );
+
+        speedSummary.on('progress', async () => {
+          const progressPercent = speedSummary.getCompletePercent();
 
           if (progressPercent == 100) {
-            isAuthenticated ().then (user => {
-              const event = {
-                title,
-                article: rawContentString,
-                poster: blobName,
-              };
-
-              createEvent (event);
-            });
+            const token = isAuthenticated();
+            await createEvent({...event, poster: blobName}, token);
+            cb();
+            this.setState(() => ({done: true}));
           }
         });
       });
     } else {
-      const event = {
-        title,
-        article: rawContentString,
-      };
-      createEvent (event);
+      const token = isAuthenticated();
+      await createEvent({...event, poster: null}, token);
+      cb();
+      this.setState(() => ({done: true}));
     }
   };
 
-  render () {
+  onSnackbarClose = () => {
+    this.setState(() => ({done: false}));
+  };
+
+  render() {
     const {classes} = this.props;
     return (
       <div>
@@ -71,9 +81,16 @@ class NewEventPage extends React.Component {
           <EventForm onSubmit={this.onSubmit} />
         </div>
 
+        {this.state.done && (
+          <SnackbarComponent
+            variant="success"
+            message="Event added!"
+            onClose={this.onSnackbarClose}
+          />
+        )}
       </div>
     );
   }
 }
 
-export default withStyles (styles) (NewEventPage);
+export default withStyles(styles)(NewEventPage);

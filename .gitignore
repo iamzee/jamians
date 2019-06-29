@@ -5,3 +5,4 @@ dist/
 .env.development
 public
 data.js
+problems

@@ -1,14 +1,19 @@
 import axios from 'axios';
 
-export const createEvent = event => {
-  return axios ({
-    method: 'post',
-    url: '/api/event',
-    data: event,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+export const createEvent = async (event, token) => {
+  try {
+    await axios ({
+      method: 'post',
+      url: '/api/event',
+      data: JSON.stringify (event),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    });
+  } catch (e) {
+    console.log (e);
+  }
 };
 
 export const listEvents = token => {
