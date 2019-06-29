@@ -35,6 +35,7 @@ class NewEventPage extends React.Component {
   };
 
   onSubmit = async (event, cb) => {
+    const {token} = isAuthenticated();
     if (event.poster) {
       getSAS('events').then(sasToken => {
         const {speedSummary, blobName} = upload(
@@ -47,7 +48,6 @@ class NewEventPage extends React.Component {
           const progressPercent = speedSummary.getCompletePercent();
 
           if (progressPercent == 100) {
-            const token = isAuthenticated();
             await createEvent({...event, poster: blobName}, token);
             cb();
             this.setState(() => ({done: true}));
@@ -55,7 +55,6 @@ class NewEventPage extends React.Component {
         });
       });
     } else {
-      const {token} = isAuthenticated();
       await createEvent({...event, poster: null}, token);
       cb();
       this.setState(() => ({done: true}));

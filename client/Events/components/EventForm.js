@@ -14,6 +14,7 @@ import {withStyles} from '@material-ui/core/styles';
 import {getSAS, download} from '../../api/upload.api';
 import ArticleEditor from './ArticleEditor';
 import SnackbarComponent from '../../components/SnackbarComponent';
+import getEditorState from '../../helpers/getEditorState';
 
 const styles = theme => ({
   root: {
@@ -54,11 +55,12 @@ const styles = theme => ({
 
 class EventForm extends React.Component {
   state = {
-    editorState: EditorState.createEmpty(),
-    title: '',
+    editorState: this.props.event
+      ? getEditorState(this.props.event.body)
+      : EditorState.createEmpty(),
+    title: this.props.event ? this.props.event.title : '',
     file: null,
     posterLink: null,
-    rawContent: null,
     fileChange: false,
     startDate: null,
     startDateFocused: false,
@@ -80,7 +82,13 @@ class EventForm extends React.Component {
         });
       }
 
-      this.setState(() => ({title: event.title, rawContent: event.article}));
+      if (event.startDate) {
+        this.setState(() => ({startDate: moment(this.props.event.startDate)}));
+      }
+
+      if (event.endDate) {
+        this.setState(() => ({endDate: moment(this.props.endDate)}));
+      }
     }
   }
 
@@ -121,13 +129,6 @@ class EventForm extends React.Component {
         );
         const rawContentString = JSON.stringify(rawContent);
 
-        // this.props.onSubmit (
-        //   this.state.title,
-        //   rawContentString,
-        //   this.state.file,
-        //   this.state.fileChange
-        // );
-
         const event = {
           title: this.state.title,
           body: rawContentString,
@@ -136,11 +137,16 @@ class EventForm extends React.Component {
           endDate: this.state.endDate && this.state.endDate,
         };
 
-        await this.props.onSubmit(event, () => {
-          this.setState(() => ({
-            adding: false,
-          }));
-        });
+        await this.props.onSubmit(
+          event,
+          () => {
+            this.setState(() => ({
+              adding: false,
+            }));
+          },
+          this.state.fileChange,
+          this.props.event.poster
+        );
       }
     }
   };
@@ -167,7 +173,8 @@ class EventForm extends React.Component {
             <ArticleEditor
               readOnly={false}
               onChange={this.onChange}
-              rawContent={this.state.rawContent}
+              editorState={this.state.editorState}
+              // rawContent={this.state.rawContent}
             />
           </div>
         </div>

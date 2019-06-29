@@ -11,84 +11,86 @@ import IconButton from '@material-ui/core/IconButton';
 import BoldIcon from '@material-ui/icons/FormatBoldOutlined';
 import ItalicIcon from '@material-ui/icons/FormatItalicOutlined';
 
-const linkifyPlugin = createLinkifyPlugin ({
+const linkifyPlugin = createLinkifyPlugin({
   component: props => <a {...props} target={'_blank'} />,
 });
 
 const plugins = [linkifyPlugin];
 
-function getPluginDecoratorArray () {
+function getPluginDecoratorArray() {
   let decorators = [];
   let plugin;
 
   for (plugin of plugins) {
     if (plugin.decorators !== null && plugin.decorators !== undefined) {
-      decorators = decorators.concat (plugin.decorators);
+      decorators = decorators.concat(plugin.decorators);
     }
   }
   return decorators;
 }
 
-function grabbingAllPluginDecorators () {
-  return new MultiDecorator ([
-    new CompositeDecorator (getPluginDecoratorArray ()),
+function grabbingAllPluginDecorators() {
+  return new MultiDecorator([
+    new CompositeDecorator(getPluginDecoratorArray()),
   ]);
 }
 
-const decorator = grabbingAllPluginDecorators ();
+const decorator = grabbingAllPluginDecorators();
 
 class ArticleEditor extends React.Component {
   state = {
-    editorState: EditorState.createEmpty (),
+    editorState: !!this.props.editorState
+      ? this.props.editorState
+      : EditorState.createEmpty(),
   };
 
-  componentDidMount () {
+  componentDidMount() {
     if (this.props.rawContent) {
-      const text = convertFromRaw (JSON.parse (this.props.rawContent));
-      const content = EditorState.createWithContent (text, decorator);
-      this.setState (() => ({editorState: content}));
+      const text = convertFromRaw(JSON.parse(this.props.rawContent));
+      const content = EditorState.createWithContent(text, decorator);
+      console.log('EDITOR CONTENT', content);
+      this.setState(() => ({editorState: content}));
     }
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     if (prevProps.rawContent !== this.props.rawContent) {
-      const text = convertFromRaw (JSON.parse (this.props.rawContent));
-      const content = EditorState.createWithContent (text, decorator);
-      this.setState (() => ({editorState: content}));
+      const text = convertFromRaw(JSON.parse(this.props.rawContent));
+      const content = EditorState.createWithContent(text, decorator);
+      console.log('EDITOR CONTENT', content);
+      this.setState(() => ({editorState: content}));
     }
   }
 
   onChange = editorState => {
-    this.setState (() => ({editorState}));
-    this.props.onChange (editorState);
+    this.setState(() => ({editorState}));
+    this.props.onChange(editorState);
   };
 
   handleKeyCommand = (command, editorState) => {
-    const newState = RichUtils.handleKeyCommand (editorState, command);
+    const newState = RichUtils.handleKeyCommand(editorState, command);
 
     if (newState) {
-      this.onChange (newState);
+      this.onChange(newState);
       return 'handled';
     }
     return 'not-handled';
   };
 
   _onBoldClick = () => {
-    this.onChange (
-      RichUtils.toggleInlineStyle (this.state.editorState, 'BOLD')
-    );
+    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
   };
 
   _onItalicClick = () => {
-    this.onChange (
-      RichUtils.toggleInlineStyle (this.state.editorState, 'ITALIC')
+    this.onChange(
+      RichUtils.toggleInlineStyle(this.state.editorState, 'ITALIC')
     );
   };
 
-  render () {
+  render() {
     return (
       <div>
-        {!this.props.readOnly &&
+        {!this.props.readOnly && (
           <div>
             <IconButton onClick={this._onBoldClick}>
               <BoldIcon />
@@ -96,7 +98,8 @@ class ArticleEditor extends React.Component {
             <IconButton onClick={this._onItalicClick}>
               <ItalicIcon />
             </IconButton>
-          </div>}
+          </div>
+        )}
         <Editor
           placeholder="Enter event details..."
           handleKeyCommand={this.handleKeyCommand}

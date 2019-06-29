@@ -7,9 +7,10 @@ import {withStyles} from '@material-ui/core/styles';
 import EventForm from '../components/EventForm';
 import Navbar from '../../components/Navbar';
 import EventsNav from '../components/EventsNav';
-import {readEvent, updateEvent} from '../../api/event.api';
+import {readEvent, updateEvent} from '../../api/event';
 import {getSAS, upload} from '../../api/upload.api';
-import {isAuthenticated} from '../../api/auth.api';
+import {isAuthenticated} from '../../helpers/auth';
+import SnackbarComponent from '../../components/SnackbarComponent';
 
 const styles = theme => ({
   root: {
@@ -17,7 +18,7 @@ const styles = theme => ({
     margin: 'auto',
     marginTop: theme.spacing.unit * 15,
     padding: theme.spacing.unit * 5,
-    [theme.breakpoints.down ('sm')]: {
+    [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing.unit * 15,
       padding: theme.spacing.unit * 2,
     },
@@ -31,44 +32,52 @@ const styles = theme => ({
 class EventEditPage extends React.Component {
   state = {
     event: null,
+    done: false,
   };
 
-  componentDidMount () {
+  componentDidMount = async () => {
     const {eventId} = this.props.match.params;
-    readEvent (eventId).then (event => {
-      this.setState (() => ({event}));
-    });
-  }
+    const {token} = isAuthenticated();
+    const event = await readEvent(eventId, token);
+    this.setState(() => ({event}));
+  };
 
-  onSubmit = (title, rawContentString, file, fileChange) => {
-    if (file && fileChange) {
-      getSAS ('events').then (sasToken => {
-        const {speedSummary, blobName} = upload (sasToken, file, 'events');
+  onSubmit = async (event, cb, fileChange, poster) => {
+    const {token} = isAuthenticated();
+    if (event.poster && fileChange) {
+      getSAS('events').then(sasToken => {
+        const {speedSummary, blobName} = upload(
+          sasToken,
+          event.poster,
+          'events'
+        );
 
-        speedSummary.on ('progress', () => {
-          const progressPercent = speedSummary.getCompletePercent ();
+        speedSummary.on('progress', async () => {
+          const progressPercent = speedSummary.getCompletePercent();
 
           if (progressPercent == 100) {
-            const event = {
-              title,
-              article: rawContentString,
-              poster: blobName,
-            };
-
-            updateEvent (this.state.event._id, event);
+            await updateEvent(
+              this.state.event._id,
+              {...event, poster: blobName},
+              token
+            );
+            cb();
+            this.setState(() => ({done: true}));
           }
         });
       });
     } else {
-      const event = {
-        title,
-        article: rawContentString,
-      };
-      updateEvent (this.state.event._id, event);
+      await updateEvent(this.state.event._id, {...event, poster}, token);
+      cb();
+      this.setState(() => ({done: true}));
     }
   };
 
-  render () {
+  onSnackbarClose = () => {
+    this.setState(() => ({done: false}));
+  };
+
+  render() {
     const {classes} = this.props;
     return (
       <div>
@@ -81,12 +90,21 @@ class EventEditPage extends React.Component {
           </Typography>
 
           <Divider />
-          {this.state.event &&
-            <EventForm event={this.state.event} onSubmit={this.onSubmit} />}
+          {this.state.event && (
+            <EventForm event={this.state.event} onSubmit={this.onSubmit} />
+          )}
         </div>
+
+        {this.state.done && (
+          <SnackbarComponent
+            variant="success"
+            message="Event updated!"
+            onClose={this.onSnackbarClose}
+          />
+        )}
       </div>
     );
   }
 }
 
-export default withStyles (styles) (EventEditPage);
+export default withStyles(styles)(EventEditPage);

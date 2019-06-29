@@ -32,6 +32,38 @@ export const listEvents = async (skip, token) => {
   }
 };
 
+export const updateEvent = async (eventId, event, token) => {
+  console.log(event);
+  try {
+    await axios({
+      method: 'patch',
+      url: `/api/event/${eventId}`,
+      data: JSON.stringify(event),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    });
+  } catch (e) {
+    console.log(e.response);
+  }
+};
+
+export const readEvent = async (eventId, token) => {
+  try {
+    const {data} = await axios({
+      method: 'get',
+      url: `/api/event/${eventId}`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+    return data;
+  } catch (e) {
+    console.log(e.response);
+  }
+};
+
 export const addBookmark = eventId => {
   return axios({
     method: 'post',
@@ -64,28 +96,5 @@ export const getBookmarks = () => {
     url: '/api/event/bookmarks',
   }).then(({data}) => {
     return data.events;
-  });
-};
-
-export const updateEvent = (eventId, payload) => {
-  return axios({
-    method: 'post',
-    url: `/api/event/${eventId}`,
-    data: JSON.stringify(payload),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  }).then(({data}) => {
-    return data;
-  });
-};
-
-export const readEvent = eventId => {
-  console.log('EVENT_ID', eventId);
-  return axios({
-    mrthod: 'get',
-    url: `/api/event/${eventId}`,
-  }).then(({data}) => {
-    return data;
   });
 };
