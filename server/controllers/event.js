@@ -1,5 +1,6 @@
 import Event from '../models/event';
 import EventDiscussion from '../models/eventDiscussion';
+import EventDiscussionComment from '../models/eventDiscussionComment';
 
 export const create = async (req, res) => {
   try {
@@ -235,5 +236,56 @@ export const listDiscussion = async (req, res) => {
     res.send({discussions});
   } catch (e) {
     res.status(500).send();
+  }
+};
+
+export const addComment = async (req, res) => {
+  const {discussionId} = req.params;
+  const eventId = req.params.id;
+  const {userId} = req.user._id;
+
+  const comment = new EventDiscussionComment({
+    ...req.body,
+    createdBy: userId,
+    discussion: discussionId,
+  });
+
+  try {
+    const matchedDiscussion = await EventDiscussion.findOne({
+      _id: discussionId,
+      event: eventId,
+    });
+
+    if (!matchedDiscussion) {
+      return res.status(400).send();
+    }
+
+    await comment.save();
+    res.send(comment);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
+
+export const listComment = async (req, res) => {
+  const {discussionId} = req.params;
+  const eventId = req.params.id;
+
+  try {
+    const matchedDiscussion = await EventDiscussion.findOne({
+      _id: discussionId,
+      event: eventId,
+    });
+
+    if (!matchedDiscussion) {
+      return res.status(400).send();
+    }
+
+    const comments = await EventDiscussionComment.find({
+      discussion: discussionId,
+    });
+    res.send({comments});
+  } catch (e) {
+    res.status(400).send(e);
   }
 };
