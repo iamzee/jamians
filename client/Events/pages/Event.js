@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import ClockIcon from '@material-ui/icons/WatchLater';
 import PeopleIcon from '@material-ui/icons/People';
+import CategoryIcon from '@material-ui/icons/Category';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -19,6 +20,8 @@ import {isAuthenticated} from '../../helpers/auth';
 import EventAbout from '../components/EventAbout';
 import GoingButton from '../components/GoingButton';
 import BookmarkButton from '../components/BookmarkButton';
+import Navbar from '../../components/Navbar';
+import EventsNav from '../components/EventsNav';
 
 const styles = theme => ({
   root: {
@@ -73,60 +76,77 @@ class Event extends React.Component {
     const {classes} = this.props;
     const {event, posterLink} = this.state;
     return (
-      <div className={classes.root}>
-        {event && (
-          <div>
-            <Card>
-              {posterLink && <CardMedia component="img" src={posterLink} />}
-              <CardContent>
-                <Typography gutterBottom variant="h5">
-                  {event.title}
-                </Typography>
+      <div>
+        <Navbar title={'Events'} />
+        <EventsNav />
 
-                <div className={classes.groupButtons}>
-                  <GoingButton event={event} />
-                  <BookmarkButton event={event} />
-                </div>
-
-                <Divider />
-
-                <div className={classes.mainInfo}>
-                  <PeopleIcon color="primary" />
-                  <Typography
-                    variant="body2"
-                    color="primary"
-                    component="p"
-                    className={classes.mainInfoTitle}
-                  >
-                    {`${event.going.length} Going`}
+        <div className={classes.root}>
+          {event && (
+            <div>
+              <Card>
+                {posterLink && <CardMedia component="img" src={posterLink} />}
+                <CardContent>
+                  <Typography gutterBottom variant="h5">
+                    {event.title}
                   </Typography>
-                </div>
 
-                <div className={classes.mainInfo}>
-                  <ClockIcon color="primary" />
-                  <Typography
-                    variant="body2"
-                    color="primary"
-                    component="p"
-                    className={classes.mainInfoTitle}
-                  >
-                    {event.startDate &&
-                      moment(event.startDate).format('ddd, MMMM DD')}
-                  </Typography>
-                </div>
-              </CardContent>
-            </Card>
+                  <div className={classes.groupButtons}>
+                    <GoingButton event={event} />
+                    <BookmarkButton event={event} />
+                  </div>
 
-            <AppBar position="static">
-              <Tabs value={this.state.tab} onChange={this.onTabChange}>
-                <Tab label="About" />
-                <Tab label="Discussion" />
-              </Tabs>
-            </AppBar>
-            {this.state.tab === 0 && <EventAbout event={event} />}
-            {this.state.tab === 1 && console.log('1')}
-          </div>
-        )}
+                  <Divider />
+
+                  <div className={classes.mainInfo}>
+                    <PeopleIcon color="primary" />
+                    <Typography
+                      variant="body2"
+                      color="primary"
+                      component="p"
+                      className={classes.mainInfoTitle}
+                    >
+                      {`${event.going.length} Going`}
+                    </Typography>
+                  </div>
+
+                  <div className={classes.mainInfo}>
+                    <ClockIcon color="primary" />
+                    <Typography
+                      variant="body2"
+                      color="primary"
+                      component="p"
+                      className={classes.mainInfoTitle}
+                    >
+                      {event.startDate &&
+                        moment(event.startDate).format('ddd, MMMM DD')}
+                    </Typography>
+                  </div>
+
+                  <div className={classes.mainInfo}>
+                    <CategoryIcon color="primary" />
+                    <Typography
+                      variant="body2"
+                      color="primary"
+                      component="p"
+                      className={classes.mainInfoTitle}
+                    >
+                      {event.category}
+                    </Typography>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <AppBar position="static">
+                <Tabs value={this.state.tab} onChange={this.onTabChange}>
+                  <Tab label="About" />
+                  <Tab label="Discussion" />
+                </Tabs>
+              </AppBar>
+              {this.state.tab === 0 && <EventAbout event={event} />}
+              {this.state.tab === 1 && console.log('1')}
+            </div>
+          )}
+        </div>
       </div>
     );
   }
