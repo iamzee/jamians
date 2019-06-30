@@ -228,7 +228,10 @@ export const listDiscussion = async (req, res) => {
   const eventId = req.params.id;
 
   try {
-    const discussions = await EventDiscussion.find({event: eventId});
+    const discussions = await EventDiscussion.find({event: eventId}).populate(
+      'createdBy',
+      'name'
+    );
     res.send({discussions});
   } catch (e) {
     res.status(500).send();

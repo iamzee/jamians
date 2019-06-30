@@ -131,5 +131,22 @@ export const addDiscussion = async (discussion, eventId, token) => {
         Authorization: 'Bearer ' + token,
       },
     });
-  } catch (e) {}
+  } catch (e) {
+    console.log(e.response);
+  }
+};
+
+export const listDiscussion = async (eventId, token) => {
+  try {
+    const {data} = await axios({
+      method: 'get',
+      url: `/api/event/${eventId}/discussion`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+    return data.discussions;
+  } catch (e) {
+    console.log(e.response);
+  }
 };
