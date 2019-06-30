@@ -30,10 +30,10 @@ class CommentListItem extends React.Component {
           primary={
             <React.Fragment>
               <Typography
-                className={
+                className={clsx(
                   comment.createdBy._id === comment.event.createdBy &&
-                  classes.author
-                }
+                    classes.author
+                )}
                 variant="subtitle2"
                 component="span"
               >
