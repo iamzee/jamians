@@ -32,7 +32,7 @@ const styles = theme => ({
     padding: theme.spacing(5),
     [theme.breakpoints.down('xs')]: {
       marginTop: theme.spacing(15),
-      padding: 0,
+      padding: theme.spacing(2),
     },
   },
   mainInfo: {

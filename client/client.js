@@ -7,8 +7,9 @@ import cyan from '@material-ui/core/colors/cyan';
 import lightBlue from '@material-ui/core/colors/lightBlue';
 
 import MainRouter from './routers/MainRouter';
+import './client.scss';
 
-const theme = createMuiTheme ({
+const theme = createMuiTheme({
   palette: {
     primary: {
       main: teal[500],
@@ -23,9 +24,9 @@ const theme = createMuiTheme ({
   },
 });
 
-ReactDOM.render (
+ReactDOM.render(
   <MuiThemeProvider theme={theme}>
     <MainRouter />
   </MuiThemeProvider>,
-  document.getElementById ('root')
+  document.getElementById('root')
 );
