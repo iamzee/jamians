@@ -103,6 +103,12 @@ const eventSchema = mongoose.Schema({
       ref: 'User',
     },
   ],
+  bookmark: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
 });
 
 const Event = mongoose.model('Event', eventSchema);

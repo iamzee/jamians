@@ -1,71 +1,76 @@
 import React from 'react';
 
-import IconButton from '@material-ui/core/IconButton';
-import BookmarkIconOutlined from '@material-ui/icons/BookmarkBorderOutlined';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
+import CheckIcon from '@material-ui/icons/Check';
 
+import {isAuthenticated} from '../../helpers/auth';
 import {addBookmark, removeBookmark} from '../../api/event';
-import {isAuthenticated} from '../../api/auth.api';
 
 class BookmarkButton extends React.Component {
   state = {
-    bookmarked: false,
-    addingBookmark: false,
-    removingBookmark: false,
+    bookmark: false,
+    adding: false,
+    removing: false,
   };
 
-  componentDidMount() {
-    isAuthenticated().then(user => {
-      const matchedUser = this.props.event.bookmarks.find(
-        bookmark => bookmark === user._id
-      );
+  componentDidMount = () => {
+    const {event} = this.props;
+    const {user} = isAuthenticated();
 
-      if (matchedUser) {
-        this.setState(() => ({bookmarked: true}));
-      }
-    });
-  }
+    const matchedUser = event.bookmark.find(b => b._id === user._id);
 
-  onAddBookmark = () => {
-    this.setState(() => ({addingBookmark: true}));
-
-    const eventId = this.props.event._id;
-    addBookmark(eventId).then(() => {
-      this.setState(() => ({bookmarked: true, addingBookmark: false}));
-    });
+    if (matchedUser) {
+      this.setState(() => ({bookmark: true}));
+    }
   };
 
-  onRemoveBookmark = () => {
-    this.setState(() => ({removingBookmark: true}));
+  onAddBookmark = async () => {
+    const {event} = this.props;
+    const {token} = isAuthenticated();
+    this.setState(() => ({adding: true}));
+    await addBookmark(event._id, token);
+    this.setState(() => ({bookmark: true, adding: false}));
+  };
 
-    const eventId = this.props.event._id;
-    removeBookmark(eventId).then(() => {
-      this.setState(() => ({bookmarked: false, removingBookmark: false}));
-    });
+  onRemoveBookmark = async () => {
+    const {event} = this.props;
+    const {token} = isAuthenticated();
+    this.setState(() => ({removing: true}));
+    await removeBookmark(event._id, token);
+    this.setState(() => ({bookmark: false, removing: false}));
   };
 
   render() {
     return (
       <React.Fragment>
-        {this.state.bookmarked ? (
+        {this.state.bookmark ? (
           <React.Fragment>
-            {this.state.removingBookmark ? (
-              <CircularProgress size={20} />
+            {this.state.removing ? (
+              <CircularProgress color="secondary" size={20} />
             ) : (
-              <IconButton onClick={this.onRemoveBookmark}>
-                <BookmarkIcon />
-              </IconButton>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={this.onRemoveBookmark}
+              >
+                <CheckIcon style={{marginRight: '4px'}} />
+                Bookmarked
+              </Button>
             )}
           </React.Fragment>
         ) : (
           <React.Fragment>
-            {this.state.addingBookmark ? (
+            {this.state.adding ? (
               <CircularProgress size={20} />
             ) : (
-              <IconButton onClick={this.onAddBookmark}>
-                <BookmarkIconOutlined />
-              </IconButton>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={this.onAddBookmark}
+              >
+                Bookmark
+              </Button>
             )}
           </React.Fragment>
         )}

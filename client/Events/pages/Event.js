@@ -11,7 +11,6 @@ import PeopleIcon from '@material-ui/icons/People';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/styles';
 
 import {readEvent} from '../../api/event';
@@ -19,6 +18,7 @@ import {getSAS, download} from '../../api/upload.api';
 import {isAuthenticated} from '../../helpers/auth';
 import EventAbout from '../components/EventAbout';
 import GoingButton from '../components/GoingButton';
+import BookmarkButton from '../components/BookmarkButton';
 
 const styles = theme => ({
   root: {
@@ -85,9 +85,7 @@ class Event extends React.Component {
 
                 <div className={classes.groupButtons}>
                   <GoingButton event={event} />
-                  <Button variant="outlined" color="secondary">
-                    Bookmark
-                  </Button>
+                  <BookmarkButton event={event} />
                 </div>
 
                 <Divider />

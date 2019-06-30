@@ -34,6 +34,7 @@ export const read = async (req, res) => {
   try {
     const event = await Event.findById(id);
     await event.populate('going', 'name').execPopulate();
+    await event.populate('bookmark', 'name').execPopulate();
     if (!event) {
       return res.status(404).send();
     }
@@ -141,5 +142,65 @@ export const removeGoing = async (req, res) => {
     res.send(event);
   } catch (e) {
     res.staus(400).send(e);
+  }
+};
+
+export const addBookmark = async (req, res) => {
+  const eventId = req.params.id;
+  const userId = req.user._id;
+
+  try {
+    const eventMatched = await Event.findOne({
+      _id: eventId,
+      bookmark: {$in: userId},
+    });
+
+    if (eventMatched) {
+      return res.status(400).send();
+    }
+
+    const event = await Event.findByIdAndUpdate(
+      eventId,
+      {$push: {bookmark: userId}},
+      {new: true}
+    );
+
+    if (!event) {
+      return res.status(404).send();
+    }
+
+    res.send(event);
+  } catch (e) {
+    res.staus(400).send(e.response);
+  }
+};
+
+export const removeBookmark = async (req, res) => {
+  const eventId = req.params.id;
+  const userId = req.user._id;
+
+  try {
+    const eventMatched = await Event.findOne({
+      _id: eventId,
+      bookmark: {$in: userId},
+    });
+
+    if (!eventMatched) {
+      return res.status(400).send();
+    }
+
+    const event = await Event.findByIdAndUpdate(
+      eventId,
+      {$pull: {bookmark: userId}},
+      {new: true}
+    );
+
+    if (!event) {
+      return res.status(404).send();
+    }
+
+    res.send(event);
+  } catch (e) {
+    res.staus(400).send(e.response);
   }
 };
