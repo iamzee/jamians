@@ -11,14 +11,14 @@ import PeopleIcon from '@material-ui/icons/People';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/styles';
 
 import {readEvent} from '../../api/event';
 import {getSAS, download} from '../../api/upload.api';
 import {isAuthenticated} from '../../helpers/auth';
-import ArticleEditor from '../components/ArticleEditor';
-import getEditorState from '../../helpers/getEditorState';
 import EventAbout from '../components/EventAbout';
+import GoingButton from '../components/GoingButton';
 
 const styles = theme => ({
   root: {
@@ -38,6 +38,9 @@ const styles = theme => ({
   },
   mainInfoTitle: {
     marginLeft: theme.spacing(1),
+  },
+  groupButtons: {
+    marginBottom: theme.spacing(2),
   },
 });
 
@@ -80,6 +83,13 @@ class Event extends React.Component {
                   {event.title}
                 </Typography>
 
+                <div className={classes.groupButtons}>
+                  <GoingButton event={event} />
+                  <Button variant="outlined" color="secondary">
+                    Bookmark
+                  </Button>
+                </div>
+
                 <Divider />
 
                 <div className={classes.mainInfo}>
@@ -90,7 +100,7 @@ class Event extends React.Component {
                     component="p"
                     className={classes.mainInfoTitle}
                   >
-                    3 Going
+                    {`${event.going.length} Going`}
                   </Typography>
                 </div>
 

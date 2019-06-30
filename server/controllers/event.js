@@ -33,6 +33,7 @@ export const read = async (req, res) => {
 
   try {
     const event = await Event.findById(id);
+    await event.populate('going', 'name').execPopulate();
     if (!event) {
       return res.status(404).send();
     }
@@ -139,6 +140,6 @@ export const removeGoing = async (req, res) => {
 
     res.send(event);
   } catch (e) {
-    res.staus(400).send(e.response);
+    res.staus(400).send(e);
   }
 };

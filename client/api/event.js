@@ -98,3 +98,31 @@ export const getBookmarks = () => {
     return data.events;
   });
 };
+
+export const addGoing = async (eventId, token) => {
+  try {
+    await axios({
+      method: 'post',
+      url: `/api/event/${eventId}/going`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+  } catch (e) {
+    console.log(e.response);
+  }
+};
+
+export const removeGoing = async (eventId, token) => {
+  try {
+    await axios({
+      method: 'delete',
+      url: `/api/event/${eventId}/going`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+  } catch (e) {
+    console.log(e.response);
+  }
+};
