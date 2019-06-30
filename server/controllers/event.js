@@ -1,4 +1,5 @@
 import Event from '../models/event';
+import EventDiscussion from '../models/eventDiscussion';
 
 export const create = async (req, res) => {
   try {
@@ -202,5 +203,34 @@ export const removeBookmark = async (req, res) => {
     res.send(event);
   } catch (e) {
     res.staus(400).send(e.response);
+  }
+};
+
+export const addDiscussion = async (req, res) => {
+  const eventId = req.params.id;
+  const userId = req.user._id;
+
+  const eventDiscussion = new EventDiscussion({
+    ...req.body,
+    createdBy: userId,
+    event: eventId,
+  });
+
+  try {
+    await eventDiscussion.save();
+    res.send(eventDiscussion);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
+
+export const listDiscussion = async (req, res) => {
+  const eventId = req.params.id;
+
+  try {
+    const discussions = await EventDiscussion.find({event: eventId});
+    res.send({discussions});
+  } catch (e) {
+    res.status(500).send();
   }
 };

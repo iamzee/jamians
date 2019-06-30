@@ -9,6 +9,8 @@ import {
   removeGoing,
   addBookmark,
   removeBookmark,
+  addDiscussion,
+  listDiscussion,
 } from '../controllers/event';
 import auth from '../middlewares/auth';
 const router = express.Router();
@@ -33,5 +35,10 @@ router
   .route('/api/event/:id/bookmark')
   .post(auth, addBookmark)
   .delete(auth, removeBookmark);
+
+router
+  .route('/api/event/:id/discussion')
+  .post(auth, addDiscussion)
+  .get(auth, listDiscussion);
 
 export default router;
