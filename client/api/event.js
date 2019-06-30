@@ -119,3 +119,17 @@ export const removeBookmark = async (eventId, token) => {
     console.log(e.response);
   }
 };
+
+export const addDiscussion = async (discussion, eventId, token) => {
+  try {
+    return await axios({
+      method: 'post',
+      url: `/api/event/${eventId}/discussion`,
+      data: JSON.stringify(discussion),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    });
+  } catch (e) {}
+};

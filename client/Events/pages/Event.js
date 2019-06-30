@@ -22,6 +22,7 @@ import GoingButton from '../components/GoingButton';
 import BookmarkButton from '../components/BookmarkButton';
 import Navbar from '../../components/Navbar';
 import EventsNav from '../components/EventsNav';
+import EventDiscussion from '../components/EventDiscussion';
 
 const styles = theme => ({
   root: {
@@ -143,7 +144,7 @@ class Event extends React.Component {
                 </Tabs>
               </AppBar>
               {this.state.tab === 0 && <EventAbout event={event} />}
-              {this.state.tab === 1 && console.log('1')}
+              {this.state.tab === 1 && <EventDiscussion event={event} />}
             </div>
           )}
         </div>
