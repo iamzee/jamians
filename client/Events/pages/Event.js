@@ -137,7 +137,7 @@ class Event extends React.Component {
                 </CardContent>
               </Card>
 
-              <AppBar position="static">
+              <AppBar position="static" color="secondary">
                 <Tabs value={this.state.tab} onChange={this.onTabChange}>
                   <Tab label="About" />
                   <Tab label="Discussion" />

@@ -15,6 +15,8 @@ const styles = theme => ({
   commentField: {
     display: 'flex',
     alignItems: 'center',
+    backgroundColor: '#efefef',
+    padding: theme.spacing(1),
   },
   textField: {
     flex: 1,

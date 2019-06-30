@@ -45,7 +45,7 @@ class DiscussionListItem extends React.Component {
           subheader={moment(discussion.createdAt).format('MMMM DD, hh:mm A')}
         />
         <CardContent>
-          <Typography variant="h5">{discussion.text}</Typography>
+          <Typography variant="h6">{discussion.text}</Typography>
         </CardContent>
         <CardActions>
           <IconButton

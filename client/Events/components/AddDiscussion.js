@@ -19,11 +19,11 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     marginTop: theme.spacing(2),
+    backgroundColor: '#efefef',
   },
   textField: {
     flex: 1,
     marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
   },
 });
 
