@@ -14,6 +14,7 @@ import Collapse from '@material-ui/core/Collapse';
 import {withStyles} from '@material-ui/core/styles';
 
 import AddComment from './AddComment';
+import CommentList from './CommentList';
 
 const styles = theme => ({
   card: {
@@ -58,6 +59,7 @@ class DiscussionListItem extends React.Component {
         <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
           <CardContent>
             <AddComment discussion={discussion} />
+            <CommentList discussion={discussion} />
           </CardContent>
         </Collapse>
       </Card>

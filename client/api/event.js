@@ -166,3 +166,18 @@ export const addComment = async (comment, eventId, discussionId, token) => {
     console.log(e.response);
   }
 };
+
+export const listComment = async (eventId, discussionId, token) => {
+  try {
+    const {data} = await axios({
+      method: 'get',
+      url: `/api/event/${eventId}/discussion/${discussionId}/addComment`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+    return data.comments;
+  } catch (e) {
+    console.log(e.response);
+  }
+};

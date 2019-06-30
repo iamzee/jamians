@@ -242,12 +242,13 @@ export const listDiscussion = async (req, res) => {
 export const addComment = async (req, res) => {
   const {discussionId} = req.params;
   const eventId = req.params.id;
-  const {userId} = req.user._id;
+  const userId = req.user._id;
 
   const comment = new EventDiscussionComment({
     ...req.body,
     createdBy: userId,
     discussion: discussionId,
+    event: eventId,
   });
 
   try {
@@ -283,7 +284,9 @@ export const listComment = async (req, res) => {
 
     const comments = await EventDiscussionComment.find({
       discussion: discussionId,
-    });
+    })
+      .populate('createdBy', 'name')
+      .populate('event', 'createdBy');
     res.send({comments});
   } catch (e) {
     res.status(400).send(e);
