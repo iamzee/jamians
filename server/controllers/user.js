@@ -26,14 +26,48 @@ export const read = async (req, res) => {
   }
 };
 
-export const addFollowing = async (req, res) => {
-  const userToFollowId = req.params.id;
+// export const addFollowing = async (req, res) => {
+//   const userToFollowId = req.params.id;
+//   const userId = req.user._id;
+
+//   try {
+//     const user = await User.findByIdAndUpdate (
+//       userId,
+//       {$push: {following: userToFollowId}},
+//       {new: true}
+//     );
+//     res.send (user);
+//   } catch (e) {
+//     res.status (400).send (e);
+//   }
+// };
+
+// export const removeFollowing = async (req, res) => {
+//   const userToFollowId = req.params.id;
+//   const userId = req.user._id;
+
+//   try {
+//     const user = await User.findByIdAndUpdate (
+//       userId,
+//       {$pull: {following: userToFollowId}},
+//       {new: true}
+//     );
+//     res.send (user);
+//   } catch (e) {
+//     res.status (400).send (e);
+//   }
+// };
+
+export const addFriendRequestSent = async (req, res) => {
+  const friendId = req.params.id;
   const userId = req.user._id;
 
   try {
     const user = await User.findByIdAndUpdate (
       userId,
-      {$push: {following: userToFollowId}},
+      {
+        $push: {friendRequestsSent: friendId},
+      },
       {new: true}
     );
     res.send (user);
@@ -42,14 +76,77 @@ export const addFollowing = async (req, res) => {
   }
 };
 
-export const removeFollowing = async (req, res) => {
-  const userToFollowId = req.params.id;
+export const removeFriendRequestSent = async (req, res) => {
+  const friendId = req.params.id;
   const userId = req.user._id;
 
   try {
     const user = await User.findByIdAndUpdate (
       userId,
-      {$pull: {following: userToFollowId}},
+      {
+        $pull: {friendRequestsSent: friendId},
+      },
+      {new: true}
+    );
+    res.send (user);
+  } catch (e) {
+    res.status (400).send (e);
+  }
+};
+
+export const addFriend = async (req, res) => {
+  const friendId = req.params.id;
+  const userId = req.user._id;
+
+  try {
+    const friendRequest = req.user.friendRequestsReceived.find (
+      friendRequests => friendRequests.toString () === friendId
+    );
+
+    if (!friendRequest) {
+      return res.status (400).send ();
+    }
+
+    const friend = await User.findByIdAndUpdate (friendId, {
+      $pull: {friendRequestsSent: userId},
+      $push: {friends: userId},
+    });
+
+    if (!friend) {
+      return res.status (404).send ();
+    }
+
+    const user = await User.findByIdAndUpdate (
+      userId,
+      {
+        $pull: {friendRequestsReceived: friendId},
+        $push: {friends: friendId},
+      },
+      {new: true}
+    );
+
+    res.send (user);
+  } catch (e) {}
+};
+
+export const removeFriend = async (req, res) => {
+  const friendId = req.params.id;
+  const userId = req.user._id;
+
+  try {
+    const friend = await User.findByIdAndUpdate (
+      friendId,
+      {$pull: {friends: userId}},
+      {new: trur}
+    );
+
+    if (!friend) {
+      return res.status (404).send ();
+    }
+
+    const user = await User.findByIdAndUpdate (
+      userId,
+      {$pull: {friends: friendId}},
       {new: true}
     );
     res.send (user);
