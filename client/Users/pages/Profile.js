@@ -12,6 +12,7 @@ import {withStyles} from '@material-ui/core/styles';
 
 import {isAuthenticated} from '../../helpers/auth';
 import {readUser, sendFriendRequest} from '../../api/user';
+import {getSAS, download} from '../../api/upload.api';
 
 const styles = theme => ({
   root: {
@@ -32,11 +33,15 @@ const styles = theme => ({
     width: 150,
     height: 150,
   },
+  link: {
+    textDecoration: 'none',
+  },
 });
 
 class Profile extends React.Component {
   state = {
     user: null,
+    posterLink: null,
     sending: false,
     sent: false,
   };
@@ -46,6 +51,12 @@ class Profile extends React.Component {
     const {userId} = this.props.match.params;
     const user = await readUser(userId, token);
     this.setState(() => ({user}));
+
+    if (user.avatar) {
+      const sasToken = await getSAS('avatar');
+      const posterLink = download(sasToken, 'avatar', user.avatar);
+      this.setState(() => ({posterLink}));
+    }
   };
 
   onSendFriendRequest = async () => {
@@ -58,8 +69,6 @@ class Profile extends React.Component {
 
   isFriend = () => {
     const {user: loggedInUser} = isAuthenticated();
-    console.log('LOG', loggedInUser._id);
-    console.log('FrI', this.state.user._id);
     const isFriend = this.state.user.friends.find(
       friend => friend.toString() === loggedInUser._id.toString()
     );
@@ -101,7 +110,7 @@ class Profile extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {user} = this.state;
+    const {user, posterLink} = this.state;
     const {user: loggedInUser} = isAuthenticated();
     return (
       <div className={classes.root}>
@@ -111,8 +120,8 @@ class Profile extends React.Component {
               <CardContent>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={6}>
-                    {user.avatar ? (
-                      <Avatar className={classes.avatar} src={user.avatar} />
+                    {posterLink ? (
+                      <Avatar className={classes.avatar} src={posterLink} />
                     ) : (
                       <Avatar className={classes.avatar}>
                         <PersonIcon />
@@ -122,7 +131,10 @@ class Profile extends React.Component {
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h4">{user.name}</Typography>
                     {loggedInUser._id.toString() === user._id.toString() ? (
-                      <Link to={`/users/${user._id}/edit`}>
+                      <Link
+                        to={`/users/${user._id}/edit`}
+                        className={classes.link}
+                      >
                         <Button variant="outlined" color="secondary">
                           Edit Profile
                         </Button>

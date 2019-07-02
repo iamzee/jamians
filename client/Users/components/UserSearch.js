@@ -1,26 +1,17 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
 
 import TextField from '@material-ui/core/TextField';
 import Collapse from '@material-ui/core/Collapse';
 import Paper from '@material-ui/core/Paper';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import PersonIcon from '@material-ui/icons/Person';
 import {withStyles} from '@material-ui/core/styles';
 
 import {isAuthenticated} from '../../helpers/auth';
 import {listUsers} from '../../api/user';
+import UserSearchItem from './UserSearchItem';
 
 const styles = theme => ({
   textField: {
     width: '100%',
-  },
-  link: {
-    textDecoration: 'none',
-    color: 'black',
   },
 });
 
@@ -69,22 +60,7 @@ class UserSearch extends React.Component {
           <Paper>
             {this.state.filteredUsers.length > 0 &&
               this.state.filteredUsers.map(user => {
-                return (
-                  <Link
-                    to={`/users/${user._id}`}
-                    key={user._id}
-                    className={classes.link}
-                  >
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Avatar>
-                          <PersonIcon />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText primary={user.name} />
-                    </ListItem>
-                  </Link>
-                );
+                return <UserSearchItem key={user._id} user={user} />;
               })}
           </Paper>
         </Collapse>
