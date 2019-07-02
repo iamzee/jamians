@@ -9,7 +9,6 @@ import Grid from '@material-ui/core/Grid';
 import NotesIcon from '@material-ui/icons/ClassOutlined';
 import QuestionPaperIcon from '@material-ui/icons/SchoolOutlined';
 import DiscussionIcon from '@material-ui/icons/QuestionAnswerOutlined';
-import LogoutIcon from '@material-ui/icons/ExitToAppOutlined';
 import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 import EventIcon from '@material-ui/icons/EventOutlined';
 import NavigationIcon from '@material-ui/icons/NavigationOutlined';
@@ -25,10 +24,10 @@ const styles = theme => ({
   appbar: {background: theme.palette.primary.main},
   title: {flexGrow: 1},
   container: {
-    marginTop: theme.spacing.unit * 10,
-    padding: theme.spacing.unit * 5,
-    [theme.breakpoints.down ('xs')]: {
-      padding: theme.spacing.unit * 2,
+    marginTop: theme.spacing(10),
+    padding: theme.spacing(5),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2),
     },
   },
   link: {
@@ -38,7 +37,7 @@ const styles = theme => ({
     color: 'black',
   },
   linkText: {
-    marginLeft: theme.spacing.unit * 2,
+    marginLeft: theme.spacing(2),
   },
 });
 
@@ -55,7 +54,7 @@ const HomePage = props => {
       </AppBar>
 
       <div className={classes.container}>
-        <Grid container spacing={8}>
+        <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={4} lg={3}>
             <Link className={classes.link} to="/notes">
               <NotesIcon />
@@ -158,4 +157,4 @@ const HomePage = props => {
   );
 };
 
-export default withStyles (styles) (HomePage);
+export default withStyles(styles)(HomePage);
