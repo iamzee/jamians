@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
 import {isAuthenticated} from '../../helpers/auth';
-import {readUser, sendFriendRequest} from '../../api/user';
+import {readUser, sendFriendRequest, removeFriend} from '../../api/user';
 import {getSAS, download} from '../../api/upload.api';
 
 const styles = theme => ({
@@ -35,6 +35,9 @@ const styles = theme => ({
   },
   link: {
     textDecoration: 'none',
+  },
+  actionButton: {
+    marginTop: theme.spacing(2),
   },
 });
 
@@ -108,6 +111,12 @@ class Profile extends React.Component {
     return false;
   };
 
+  onRemoveFriend = async () => {
+    const {userId} = this.props.match.params;
+    const {token} = isAuthenticated();
+    await removeFriend(userId, token);
+  };
+
   render() {
     const {classes} = this.props;
     const {user, posterLink} = this.state;
@@ -142,7 +151,12 @@ class Profile extends React.Component {
                     ) : (
                       <React.Fragment>
                         {this.isFriend() ? (
-                          <Button variant="outlined" color="secondary">
+                          <Button
+                            className={classes.actionButton}
+                            onClick={this.onRemoveFriend}
+                            variant="outlined"
+                            color="secondary"
+                          >
                             Remove Friend
                           </Button>
                         ) : (

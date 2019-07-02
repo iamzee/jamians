@@ -74,3 +74,17 @@ export const sendFriendRequest = async (userId, token) => {
     console.log(e.response);
   }
 };
+
+export const removeFriend = async (userId, token) => {
+  try {
+    return await axios({
+      method: 'delete',
+      url: `/api/users/${userId}/friend`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+  } catch (e) {
+    console.log(e.response);
+  }
+};

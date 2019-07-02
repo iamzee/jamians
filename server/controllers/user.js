@@ -132,7 +132,7 @@ export const removeFriend = async (req, res) => {
     const friend = await User.findByIdAndUpdate(
       friendId,
       {$pull: {friends: userId}},
-      {new: trur}
+      {new: true}
     );
 
     if (!friend) {
