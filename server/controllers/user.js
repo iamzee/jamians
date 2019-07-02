@@ -11,6 +11,15 @@ export const create = async (req, res) => {
   }
 };
 
+export const list = async (req, res) => {
+  try {
+    const users = await User.find ({});
+    res.send ({users});
+  } catch (e) {
+    res.status (500).send ();
+  }
+};
+
 export const read = async (req, res) => {
   try {
     const {id} = req.params;

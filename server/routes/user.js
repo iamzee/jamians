@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   create,
+  list,
   read,
   addFriendRequestSent,
   removeFriendRequestSent,
@@ -15,7 +16,7 @@ import auth from '../middlewares/auth';
 
 const router = express.Router ();
 
-router.route ('/api/users').post (create);
+router.route ('/api/users').post (create).get (auth, list);
 
 router.route ('/api/users/:id').get (auth, read);
 

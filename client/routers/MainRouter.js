@@ -6,7 +6,8 @@ import PrivateRoute from './PrivateRouter';
 import PageLoader from '../components/PageLoader';
 
 // USER  IMPORTS
-const Profile = lazy (() => import ('../User/pages/Profile'));
+const UsersDashboard = lazy (() => import ('../Users/pages/UsersDashboard'));
+const Profile = lazy (() => import ('../Users/pages/Profile'));
 
 // AUTH IMPORTS
 const Signup = lazy (() => import ('../Home/pages/Signup'));
@@ -66,6 +67,7 @@ const MainRouter = () => (
 
         {/* USER ROUTES */}
         <PrivateRoute path="/users/:userId" component={Profile} />
+        <PrivateRoute path="/users" component={UsersDashboard} />
 
         {/* EVENT ROUTES */}
         <PrivateRoute path="/events/bookmarks" component={EventBookmarksPage} />

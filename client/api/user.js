@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const create = async data => {
   try {
-    await axios({
+    await axios ({
       method: 'post',
       url: '/api/users',
       data,
@@ -11,22 +11,36 @@ export const create = async data => {
       },
     });
   } catch (e) {
-    console.log(e.response);
+    console.log (e.response);
   }
+};
+
+export const listUsers = async token => {
+  try {
+    const {data} = await axios ({
+      method: 'get',
+      url: '/api/users',
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+
+    return data.users;
+  } catch (e) {}
 };
 
 export const readUser = async (userId, token) => {
   try {
-    const {data} = await axios({
+    const {data} = await axios ({
       method: 'get',
       url: `/api/users/${userId}`,
       headers: {
         Authorization: 'Bearer ' + token,
       },
     });
-    console.log(data);
+    console.log (data);
     return data;
   } catch (e) {
-    console.log(e.response);
+    console.log (e.response);
   }
 };
