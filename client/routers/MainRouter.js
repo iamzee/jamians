@@ -6,66 +6,65 @@ import PrivateRoute from './PrivateRouter';
 import PageLoader from '../components/PageLoader';
 
 // USER  IMPORTS
-const UsersDashboard = lazy (() => import ('../Users/pages/UsersDashboard'));
-const Profile = lazy (() => import ('../Users/pages/Profile'));
+const EditProfile = lazy(() => import('../Users/pages/EditProfile'));
+const UsersDashboard = lazy(() => import('../Users/pages/UsersDashboard'));
+const Profile = lazy(() => import('../Users/pages/Profile'));
 
 // AUTH IMPORTS
-const Signup = lazy (() => import ('../Home/pages/Signup'));
-const Login = lazy (() => import ('../Home/pages/Login'));
+const Signup = lazy(() => import('../Home/pages/Signup'));
+const Login = lazy(() => import('../Home/pages/Login'));
 
 // NOTE IMPORTS
-const NotesPage = lazy (() => import ('../Notes/pages/NotesPage'));
-const NotesBookmarkPage = lazy (() =>
-  import ('../Notes/pages/NotesBookmarkPage')
+const NotesPage = lazy(() => import('../Notes/pages/NotesPage'));
+const NotesBookmarkPage = lazy(() =>
+  import('../Notes/pages/NotesBookmarkPage')
 );
-const Note = lazy (() => import ('../Notes/pages/Note'));
-const UploadNotesPage = lazy (() => import ('../Notes/pages/UploadNotesPage'));
+const Note = lazy(() => import('../Notes/pages/Note'));
+const UploadNotesPage = lazy(() => import('../Notes/pages/UploadNotesPage'));
 
 // QUESTION PAPER IMPORTS
-const Upload = lazy (() => import ('../QuestionPaper/pages/Upload'));
-const QuestionPaperDashboard = lazy (() =>
-  import ('../QuestionPaper/pages/QuestionPaperDashboard')
+const Upload = lazy(() => import('../QuestionPaper/pages/Upload'));
+const QuestionPaperDashboard = lazy(() =>
+  import('../QuestionPaper/pages/QuestionPaperDashboard')
 );
-const QuestionPaper = lazy (() =>
-  import ('../QuestionPaper/components/QusetionPaper')
+const QuestionPaper = lazy(() =>
+  import('../QuestionPaper/components/QusetionPaper')
 );
-const QuestionPaperBookmarkPage = lazy (() =>
-  import ('../QuestionPaper/pages/QuestionPaperBookmarkPage')
+const QuestionPaperBookmarkPage = lazy(() =>
+  import('../QuestionPaper/pages/QuestionPaperBookmarkPage')
 );
 
 // DISCUSSION IMPORTS
-const DiscussionList = lazy (() =>
-  import ('../Discussion/pages/DiscussionList')
+const DiscussionList = lazy(() => import('../Discussion/pages/DiscussionList'));
+const NewDiscussionPage = lazy(() =>
+  import('../Discussion/pages/NewDiscussionPage')
 );
-const NewDiscussionPage = lazy (() =>
-  import ('../Discussion/pages/NewDiscussionPage')
-);
-const Discussion = lazy (() => import ('../Discussion/pages/Discussion'));
+const Discussion = lazy(() => import('../Discussion/pages/Discussion'));
 
 // SETTINGS IMPORTS
-const Settings = lazy (() => import ('../Settings/pages/Settings'));
+const Settings = lazy(() => import('../Settings/pages/Settings'));
 
 // EVENT IMPORTS
-const Event = lazy (() => import ('../Events/pages/Event'));
-const NewEventPage = lazy (() => import ('../Events/pages/NewEventPage'));
-const EventsDashboard = lazy (() => import ('../Events/pages/EventsDashboard'));
-const EventBookmarksPage = lazy (() =>
-  import ('../Events/pages/EventBookmarksPage')
+const Event = lazy(() => import('../Events/pages/Event'));
+const NewEventPage = lazy(() => import('../Events/pages/NewEventPage'));
+const EventsDashboard = lazy(() => import('../Events/pages/EventsDashboard'));
+const EventBookmarksPage = lazy(() =>
+  import('../Events/pages/EventBookmarksPage')
 );
-const EventEditPage = lazy (() => import ('../Events/pages/EventEditPage'));
+const EventEditPage = lazy(() => import('../Events/pages/EventEditPage'));
 
 // HOME IMPORTS
-const StartPage = lazy (() => import ('../Home/pages/StartPage'));
-const HomePage = lazy (() => import ('../Home/pages/HomePage'));
+const StartPage = lazy(() => import('../Home/pages/StartPage'));
+const HomePage = lazy(() => import('../Home/pages/HomePage'));
 
-const history = createHistory ();
+const history = createHistory();
 
 const MainRouter = () => (
   <Router history={history}>
     <Suspense fallback={<PageLoader />}>
       <Switch>
-
         {/* USER ROUTES */}
+        <PrivateRoute path="/users/:userId/edit" component={EditProfile} />
         <PrivateRoute path="/users/:userId" component={Profile} />
         <PrivateRoute path="/users" component={UsersDashboard} />
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
 import Avatar from '@material-ui/core/Avatar';
 import PersonIcon from '@material-ui/icons/Person';
@@ -121,9 +122,11 @@ class Profile extends React.Component {
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h4">{user.name}</Typography>
                     {loggedInUser._id.toString() === user._id.toString() ? (
-                      <Button variant="outlined" color="secondary">
-                        Edit Profile
-                      </Button>
+                      <Link to={`/users/${user._id}/edit`}>
+                        <Button variant="outlined" color="secondary">
+                          Edit Profile
+                        </Button>
+                      </Link>
                     ) : (
                       <React.Fragment>
                         {this.isFriend() ? (
