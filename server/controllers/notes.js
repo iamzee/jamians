@@ -1,6 +1,6 @@
 import Note from '../models/notes';
 import Department from '../models/department';
-import Course from '../models/course.model';
+import Course from '../models/course';
 import Subject from '../models/subject.model';
 
 export const create = async (req, res) => {

@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
 
-const courseSchema = mongoose.Schema ({
+const courseSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
   },
   department: {
     type: mongoose.Schema.Types.ObjectId,
@@ -12,6 +13,6 @@ const courseSchema = mongoose.Schema ({
   },
 });
 
-const Course = mongoose.model ('Course', courseSchema);
+const Course = mongoose.model('Course', courseSchema);
 
 export default Course;

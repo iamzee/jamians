@@ -7,7 +7,7 @@ import socketIO from 'socket.io';
 // import cookieSession from 'cookie-session';
 // import passport from 'passport';
 
-import courseRoutes from './routes/course.route';
+import courseRoutes from './routes/course';
 import subjectRoutes from './routes/subject.route';
 import departmentRoutes from './routes/department';
 import noteRoutes from './routes/notes';
