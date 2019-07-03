@@ -5,25 +5,34 @@ import Subject from '../models/subject';
 
 export const create = async (req, res) => {
   try {
-    const department = await Department.findById(req.body.department);
-    const course = await Course.findOne({
-      _id: req.body.course,
-      department: req.body.department,
+    const {department, course, subject, semester} = req.query;
+    const d = await Department.findById(department);
+    const c = await Course.findOne({
+      _id: course,
+      department: department,
     });
-    const subject = await Subject.findOne({
-      _id: req.body.subject,
-      course: req.body.course,
-      semester: req.body.semester,
+    const s = await Subject.findOne({
+      _id: subject,
+      course: course,
+      semester: semester,
     });
 
-    if (!department || !course || !subject) {
+    if (!d || !c || !s) {
       return res.status(400).send();
     }
 
-    const note = new Note({...req.body, createdBy: req.user._id});
+    const note = new Note({
+      ...req.body,
+      createdBy: req.user._id,
+      department,
+      course,
+      subject,
+      semester,
+    });
     await note.save();
     res.send(note);
   } catch (e) {
+    console.log(e);
     res.status(400).send(e);
   }
 };
@@ -51,64 +60,80 @@ export const list = async (req, res) => {
     });
 };
 
-const read = (req, res) => {
-  const noteId = req.params.noteId;
+export const read = async (req, res) => {
+  const {id} = req.params;
 
-  Note.findById(noteId)
-    .populate('department', 'name')
-    .populate('course', 'name')
-    .populate('uploadedBy', 'name')
-    .populate('subject', 'name')
-    .then(note => {
-      if (!note) {
-        return res.status(400).json({
-          errorMessage: 'Note not found',
-        });
-      }
+  try {
+    const note = await Note.findById(id)
+      .populate('department', 'name')
+      .populate('course', 'name')
+      .populate('uploadedBy', 'name')
+      .populate('subject', 'name');
 
-      res.status(200).json(note);
-    })
-    .catch(err => {
-      res.status(400).json({
-        err,
-        errorMessage: 'Unable to fetch note',
-      });
-    });
-};
-
-const addBookmark = (req, res) => {
-  const userId = req.user._id;
-  const noteId = req.body.noteId;
-
-  Note.findById(noteId).then(note => {
     if (!note) {
-      return res.status(400).json({
-        errorMessage: 'Note not found',
-      });
+      return res.status(404).send();
     }
 
-    note.bookmarks.push(userId);
-
-    note.save().then(doc => {
-      res.json(doc);
-    });
-  });
+    res.send(note);
+  } catch (e) {
+    res.status(400).send(e);
+  }
 };
 
-const removeBookmark = (req, res) => {
+export const addBookmark = async (req, res) => {
   const userId = req.user._id;
-  const noteId = req.body.noteId;
+  const {id} = req.params;
 
-  Note.findByIdAndUpdate(noteId, {$pull: {bookmarks: userId}}, {new: true})
-    .then(doc => {
-      res.status(200).json(doc);
-    })
-    .catch(err => {
-      res.status(400).json({
-        err,
-        errorMessage: 'Unable to update note',
-      });
+  try {
+    const alreadyBookmarked = await Note.findOne({
+      _id: id,
+      bookmarks: {$eq: userId},
     });
+
+    if (alreadyBookmarked) {
+      return res.status(400).send();
+    }
+
+    const note = await Note.findByIdAndUpdate(
+      id,
+      {$push: {bookmarks: userId}},
+      {new: true}
+    );
+    if (!note) {
+      res.status(404).send();
+    }
+    res.send(note);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
+
+export const removeBookmark = async (req, res) => {
+  const userId = req.user._id;
+  const {id} = req.params;
+
+  try {
+    const alreadyBookmarked = await Note.findOne({
+      _id: id,
+      bookmarks: {$eq: userId},
+    });
+
+    if (!alreadyBookmarked) {
+      return res.status(400).send();
+    }
+
+    const note = await Note.findByIdAndUpdate(
+      id,
+      {$pull: {bookmarks: userId}},
+      {new: true}
+    );
+    if (!note) {
+      res.status(404).send();
+    }
+    res.send(note);
+  } catch (e) {
+    res.status(400).send(e);
+  }
 };
 
 export const getBookmarkedNotes = async (req, res) => {
