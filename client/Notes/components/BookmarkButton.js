@@ -5,14 +5,14 @@ import Snackbar from '@material-ui/core/Snackbar';
 import {withStyles} from '@material-ui/core/styles';
 
 import {addBookmark, removeBookmark} from '../../api/notes';
-import {isAuthenticated} from '../../api/auth.api';
-
+import {isAuthenticated} from '../../helpers/auth';
+import SnackbarComponent from '../../components/SnackbarComponent';
 import SnackbarContentWrapper from '../../components/SnackbarContentWrapper';
 
 const styles = theme => ({
   button: {
     color: theme.palette.secondary.main,
-    marginRight: theme.spacing.unit * 2,
+    marginRight: theme.spacing(2),
     '&:hover': {
       backgroundColor: theme.palette.secondary.main,
       color: '#fff',
@@ -30,15 +30,15 @@ class BookmarkButton extends React.Component {
   };
 
   componentDidMount() {
-    isAuthenticated().then(user => {
-      const matchedUser = this.props.note.bookmarks.find(
-        bookmark => bookmark === user._id
-      );
+    const {user} = isAuthenticated();
 
-      if (matchedUser) {
-        this.setState(() => ({bookmarked: true}));
-      }
-    });
+    const matchedUser = this.props.note.bookmarks.find(
+      bookmark => bookmark.toString() === user._id.toString()
+    );
+
+    if (matchedUser) {
+      this.setState(() => ({bookmarked: true}));
+    }
   }
 
   handleAddBookmarkSnackbarClose = () => {
@@ -49,31 +49,30 @@ class BookmarkButton extends React.Component {
     this.setState(() => ({openRemoveBookmarkSnackbar: false}));
   };
 
-  onAddBookmark = () => {
+  onAddBookmark = async () => {
     this.setState(() => ({addingBookmark: true}));
     const noteId = this.props.note._id;
+    const {token} = isAuthenticated();
 
-    addBookmark(noteId).then(() => {
-      this.setState(() => ({
-        bookmarked: true,
-        addingBookmark: false,
-        openAddBookmarkSnackbar: true,
-      }));
-    });
+    await addBookmark(noteId, token);
+    this.setState(() => ({
+      bookmarked: true,
+      addingBookmark: false,
+      openAddBookmarkSnackbar: true,
+    }));
   };
 
-  onRemoveBookmark = () => {
+  onRemoveBookmark = async () => {
     this.setState(() => ({removingBookmark: true}));
-
+    const {token} = isAuthenticated();
     const noteId = this.props.note._id;
 
-    removeBookmark(noteId).then(() => {
-      this.setState(() => ({
-        bookmarked: false,
-        removingBookmark: false,
-        openRemoveBookmarkSnackbar: true,
-      }));
-    });
+    await removeBookmark(noteId, token);
+    this.setState(() => ({
+      bookmarked: false,
+      removingBookmark: false,
+      openRemoveBookmarkSnackbar: true,
+    }));
   };
 
   render() {

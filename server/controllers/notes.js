@@ -67,7 +67,7 @@ export const read = async (req, res) => {
     const note = await Note.findById(id)
       .populate('department', 'name')
       .populate('course', 'name')
-      .populate('uploadedBy', 'name')
+      .populate('createdBy', 'name')
       .populate('subject', 'name');
 
     if (!note) {
