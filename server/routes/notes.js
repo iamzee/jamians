@@ -16,11 +16,12 @@ router
   .post(auth, create)
   .get(auth, list);
 
+router.route('/api/notes/bookmark').get(auth, getBookmarkedNotes);
+
 router.route('/api/notes/:id').get(auth, read);
 
 router
   .route('/api/notes/:id/bookmark')
-  .get(auth, getBookmarkedNotes)
   .post(auth, addBookmark)
   .delete(auth, removeBookmark);
 

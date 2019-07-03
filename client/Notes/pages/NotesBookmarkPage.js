@@ -6,7 +6,7 @@ import Divider from '@material-ui/core/Divider';
 import {withStyles} from '@material-ui/core/styles';
 
 import {getBookmarkedNotes} from '../../api/notes';
-
+import {isAuthenticated} from '../../helpers/auth';
 import NoteItem from '../components/NoteItem';
 import Navbar from '../../components/Navbar';
 import Loader from '../../components/Loader';
@@ -21,17 +21,17 @@ const styles = theme => ({
   root: {
     maxWidth: 600,
     margin: 'auto',
-    marginTop: theme.spacing.unit * 20,
+    marginTop: theme.spacing(20),
     [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing.unit * 15,
-      padding: theme.spacing.unit * 2,
+      marginTop: theme.spacing(15),
+      padding: theme.spacing(2),
     },
   },
   title: {
     fontWeight: 300,
   },
   notesSection: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
   },
 });
 
@@ -41,14 +41,14 @@ class NotesBookmarkPage extends React.Component {
     noNotes: false,
   };
 
-  componentDidMount() {
-    getBookmarkedNotes().then(notes => {
-      this.setState(() => ({notes}));
-      if (notes.length === 0) {
-        this.setState(() => ({noNotes: true}));
-      }
-    });
-  }
+  componentDidMount = async () => {
+    const {token} = isAuthenticated();
+    const notes = await getBookmarkedNotes(token);
+    this.setState(() => ({notes}));
+    if (notes.length === 0) {
+      this.setState(() => ({noNotes: true}));
+    }
+  };
 
   render() {
     const {classes} = this.props;

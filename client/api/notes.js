@@ -88,16 +88,18 @@ export const removeBookmark = async (noteId, token) => {
   }
 };
 
-export const getBookmarkedNotes = () => {
-  return axios({
-    method: 'get',
-    url: '/api/note/bookmarks',
-  })
-    .then(({data}) => {
-      console.log('data', data);
-      return data.notes;
-    })
-    .catch(err => {
-      console.log(err);
+export const getBookmarkedNotes = async token => {
+  try {
+    const {data} = await axios({
+      method: 'get',
+      url: `/api/notes/bookmark`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
     });
+
+    return data.notes;
+  } catch (e) {
+    console.log(e.response);
+  }
 };
