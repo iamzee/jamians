@@ -31,21 +31,6 @@ export const read = async (req, res) => {
   } catch (e) {
     res.status(400).send(e);
   }
-
-  Course.findById(courseId)
-    .populate({
-      path: 'subjects',
-      select: '_id name semester',
-    })
-    .then(doc => {
-      res.status(200).json(doc);
-    })
-    .catch(err => {
-      res.status(400).json({
-        err,
-        errorMessage: 'Unable to read course',
-      });
-    });
 };
 
 export const list = async (req, res) => {
