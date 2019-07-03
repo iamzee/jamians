@@ -7,7 +7,8 @@ export const create = async (req, res) => {
     await user.save();
     res.send(user);
   } catch (e) {
-    res.send(400).send(e);
+    console.log(e);
+    res.status(400).send(e);
   }
 };
 

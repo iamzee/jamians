@@ -1,6 +1,8 @@
 import React from 'react';
 import validator from 'validator';
 
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -14,11 +16,17 @@ import {create} from '../../api/user';
 import {listDepartments} from '../../api/department';
 import {listCourses} from '../../api/course';
 import {MenuItem} from '@material-ui/core';
+import SnackbarComponent from '../../components/SnackbarComponent';
 
 const styles = theme => ({
   root: {
     maxWidth: 600,
     margin: 'auto',
+    marginTop: theme.spacing(10),
+    padding: theme.spacing(5),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2),
+    },
   },
   title: {
     fontWeight: 300,
@@ -43,9 +51,9 @@ class Signup extends React.Component {
     showDepartments: false,
     showCourseLoader: false,
     showCourses: false,
+    signing: false,
+    done: false,
   };
-
-  componentDidMount = async () => {};
 
   onNameChange = e => {
     const name = e.target.value;
@@ -115,127 +123,179 @@ class Signup extends React.Component {
         this.setState(() => ({
           error: 'Password should be minimum of 6 characters.',
         }));
+      } else if (this.state.department && !this.state.course) {
+        this.setState(() => ({
+          error: 'Department and course both are required for a student.',
+        }));
       } else {
-        const data = {
-          name: this.state.name,
-          email: this.state.email,
-          password: this.state.password,
-          department: this.state.department && this.state.department,
-          course: this.state.course && this.state.course,
-        };
+        this.setState(() => ({signing: true}));
 
-        await create(data);
+        let user = {};
+
+        if (this.state.department && this.state.course) {
+          user = {
+            name: this.state.name,
+            email: this.state.email,
+            password: this.state.password,
+            department: this.state.department,
+            course: this.state.course,
+          };
+        } else {
+          user = {
+            name: this.state.name,
+            email: this.state.email,
+            password: this.state.password,
+          };
+        }
+
+        await create(user);
+        this.setState(() => ({signing: false}));
+        this.props.history.push('/login?new=true');
       }
     }
+  };
+
+  onSnackbarClose = () => {
+    this.setState(() => ({error: ''}));
   };
 
   render() {
     const {classes} = this.props;
     return (
-      <div className={classes.root}>
-        <Typography className={classes.title} variant="h4" gutterBottom>
-          Signup
-        </Typography>
-        <Divider />
+      <div>
+        <AppBar position="fixed" className={classes.appbar}>
+          <Toolbar>
+            <Typography variant="h6" className={classes.title}>
+              Jamian Rivets
+            </Typography>
+          </Toolbar>
+        </AppBar>
 
-        <TextField
-          label="Name"
-          value={this.state.name}
-          onChange={this.onNameChange}
-          margin="normal"
-          variant="outlined"
-          className={classes.textField}
-        />
-        <br />
-        <TextField
-          label="Email"
-          value={this.state.email}
-          onChange={this.onEmailChange}
-          margin="normal"
-          variant="outlined"
-          className={classes.textField}
-        />
-        <br />
-        <TextField
-          label="Password"
-          value={this.state.password}
-          onChange={this.onPasswordChange}
-          margin="normal"
-          variant="outlined"
-          className={classes.textField}
-        />
-        <br />
+        <div className={classes.root}>
+          <Typography className={classes.title} variant="h4" gutterBottom>
+            New Account
+          </Typography>
+          <Divider />
 
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={this.state.isStudent}
-              value=""
-              onChange={this.onCheckboxChange}
+          <TextField
+            label="Name"
+            value={this.state.name}
+            onChange={this.onNameChange}
+            margin="normal"
+            variant="outlined"
+            className={classes.textField}
+          />
+          <br />
+          <TextField
+            label="Email"
+            value={this.state.email}
+            onChange={this.onEmailChange}
+            margin="normal"
+            variant="outlined"
+            className={classes.textField}
+          />
+          <br />
+          <TextField
+            label="Password"
+            value={this.state.password}
+            onChange={this.onPasswordChange}
+            margin="normal"
+            variant="outlined"
+            className={classes.textField}
+          />
+          <br />
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={this.state.isStudent}
+                value=""
+                onChange={this.onCheckboxChange}
+              />
+            }
+            label="Are u a student?"
+          />
+          <br />
+
+          {this.state.showDepartmentLoader && (
+            <CircularProgress
+              className={classes.progress}
+              size={24}
+              variant="indeterminate"
             />
-          }
-          label="Are u a student?"
-        />
-        <br />
+          )}
 
-        {this.state.showDepartmentLoader && (
-          <CircularProgress
-            className={classes.progress}
-            size={24}
-            variant="indeterminate"
+          {this.state.showDepartments && (
+            <TextField
+              label="Department"
+              value={this.state.department}
+              onChange={this.onDepartmentChange}
+              select
+              variant="outlined"
+              margin="normal"
+              className={classes.textField}
+            >
+              {this.state.departments.map(d => (
+                <MenuItem key={d._id} value={d._id}>
+                  {d.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
+
+          <br />
+
+          {this.state.showCourseLoader && (
+            <CircularProgress
+              className={classes.progress}
+              size={24}
+              variant="indeterminate"
+            />
+          )}
+
+          {this.state.showCourses && (
+            <TextField
+              label="Course"
+              value={this.state.course}
+              onChange={this.onCourseChange}
+              select
+              variant="outlined"
+              margin="normal"
+              className={classes.textField}
+            >
+              {this.state.courses.map(c => (
+                <MenuItem key={c._id} value={c._id}>
+                  {c.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
+          <br />
+
+          {this.state.signing ? (
+            <Button variant="contained" color="secondary">
+              <CircularProgress size={24} color="inherit" />
+              Creating Account
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={this.onSubmit}
+            >
+              Create Account
+            </Button>
+          )}
+          <br />
+        </div>
+        {this.state.error && (
+          <SnackbarComponent
+            variant="error"
+            message={this.state.error}
+            open={true}
+            onClose={this.onSnackbarClose}
           />
         )}
-
-        {this.state.showDepartments && (
-          <TextField
-            label="Department"
-            value={this.state.department}
-            onChange={this.onDepartmentChange}
-            select
-            variant="outlined"
-            margin="normal"
-            className={classes.textField}
-          >
-            {this.state.departments.map(d => (
-              <MenuItem key={d._id} value={d._id}>
-                {d.name}
-              </MenuItem>
-            ))}
-          </TextField>
-        )}
-
-        <br />
-
-        {this.state.showCourseLoader && (
-          <CircularProgress
-            className={classes.progress}
-            size={24}
-            variant="indeterminate"
-          />
-        )}
-
-        {this.state.showCourses && (
-          <TextField
-            label="Course"
-            value={this.state.course}
-            onChange={this.onCourseChange}
-            select
-            variant="outlined"
-            margin="normal"
-            className={classes.textField}
-          >
-            {this.state.courses.map(c => (
-              <MenuItem key={c._id} value={c._id}>
-                {c.name}
-              </MenuItem>
-            ))}
-          </TextField>
-        )}
-        <br />
-
-        <Button onClick={this.onSubmit}>Signup</Button>
-        <br />
-        {this.state.error && <p>{this.state.error}</p>}
       </div>
     );
   }

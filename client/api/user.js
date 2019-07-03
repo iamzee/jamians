@@ -1,11 +1,12 @@
 import axios from 'axios';
 
-export const create = async data => {
+export const create = async user => {
+  console.log(user);
   try {
-    await axios({
+    return await axios({
       method: 'post',
       url: '/api/users',
-      data,
+      data: JSON.stringify(user),
       headers: {
         'Content-Type': 'application/json',
       },
