@@ -9,7 +9,7 @@ import socketIO from 'socket.io';
 
 import courseRoutes from './routes/course.route';
 import subjectRoutes from './routes/subject.route';
-import departmentRoutes from './routes/department.route';
+import departmentRoutes from './routes/department';
 import noteRoutes from './routes/notes';
 import userRoutes from './routes/user';
 import authRoutes from './routes/auth';

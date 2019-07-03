@@ -1,13 +1,14 @@
 import mongoose from 'mongoose';
 
-const DepartmentSchema = mongoose.Schema ({
+const DepartmentSchema = mongoose.Schema({
   name: {
     type: String,
     required: 'Name is required',
     trim: true,
+    unique: true,
   },
 });
 
-const Department = mongoose.model ('Department', DepartmentSchema);
+const Department = mongoose.model('Department', DepartmentSchema);
 
 export default Department;
