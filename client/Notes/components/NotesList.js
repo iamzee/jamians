@@ -3,7 +3,7 @@ import queryString from 'query-string';
 
 import List from '@material-ui/core/List';
 
-import {listNotes} from '../../api/note.api';
+import {listNotes} from '../../api/notes';
 
 import NoNotes from './NoNotes';
 import Loader from '../../components/Loader';

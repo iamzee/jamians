@@ -1,16 +1,26 @@
 import axios from 'axios';
 
-export const createNote = note => {
-  return axios({
-    method: 'post',
-    url: '/api/note',
-    data: JSON.stringify(note),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  }).then(({data}) => {
-    return data;
-  });
+export const createNote = async (
+  note,
+  department,
+  course,
+  semester,
+  subject,
+  token
+) => {
+  try {
+    return await axios({
+      method: 'post',
+      url: `/api/notes?department=${department}&course=${course}&semester=${semester}&subject=${subject}`,
+      data: JSON.stringify(note),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    });
+  } catch (e) {
+    console.log(e.response);
+  }
 };
 
 export const listNotes = ({department, course, semester, subject}) => {

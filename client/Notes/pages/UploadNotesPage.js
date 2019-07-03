@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -12,17 +11,18 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 import {withStyles} from '@material-ui/core/styles';
 
-import {getSAS, upload} from '../../api/upload.api';
-import {listDepartments} from '../../api/department.api';
-import {listCourses} from '../../api/course.api';
-import {listSubjects} from '../../api/subject.api';
-import {createNote} from '../../api/note.api';
-import {isAuthenticated} from '../../api/auth.api';
-import {semesters} from '../../helpers/note.helper';
+import {getSAS, upload} from '../../api/upload';
+import {listDepartments} from '../../api/department';
+import {listCourses} from '../../api/course';
+import {listSubjects} from '../../api/subject';
+import {createNote} from '../../api/notes';
+import {isAuthenticated} from '../../helpers/auth';
+import {semesters} from '../../helpers/notes';
 
 import SnackbarContentWrapper from '../../components/SnackbarContentWrapper';
 import Navbar from '../../components/Navbar';
 import NotesNav from '../components/NotesNav';
+import SnackbarComponent from '../../components/SnackbarComponent';
 
 import styles from '../styles/UploadNotesPageStyles';
 
@@ -42,40 +42,39 @@ class UploadNotesPage extends React.Component {
     error: '',
     progressPercent: 0,
     uploading: false,
-    open: false,
+    uploaded: false,
     showCourseLoader: false,
     showSubjectLoader: false,
     showCourses: false,
     showSubjects: false,
   };
 
-  componentDidMount () {
-    listDepartments ().then (departments => {
-      this.setState (() => ({
-        departments,
-      }));
-    });
-  }
+  componentDidMount = async () => {
+    const {token} = isAuthenticated();
+    const departments = await listDepartments(token);
+    this.setState(() => ({departments}));
+  };
 
   onFileChange = e => {
     const file = e.target.files[0];
-    this.setState (() => ({file}));
+    this.setState(() => ({file}));
   };
 
   onTopicChange = e => {
     const topic = e.target.value;
-    this.setState (() => ({topic}));
+    this.setState(() => ({topic}));
   };
 
   onDescriptionChange = e => {
     const description = e.target.value;
-    this.setState (() => ({description}));
+    this.setState(() => ({description}));
   };
 
-  onDepartmentChange = e => {
+  onDepartmentChange = async e => {
     const department = e.target.value;
+    const {token} = isAuthenticated();
 
-    this.setState (() => ({
+    this.setState(() => ({
       department,
       course: '',
       showCourseLoader: true,
@@ -83,39 +82,46 @@ class UploadNotesPage extends React.Component {
       showSubjects: false,
     }));
 
-    listCourses (department).then (courses => {
-      this.setState (() => ({
-        courses,
-        showCourseLoader: false,
-        showCourses: true,
-      }));
-    });
+    const courses = await listCourses(department, token);
+    this.setState(() => ({
+      courses,
+      showCourseLoader: false,
+      showCourses: true,
+    }));
   };
 
   onCourseChange = e => {
     const course = e.target.value;
-    this.setState (() => ({course, subject: ''}));
+    this.setState(() => ({course, subject: ''}));
   };
 
-  onSemesterChange = e => {
+  onSemesterChange = async e => {
     const semester = e.target.value;
-    this.setState (() => ({showSubjectLoader: true, semester}));
+    const {token} = isAuthenticated();
+    this.setState(() => ({
+      showSubjectLoader: true,
+      showSubjects: false,
+      semester,
+    }));
 
-    listSubjects (this.state.course, semester).then (subjects => {
-      this.setState (() => ({
-        showSubjects: true,
-        showSubjectLoader: false,
-        subjects,
-      }));
-    });
+    const subjects = await listSubjects(this.state.course, semester, token);
+    this.setState(() => ({
+      showSubjects: true,
+      showSubjectLoader: false,
+      subjects,
+    }));
   };
 
   onSubjectChange = e => {
     const subject = e.target.value;
-    this.setState (() => ({subject}));
+    this.setState(() => ({subject}));
   };
 
-  onSubmit = e => {
+  onSnackbarClose = () => {
+    this.setState(() => ({error: ''}));
+  };
+
+  onSubmit = async e => {
     if (
       !this.state.file ||
       !this.state.topic ||
@@ -124,53 +130,53 @@ class UploadNotesPage extends React.Component {
       !this.state.course ||
       !this.state.department
     ) {
-      this.setState (() => ({error: 'All fields are necessary!'}));
+      this.setState(() => ({error: 'All fields are necessary!'}));
     } else if (this.state.file.type !== 'application/pdf') {
-      this.setState (() => ({error: 'Upload only pdf file.'}));
+      this.setState(() => ({error: 'Upload only pdf file.'}));
     } else {
-      this.setState (() => ({uploading: true, error: ''}));
+      this.setState(() => ({uploading: true, error: ''}));
 
-      getSAS ('notes').then (sasToken => {
-        const {speedSummary, blobName} = upload (
-          sasToken,
-          this.state.file,
-          'notes'
-        );
+      const sasToken = await getSAS('notes');
 
-        speedSummary.on ('progress', () => {
-          const progressPercent = speedSummary.getCompletePercent ();
-          this.setState (() => ({
-            progressPercent,
-          }));
+      const {speedSummary, blobName} = await upload(
+        sasToken,
+        this.state.file,
+        'notes'
+      );
 
-          if (progressPercent == 100) {
-            isAuthenticated ().then (user => {
-              const note = {
-                name: blobName,
-                topic: this.state.topic,
-                description: this.state.description,
-                department: this.state.department,
-                course: this.state.course,
-                subject: this.state.subject,
-                semester: this.state.semester,
-                uploadedBy: user._id,
-              };
+      speedSummary.on('progress', async () => {
+        const progressPercent = speedSummary.getCompletePercent();
+        this.setState(() => ({
+          progressPercent,
+        }));
 
-              createNote (note).then (data => {
-                this.setState (() => ({uploading: false, open: true}));
-              });
-            });
-          }
-        });
+        if (progressPercent == 100) {
+          const {token} = isAuthenticated();
+          const note = {
+            name: blobName,
+            topic: this.state.topic,
+            description: this.state.description,
+          };
+
+          await createNote(
+            note,
+            this.state.department,
+            this.state.course,
+            this.state.semester,
+            this.state.subject,
+            token
+          );
+          this.setState(() => ({uploading: false, uploaded: true}));
+        }
       });
     }
   };
 
   handleClose = () => {
-    this.setState (() => ({open: false}));
+    this.setState(() => ({open: false}));
   };
 
-  render () {
+  render() {
     const {classes} = this.props;
 
     return (
@@ -194,16 +200,18 @@ class UploadNotesPage extends React.Component {
             <label htmlFor="file-upload">
               <Button
                 className={classes.chooseFileButton}
-                variant="contained"
+                variant="outlined"
+                color="secondary"
                 component="span"
               >
                 Choose File
               </Button>
             </label>
-            {this.state.file &&
+            {this.state.file && (
               <Typography variant="subtitle2">
                 {this.state.file.name}
-              </Typography>}
+              </Typography>
+            )}
             <br />
             <TextField
               className={classes.textField}
@@ -233,7 +241,7 @@ class UploadNotesPage extends React.Component {
               label="Department"
               variant="outlined"
             >
-              {this.state.departments.map (d => (
+              {this.state.departments.map(d => (
                 <MenuItem key={d._id} value={d._id}>
                   {d.name}
                 </MenuItem>
@@ -241,14 +249,15 @@ class UploadNotesPage extends React.Component {
             </TextField>
             <br />
 
-            {this.state.showCourseLoader &&
+            {this.state.showCourseLoader && (
               <CircularProgress
                 className={classes.progress}
-                size={24}
+                size={20}
                 variant="indeterminate"
-              />}
+              />
+            )}
 
-            {this.state.showCourses &&
+            {this.state.showCourses && (
               <div>
                 <TextField
                   className={classes.textField}
@@ -259,7 +268,7 @@ class UploadNotesPage extends React.Component {
                   label="Course"
                   variant="outlined"
                 >
-                  {this.state.courses.map (course => (
+                  {this.state.courses.map(course => (
                     <MenuItem key={course._id} value={course._id}>
                       {course.name}
                     </MenuItem>
@@ -275,21 +284,22 @@ class UploadNotesPage extends React.Component {
                   label="Semester"
                   variant="outlined"
                 >
-                  {semesters.map (semester => (
+                  {semesters.map(semester => (
                     <MenuItem key={semester.value} value={semester.value}>
                       {semester.label}
                     </MenuItem>
                   ))}
                 </TextField>
                 <br />
-                {this.state.showSubjectLoader &&
+                {this.state.showSubjectLoader && (
                   <CircularProgress
                     className={classes.progress}
-                    size={24}
+                    size={20}
                     variant="indeterminate"
-                  />}
+                  />
+                )}
 
-                {this.state.showSubjects &&
+                {this.state.showSubjects && (
                   <TextField
                     className={classes.textField}
                     select
@@ -299,65 +309,62 @@ class UploadNotesPage extends React.Component {
                     label="Subject"
                     variant="outlined"
                   >
-                    {this.state.subjects.map (subject => (
+                    {this.state.subjects.map(subject => (
                       <MenuItem key={subject._id} value={subject._id}>
                         {subject.name}
                       </MenuItem>
                     ))}
-                  </TextField>}
+                  </TextField>
+                )}
                 <br />
-              </div>}
-
-            {this.state.error && <Typography>{this.state.error}</Typography>}
+              </div>
+            )}
           </CardContent>
           <CardActions>
-            {this.state.uploading
-              ? <Button
-                  variant="contained"
-                  className={classes.button}
-                  color="primary"
-                >
-                  Uploading
-                  <CircularProgress
-                    className={classes.progress}
-                    color="secondary"
-                    size={24}
-                    variant="indeterminate"
-                  />
-                </Button>
-              : <Button
-                  variant="contained"
-                  className={classes.button}
-                  onClick={this.onSubmit}
-                  color="primary"
-                >
-                  Submit
-                </Button>}
+            {this.state.uploading ? (
+              <Button
+                variant="contained"
+                className={classes.button}
+                color="secondary"
+              >
+                Uploading
+                <CircularProgress
+                  className={classes.progress}
+                  color="inherit"
+                  size={20}
+                  variant="indeterminate"
+                />
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                className={classes.button}
+                onClick={this.onSubmit}
+                color="secondary"
+              >
+                Submit
+              </Button>
+            )}
           </CardActions>
         </Card>
 
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          open={this.state.open}
-          onClose={this.handleClose}
-        >
-          <SnackbarContentWrapper
-            onClose={this.handleClose}
+        {this.state.uploaded && (
+          <SnackbarComponent
             variant="success"
-            message="Note Uploaded!!"
-            className={classes.margin}
+            message="Notes uploaded!"
+            onClose={this.onSnackbarClose}
           />
-        </Snackbar>
+        )}
+        {this.state.error && (
+          <SnackbarComponent
+            variant="error"
+            message={this.state.error}
+            onClose={this.onSnackbarClose}
+          />
+        )}
       </div>
     );
   }
 }
 
-UploadNotesPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles (styles) (UploadNotesPage);
+export default withStyles(styles)(UploadNotesPage);
