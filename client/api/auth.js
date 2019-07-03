@@ -11,7 +11,6 @@ export const login = async user => {
         'Content-Type': 'application/json',
       },
     });
-    console.log(data);
     authenticate(data);
   } catch (e) {
     return e.response.data.error;
