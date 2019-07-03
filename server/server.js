@@ -8,7 +8,7 @@ import socketIO from 'socket.io';
 // import passport from 'passport';
 
 import courseRoutes from './routes/course';
-import subjectRoutes from './routes/subject.route';
+import subjectRoutes from './routes/subject';
 import departmentRoutes from './routes/department';
 import noteRoutes from './routes/notes';
 import userRoutes from './routes/user';

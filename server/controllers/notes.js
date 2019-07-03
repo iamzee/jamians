@@ -1,7 +1,7 @@
 import Note from '../models/notes';
 import Department from '../models/department';
 import Course from '../models/course';
-import Subject from '../models/subject.model';
+import Subject from '../models/subject';
 
 export const create = async (req, res) => {
   try {

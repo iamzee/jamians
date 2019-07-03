@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const SubjectSchema = mongoose.Schema ({
+const SubjectSchema = mongoose.Schema({
   name: {
     type: String,
     require: 'Name is required',
@@ -13,9 +13,10 @@ const SubjectSchema = mongoose.Schema ({
   course: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Course',
+    required: true,
   },
 });
 
-const Subject = mongoose.model ('Subject', SubjectSchema);
+const Subject = mongoose.model('Subject', SubjectSchema);
 
 export default Subject;
