@@ -10,6 +10,7 @@ const styles = theme => ({
     textDecoration: 'none',
   },
   listItem: {
+    color: 'black',
     '&:hover': {
       backgroundColor: theme.palette.tertiary,
     },
@@ -17,7 +18,7 @@ const styles = theme => ({
 });
 
 class NoteItem extends React.Component {
-  render () {
+  render() {
     const {note, classes} = this.props;
 
     return (
@@ -30,4 +31,4 @@ class NoteItem extends React.Component {
   }
 }
 
-export default withStyles (styles) (NoteItem);
+export default withStyles(styles)(NoteItem);

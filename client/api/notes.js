@@ -23,17 +23,26 @@ export const createNote = async (
   }
 };
 
-export const listNotes = ({department, course, semester, subject}) => {
-  const url = `/api/note?department=${department || ''}&course=${course ||
+export const listNotes = async (
+  {department, course, semester, subject},
+  token
+) => {
+  const url = `/api/notes?department=${department || ''}&course=${course ||
     ''}&semester=${semester || ''}&subject=${subject || ''}`;
-  console.log(url);
-  return axios({
-    method: 'get',
-    url,
-  }).then(({data}) => {
-    console.log(data.notes);
+
+  try {
+    const {data} = await axios({
+      method: 'get',
+      url,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+
     return data.notes;
-  });
+  } catch (e) {
+    console.log(e.response);
+  }
 };
 
 export const addBookmark = noteId => {

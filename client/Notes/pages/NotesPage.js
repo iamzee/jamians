@@ -14,10 +14,10 @@ import styles from '../styles/NotesPage.styles';
 
 class NotesPage extends React.Component {
   onDialogOpen = () => {
-    this.setState (() => ({openDialog: true}));
+    this.setState(() => ({openDialog: true}));
   };
 
-  render () {
+  render() {
     const queryString = this.props.location.search;
     const {classes} = this.props;
     return (
@@ -42,4 +42,4 @@ class NotesPage extends React.Component {
   }
 }
 
-export default withStyles (styles) (NotesPage);
+export default withStyles(styles)(NotesPage);

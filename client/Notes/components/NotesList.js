@@ -4,7 +4,7 @@ import queryString from 'query-string';
 import List from '@material-ui/core/List';
 
 import {listNotes} from '../../api/notes';
-
+import {isAuthenticated} from '../../helpers/auth';
 import NoNotes from './NoNotes';
 import Loader from '../../components/Loader';
 import NoteItem from './NoteItem';
@@ -15,35 +15,31 @@ class NotesList extends React.Component {
     noNotes: false,
   };
 
-  componentDidMount() {
+  componentDidMount = async () => {
+    const {token} = isAuthenticated();
     const query = queryString.parse(this.props.queryString);
-    console.log('First', query);
 
-    listNotes(query).then(notes => {
-      console.log(notes);
-      this.setState(() => ({notes}));
+    const notes = await listNotes(query, token);
+    this.setState(() => ({notes}));
+
+    if (notes.length === 0) {
+      this.setState(() => ({noNotes: true}));
+    }
+  };
+
+  componentDidUpdate = async prevProps => {
+    const {token} = isAuthenticated();
+    if (this.props.queryString !== prevProps.queryString) {
+      this.setState(() => ({notes: []}));
+      const parsed = queryString.parse(this.props.queryString);
+      const notes = await listNotes(parsed, token);
+      this.setState(() => ({notes, noNotes: false}));
 
       if (notes.length === 0) {
         this.setState(() => ({noNotes: true}));
       }
-    });
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.queryString !== prevProps.queryString) {
-      this.setState(() => ({notes: []}));
-      const parsed = queryString.parse(this.props.queryString);
-      listNotes(parsed).then(notes => {
-        this.setState(() => ({notes, noNotes: false}));
-
-        if (notes.length === 0) {
-          this.setState(() => ({noNotes: true}));
-        }
-      });
-
-      console.log('Second', this.props.queryString);
     }
-  }
+  };
 
   render() {
     return (
