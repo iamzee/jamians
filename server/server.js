@@ -4,14 +4,13 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import socketIO from 'socket.io';
-import cookieSession from 'cookie-session';
-import passport from 'passport';
+// import cookieSession from 'cookie-session';
+// import passport from 'passport';
 
 import courseRoutes from './routes/course.route';
-import teacherRoutes from './routes/teacher.route';
 import subjectRoutes from './routes/subject.route';
 import departmentRoutes from './routes/department.route';
-import noteRoutes from './routes/note.route';
+import noteRoutes from './routes/notes';
 import userRoutes from './routes/user';
 import authRoutes from './routes/auth';
 import uploadRoutes from './routes/upload.route';
@@ -25,7 +24,7 @@ import template from '../template';
 import socketio from './socketio/socketio';
 
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_MLAB_URI);
 
 const app = express();
 
@@ -43,7 +42,6 @@ app.use(bodyParser.json());
 // app.use(passport.session());
 
 app.use('/', courseRoutes);
-app.use('/', teacherRoutes);
 app.use('/', subjectRoutes);
 app.use('/', departmentRoutes);
 app.use('/', noteRoutes);

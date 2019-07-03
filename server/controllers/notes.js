@@ -1,20 +1,34 @@
-import Note from '../models/note.model';
+import Note from '../models/notes';
+import Department from '../models/department.model';
+import Course from '../models/course.model';
+import Subject from '../models/subject.model';
 
-const create = (req, res) => {
-  new Note(req.body)
-    .save()
-    .then(doc => {
-      res.status(200).send(doc);
-    })
-    .catch(err => {
-      res.status(400).send({
-        err,
-        errorMessage: 'Unable to create Note',
-      });
+export const create = async (req, res) => {
+  try {
+    const department = await Department.findById(req.body.department);
+    const course = await Course.findOne({
+      _id: req.body.course,
+      department: req.body.department,
     });
+    const subject = await Subject.findOne({
+      _id: req.body.subject,
+      course: req.body.course,
+      semester: req.body.semester,
+    });
+
+    if (!department || !course || !subject) {
+      return res.status(400).send();
+    }
+
+    const note = new Note({...req.body, createdBy: req.user._id});
+    await note.save();
+    res.send(note);
+  } catch (e) {
+    res.status(400).send(e);
+  }
 };
 
-const list = (req, res) => {
+export const list = async (req, res) => {
   const {department, course, semester, subject} = req.query;
   let queryObject = {};
 
@@ -25,9 +39,12 @@ const list = (req, res) => {
   else if (department && course) queryObject = {department, course};
   else if (department) queryObject = {department};
 
+  try {
+  } catch (e) {}
+
   Note.find(queryObject)
     .then(docs => {
-      res.status(200).json({notes: docs});
+      res.status(200).send({notes: docs});
     })
     .catch(err => {
       console.log(err);
@@ -94,19 +111,15 @@ const removeBookmark = (req, res) => {
     });
 };
 
-const getBookmarkedNotes = (req, res) => {
+export const getBookmarkedNotes = async (req, res) => {
   const userId = req.user._id;
-  console.log(typeof userId);
-  Note.find({bookmarks: {$eq: userId}})
-    .then(docs => {
-      console.log(docs);
-      res.status(200).json({
-        notes: docs,
-      });
-    })
-    .catch(err => {
-      console.log(err);
-    });
+
+  try {
+    const notes = await Note.find({bookmarks: {$eq: userId}});
+    res.send({notes});
+  } catch (e) {
+    res.status(400).send(e);
+  }
 };
 
 const count = (req, res) => {
@@ -120,14 +133,4 @@ const count = (req, res) => {
         errorMessage: 'Unable to count notes.',
       });
     });
-};
-
-export default {
-  create,
-  list,
-  addBookmark,
-  removeBookmark,
-  getBookmarkedNotes,
-  read,
-  count,
 };
