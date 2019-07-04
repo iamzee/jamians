@@ -3,15 +3,15 @@ import {authenticate} from '../helpers/auth';
 
 export const login = async user => {
   try {
-    const {data} = await axios({
+    const {data} = await axios ({
       method: 'post',
       url: '/api/login',
-      data: JSON.stringify(user),
+      data: JSON.stringify (user),
       headers: {
         'Content-Type': 'application/json',
       },
     });
-    authenticate(data);
+    authenticate (data);
   } catch (e) {
     return e.response.data.error;
   }

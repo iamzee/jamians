@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import {Provider} from 'react-redux';
+import store from './store/configStore';
+
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import teal from '@material-ui/core/colors/teal';
 import cyan from '@material-ui/core/colors/cyan';
@@ -8,8 +11,9 @@ import lightBlue from '@material-ui/core/colors/lightBlue';
 
 import MainRouter from './routers/MainRouter';
 import './client.scss';
+import {getUserFromSessionStorage} from './actions/user';
 
-const theme = createMuiTheme({
+const theme = createMuiTheme ({
   palette: {
     primary: {
       main: teal[500],
@@ -24,9 +28,11 @@ const theme = createMuiTheme({
   },
 });
 
-ReactDOM.render(
-  <MuiThemeProvider theme={theme}>
-    <MainRouter />
-  </MuiThemeProvider>,
-  document.getElementById('root')
+ReactDOM.render (
+  <Provider store={store}>
+    <MuiThemeProvider theme={theme}>
+      <MainRouter />
+    </MuiThemeProvider>
+  </Provider>,
+  document.getElementById ('root')
 );
