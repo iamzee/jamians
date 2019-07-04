@@ -8,7 +8,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import ListItemText from '@material-ui/core/ListItemText';
 import {withStyles} from '@material-ui/core/styles';
 
-import {getSAS, download} from '../../api/upload.api';
+import {getSAS, download} from '../../api/upload';
 
 const styles = theme => ({
   link: {
@@ -23,25 +23,23 @@ class UserSearchItem extends React.Component {
 
   componentDidMount = async () => {
     if (this.props.user.avatar) {
-      const sasToken = await getSAS('avatar');
-      const posterLink = download(sasToken, 'avatar', this.props.user.avatar);
-      this.setState(() => ({posterLink}));
+      const sasToken = await getSAS ('avatar');
+      const posterLink = download (sasToken, 'avatar', this.props.user.avatar);
+      this.setState (() => ({posterLink}));
     }
   };
 
-  render() {
+  render () {
     const {classes, user} = this.props;
     return (
       <Link to={`/users/${user._id}`} key={user._id} className={classes.link}>
         <ListItem>
           <ListItemAvatar>
-            {this.state.posterLink ? (
-              <Avatar src={this.state.posterLink} />
-            ) : (
-              <Avatar>
-                <PersonIcon />
-              </Avatar>
-            )}
+            {this.state.posterLink
+              ? <Avatar src={this.state.posterLink} />
+              : <Avatar>
+                  <PersonIcon />
+                </Avatar>}
           </ListItemAvatar>
           <ListItemText primary={user.name} />
         </ListItem>
@@ -50,4 +48,4 @@ class UserSearchItem extends React.Component {
   }
 }
 
-export default withStyles(styles)(UserSearchItem);
+export default withStyles (styles) (UserSearchItem);

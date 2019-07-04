@@ -12,7 +12,7 @@ import {withStyles} from '@material-ui/core/styles';
 
 import {isAuthenticated} from '../../helpers/auth';
 import {readUser, sendFriendRequest, removeFriend} from '../../api/user';
-import {getSAS, download} from '../../api/upload.api';
+import {getSAS, download} from '../../api/upload';
 
 const styles = theme => ({
   root: {
@@ -20,7 +20,7 @@ const styles = theme => ({
     margin: 'auto',
     marginTop: theme.spacing.unit * 15,
     padding: theme.spacing.unit * 5,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down ('xs')]: {
       marginTop: theme.spacing.unit * 15,
       padding: theme.spacing.unit * 2,
     },
@@ -37,7 +37,7 @@ const styles = theme => ({
     textDecoration: 'none',
   },
   actionButton: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing (2),
   },
 });
 
@@ -50,30 +50,30 @@ class Profile extends React.Component {
   };
 
   componentDidMount = async () => {
-    const {token} = isAuthenticated();
+    const {token} = isAuthenticated ();
     const {userId} = this.props.match.params;
-    const user = await readUser(userId, token);
-    this.setState(() => ({user}));
+    const user = await readUser (userId, token);
+    this.setState (() => ({user}));
 
     if (user.avatar) {
-      const sasToken = await getSAS('avatar');
-      const posterLink = download(sasToken, 'avatar', user.avatar);
-      this.setState(() => ({posterLink}));
+      const sasToken = await getSAS ('avatar');
+      const posterLink = download (sasToken, 'avatar', user.avatar);
+      this.setState (() => ({posterLink}));
     }
   };
 
   onSendFriendRequest = async () => {
-    this.setState(() => ({sending: true}));
-    const {token} = isAuthenticated();
-    await sendFriendRequest(this.state.user._id, token);
+    this.setState (() => ({sending: true}));
+    const {token} = isAuthenticated ();
+    await sendFriendRequest (this.state.user._id, token);
 
-    this.setState(() => ({sending: false, sent: true}));
+    this.setState (() => ({sending: false, sent: true}));
   };
 
   isFriend = () => {
-    const {user: loggedInUser} = isAuthenticated();
-    const isFriend = this.state.user.friends.find(
-      friend => friend.toString() === loggedInUser._id.toString()
+    const {user: loggedInUser} = isAuthenticated ();
+    const isFriend = this.state.user.friends.find (
+      friend => friend.toString () === loggedInUser._id.toString ()
     );
 
     if (isFriend) {
@@ -84,9 +84,9 @@ class Profile extends React.Component {
   };
 
   isFriendRequestSent = () => {
-    const {user: loggedInUser} = isAuthenticated();
-    const isFriendRequestSent = loggedInUser.friendRequestsSent.find(
-      friend => friend.toString() === this.state.user._id.toString()
+    const {user: loggedInUser} = isAuthenticated ();
+    const isFriendRequestSent = loggedInUser.friendRequestsSent.find (
+      friend => friend.toString () === this.state.user._id.toString ()
     );
 
     if (isFriendRequestSent) {
@@ -98,10 +98,10 @@ class Profile extends React.Component {
 
   isFriendRequest = () => {
     const {user} = this.state;
-    const {user: loggedInUser} = isAuthenticated();
+    const {user: loggedInUser} = isAuthenticated ();
 
-    const isFriendRequest = loggedInUser.friendRequestsReceived.find(
-      friend => friend.toString() === user._id.toString()
+    const isFriendRequest = loggedInUser.friendRequestsReceived.find (
+      friend => friend.toString () === user._id.toString ()
     );
 
     if (isFriendRequest) {
@@ -113,88 +113,83 @@ class Profile extends React.Component {
 
   onRemoveFriend = async () => {
     const {userId} = this.props.match.params;
-    const {token} = isAuthenticated();
-    await removeFriend(userId, token);
+    const {token} = isAuthenticated ();
+    await removeFriend (userId, token);
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
     const {user, posterLink} = this.state;
-    const {user: loggedInUser} = isAuthenticated();
+    const {user: loggedInUser} = isAuthenticated ();
     return (
       <div className={classes.root}>
-        {user && (
+        {user &&
           <div>
             <Card className={classes.card}>
               <CardContent>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={6}>
-                    {posterLink ? (
-                      <Avatar className={classes.avatar} src={posterLink} />
-                    ) : (
-                      <Avatar className={classes.avatar}>
-                        <PersonIcon />
-                      </Avatar>
-                    )}
+                    {posterLink
+                      ? <Avatar className={classes.avatar} src={posterLink} />
+                      : <Avatar className={classes.avatar}>
+                          <PersonIcon />
+                        </Avatar>}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h4">{user.name}</Typography>
-                    {loggedInUser._id.toString() === user._id.toString() ? (
-                      <Link
-                        to={`/users/${user._id}/edit`}
-                        className={classes.link}
-                      >
-                        <Button variant="outlined" color="secondary">
-                          Edit Profile
-                        </Button>
-                      </Link>
-                    ) : (
-                      <React.Fragment>
-                        {this.isFriend() ? (
-                          <Button
-                            className={classes.actionButton}
-                            onClick={this.onRemoveFriend}
-                            variant="outlined"
-                            color="secondary"
-                          >
-                            Remove Friend
+                    {loggedInUser._id.toString () === user._id.toString ()
+                      ? <Link
+                          to={`/users/${user._id}/edit`}
+                          className={classes.link}
+                        >
+                          <Button variant="outlined" color="secondary">
+                            Edit Profile
                           </Button>
-                        ) : (
-                          <React.Fragment>
-                            {this.isFriendRequestSent() ? (
-                              <Button variant="outlined" color="secondary">
-                                Friend Request Sent
+                        </Link>
+                      : <React.Fragment>
+                          {this.isFriend ()
+                            ? <Button
+                                className={classes.actionButton}
+                                onClick={this.onRemoveFriend}
+                                variant="outlined"
+                                color="secondary"
+                              >
+                                Remove Friend
                               </Button>
-                            ) : (
-                              <React.Fragment>
-                                {this.isFriendRequest() ? (
-                                  <Button variant="outlined" color="secondary">
-                                    Accept Friend Request
-                                  </Button>
-                                ) : (
-                                  <Button
-                                    variant="outlined"
-                                    color="secondary"
-                                    onClick={this.onSendFriendRequest}
-                                  >
-                                    Send Friend Request
-                                  </Button>
-                                )}
-                              </React.Fragment>
-                            )}
-                          </React.Fragment>
-                        )}
-                      </React.Fragment>
-                    )}
+                            : <React.Fragment>
+                                {this.isFriendRequestSent ()
+                                  ? <Button
+                                      variant="outlined"
+                                      color="secondary"
+                                    >
+                                      Friend Request Sent
+                                    </Button>
+                                  : <React.Fragment>
+                                      {this.isFriendRequest ()
+                                        ? <Button
+                                            variant="outlined"
+                                            color="secondary"
+                                          >
+                                            Accept Friend Request
+                                          </Button>
+                                        : <Button
+                                            variant="outlined"
+                                            color="secondary"
+                                            onClick={this.onSendFriendRequest}
+                                          >
+                                            Send Friend Request
+                                          </Button>}
+                                    </React.Fragment>}
+                              </React.Fragment>}
+                        </React.Fragment>}
                   </Grid>
                 </Grid>
               </CardContent>
             </Card>
-          </div>
-        )}
+          </div>}
       </div>
     );
   }
 }
 
-export default withStyles(styles)(Profile);
+export default withStyles (styles) (Profile);

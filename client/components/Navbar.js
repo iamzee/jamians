@@ -25,6 +25,7 @@ import TimeTableIcon from '@material-ui/icons/CalendarTodayOutlined';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCartOutlined';
 import ConfessIcon from '@material-ui/icons/NaturePeopleOutlined';
 import NewFeaturesIcon from '@material-ui/icons/NewReleasesOutlined';
+import FaceIcon from '@material-ui/icons/FaceOutlined';
 
 const styles = theme => ({
   root: {
@@ -62,13 +63,6 @@ const styles = theme => ({
   },
   navButton: {
     color: '#fff',
-  },
-  navList: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  listPrimary: {
-    flexGrow: 1,
   },
 });
 
@@ -123,87 +117,84 @@ class Navbar extends React.Component {
 
                 <Divider variant="middle" />
 
-                <List className={classes.navList} style={{height: '88%'}}>
-                  <div className={classes.listPrimary}>
-                    <Link to="/notes">
-                      <ListItem button className={classes.listItem}>
-                        <NotesIcon />
-                        <ListItemText primary={'Notes'} />
-                      </ListItem>
-                    </Link>
-
-                    <Link to="/question_papers">
-                      <ListItem button className={classes.listItem}>
-                        <QuestionPaperIcon />
-                        <ListItemText primary={'Question Papers'} />
-                      </ListItem>
-                    </Link>
-
+                <List>
+                  <Link to="/notes" className={classes.link}>
                     <ListItem button className={classes.listItem}>
-                      <SyllabusIcon />
-                      <ListItemText primary={'Syllabus'} />
+                      <NotesIcon />
+                      <ListItemText primary={'Notes'} />
                     </ListItem>
+                  </Link>
 
+                  <Link to="/question_papers" className={classes.link}>
                     <ListItem button className={classes.listItem}>
-                      <TimeTableIcon />
-                      <ListItemText primary={'Time Table'} />
+                      <QuestionPaperIcon />
+                      <ListItemText primary={'Question Papers'} />
                     </ListItem>
+                  </Link>
 
-                    <Link to="/discussion" className={classes.link}>
-                      <ListItem button className={classes.listItem}>
-                        <DiscussionIcon />
-                        <ListItemText primary={'Discussion'} />
-                      </ListItem>
-                    </Link>
+                  <ListItem button className={classes.listItem}>
+                    <SyllabusIcon />
+                    <ListItemText primary={'Syllabus'} />
+                  </ListItem>
 
-                    <Link to="/events" className={classes.link}>
-                      <ListItem button className={classes.listItem}>
-                        <EventIcon />
-                        <ListItemText primary={'Events'} />
-                      </ListItem>
-                    </Link>
+                  <ListItem button className={classes.listItem}>
+                    <TimeTableIcon />
+                    <ListItemText primary={'Time Table'} />
+                  </ListItem>
 
+                  <Link to="/events" className={classes.link}>
                     <ListItem button className={classes.listItem}>
-                      <ConfessIcon />
-                      <ListItemText primary={'Confess'} />
+                      <EventIcon />
+                      <ListItemText primary={'Events'} />
                     </ListItem>
+                  </Link>
 
+                  <Link to="/users" className={classes.link}>
                     <ListItem button className={classes.listItem}>
-                      <ShoppingCartIcon />
-                      <ListItemText primary={'Buy / Sell'} />
+                      <FaceIcon />
+                      <ListItemText primary={'Find People'} />
                     </ListItem>
+                  </Link>
 
+                  <Link to="/discussion" className={classes.link}>
                     <ListItem button className={classes.listItem}>
-                      <NavigationIcon />
-                      <ListItemText primary={'Navigate'} />
+                      <DiscussionIcon />
+                      <ListItemText primary={'Discussion'} />
                     </ListItem>
+                  </Link>
 
-                    <ListItem button className={classes.listItem}>
-                      <NewFeaturesIcon />
-                      <ListItemText primary={'New Features'} />
-                    </ListItem>
+                  <ListItem button className={classes.listItem}>
+                    <ConfessIcon />
+                    <ListItemText primary={'Confess'} />
+                  </ListItem>
 
-                    <Link to="/settings" className={classes.link}>
-                      <ListItem button className={classes.listItem}>
-                        <SettingsIcon />
-                        <ListItemText primary={'Settings'} />
-                      </ListItem>
-                    </Link>
+                  <ListItem button className={classes.listItem}>
+                    <ShoppingCartIcon />
+                    <ListItemText primary={'Buy / Sell'} />
+                  </ListItem>
 
+                  <ListItem button className={classes.listItem}>
+                    <NavigationIcon />
+                    <ListItemText primary={'Navigate'} />
+                  </ListItem>
+
+                  <ListItem button className={classes.listItem}>
+                    <NewFeaturesIcon />
+                    <ListItemText primary={'New Features'} />
+                  </ListItem>
+
+                  <Link to="/settings" className={classes.link}>
                     <ListItem button className={classes.listItem}>
-                      <HelpIcon />
-                      <ListItemText primary={'Help'} />
+                      <SettingsIcon />
+                      <ListItemText primary={'Settings'} />
                     </ListItem>
-                  </div>
-                  <div className={classes.listSecondary}>
-                    <ListItem button className={classes.listItem}>
-                      <LogoutIcon />
-                      <ListItemText
-                        onClick={this.onLogoutClick}
-                        primary={'Logout'}
-                      />
-                    </ListItem>
-                  </div>
+                  </Link>
+
+                  <ListItem button className={classes.listItem}>
+                    <HelpIcon />
+                    <ListItemText primary={'Help'} />
+                  </ListItem>
+
                 </List>
               </div>
             </div>
