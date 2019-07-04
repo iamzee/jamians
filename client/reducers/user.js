@@ -1,10 +1,8 @@
-import {isAuthenticated} from '../helpers/auth';
-
-export default (
-  state = isAuthenticated () ? isAuthenticated ().user : {},
-  action
-) => {
+export default (state = {}, action) => {
   switch (action.type) {
+    case 'SET_USER': {
+      return action.user;
+    }
     default: {
       return state;
     }

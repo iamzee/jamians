@@ -11,7 +11,8 @@ import lightBlue from '@material-ui/core/colors/lightBlue';
 
 import MainRouter from './routers/MainRouter';
 import './client.scss';
-import {getUserFromSessionStorage} from './actions/user';
+import {startSetUser} from './actions/user';
+import {isAuthenticated} from './helpers/auth';
 
 const theme = createMuiTheme ({
   palette: {
@@ -28,11 +29,13 @@ const theme = createMuiTheme ({
   },
 });
 
-ReactDOM.render (
-  <Provider store={store}>
-    <MuiThemeProvider theme={theme}>
-      <MainRouter />
-    </MuiThemeProvider>
-  </Provider>,
-  document.getElementById ('root')
-);
+store.dispatch (startSetUser (isAuthenticated ().token)).then (() => {
+  ReactDOM.render (
+    <Provider store={store}>
+      <MuiThemeProvider theme={theme}>
+        <MainRouter />
+      </MuiThemeProvider>
+    </Provider>,
+    document.getElementById ('root')
+  );
+});
