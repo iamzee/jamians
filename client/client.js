@@ -1,20 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {Provider} from 'react-redux';
-import store from './store/configStore';
+import './client.scss';
+import MainRouter from './routers/MainRouter';
 
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import teal from '@material-ui/core/colors/teal';
 import cyan from '@material-ui/core/colors/cyan';
 import lightBlue from '@material-ui/core/colors/lightBlue';
 
-import MainRouter from './routers/MainRouter';
-import './client.scss';
-import {startSetUser} from './actions/user';
-import {isAuthenticated} from './helpers/auth';
-
-const theme = createMuiTheme ({
+const theme = createMuiTheme({
   palette: {
     primary: {
       main: teal[500],
@@ -29,13 +24,12 @@ const theme = createMuiTheme ({
   },
 });
 
-store.dispatch (startSetUser (isAuthenticated ().token)).then (() => {
-  ReactDOM.render (
-    <Provider store={store}>
-      <MuiThemeProvider theme={theme}>
-        <MainRouter />
-      </MuiThemeProvider>
-    </Provider>,
-    document.getElementById ('root')
+const App = () => {
+  return (
+    <MuiThemeProvider theme={theme}>
+      <MainRouter />
+    </MuiThemeProvider>
   );
-});
+};
+
+ReactDOM.render(<App />, document.getElementById('root'));

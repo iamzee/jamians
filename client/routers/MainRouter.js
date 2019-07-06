@@ -59,58 +59,69 @@ const HomePage = lazy(() => import('../Home/pages/HomePage'));
 
 const history = createHistory();
 
-const MainRouter = () => (
-  <Router history={history}>
-    <Suspense fallback={<PageLoader />}>
-      <Switch>
-        {/* USER ROUTES */}
-        <PrivateRoute path="/users/:userId/edit" component={EditProfile} />
-        <PrivateRoute path="/users/:userId" component={Profile} />
-        <PrivateRoute path="/users" component={UsersDashboard} />
+const MainRouter = props => (
+  <React.Fragment>
+    <Router history={history}>
+      <Suspense fallback={<PageLoader />}>
+        <Switch>
+          {/* USER ROUTES */}
+          <PrivateRoute path="/users/:userId/edit" component={EditProfile} />
+          <PrivateRoute path="/users/:userId" component={Profile} />
+          <PrivateRoute path="/users" component={UsersDashboard} />
 
-        {/* EVENT ROUTES */}
-        <PrivateRoute path="/events/bookmarks" component={EventBookmarksPage} />
-        <PrivateRoute path="/events/new" component={NewEventPage} />
-        <PrivateRoute path="/events/:eventId" component={Event} />
-        <PrivateRoute path="/events/:eventId/edit" component={EventEditPage} />
-        <PrivateRoute path="/events" component={EventsDashboard} />
+          {/* EVENT ROUTES */}
+          <PrivateRoute
+            path="/events/bookmarks"
+            component={EventBookmarksPage}
+          />
+          <PrivateRoute path="/events/new" component={NewEventPage} />
+          <PrivateRoute path="/events/:eventId" component={Event} />
+          <PrivateRoute
+            path="/events/:eventId/edit"
+            component={EventEditPage}
+          />
+          <PrivateRoute path="/events" component={EventsDashboard} />
 
-        {/* SETTINGS ROUTES */}
-        <PrivateRoute path="/settings" component={Settings} />
+          {/* SETTINGS ROUTES */}
+          <PrivateRoute path="/settings" component={Settings} />
 
-        {/* DISCUSSION ROUTES */}
-        <PrivateRoute path="/discussion/new" component={NewDiscussionPage} />
-        <PrivateRoute path="/discussion/:discussionId" component={Discussion} />
-        <PrivateRoute path="/discussion" component={DiscussionList} />
+          {/* DISCUSSION ROUTES */}
+          <PrivateRoute path="/discussion/new" component={NewDiscussionPage} />
+          <PrivateRoute
+            path="/discussion/:discussionId"
+            component={Discussion}
+          />
+          <PrivateRoute path="/discussion" component={DiscussionList} />
 
-        {/* QUESTION PAPER ROUTES */}
-        <PrivateRoute path="/question_papers/upload" component={Upload} />
-        <PrivateRoute
-          path="/question_papers/bookmarks"
-          component={QuestionPaperBookmarkPage}
-        />
-        <PrivateRoute
-          path="/question_papers/:questionPaperId"
-          component={QuestionPaper}
-        />
-        <PrivateRoute
-          path="/question_papers"
-          component={QuestionPaperDashboard}
-        />
+          {/* QUESTION PAPER ROUTES */}
+          <PrivateRoute path="/question_papers/upload" component={Upload} />
+          <PrivateRoute
+            path="/question_papers/bookmarks"
+            component={QuestionPaperBookmarkPage}
+          />
+          <PrivateRoute
+            path="/question_papers/:questionPaperId"
+            component={QuestionPaper}
+          />
+          <PrivateRoute
+            path="/question_papers"
+            component={QuestionPaperDashboard}
+          />
 
-        {/* NOTE ROUTES */}
-        <PrivateRoute path="/notes/upload" component={UploadNotesPage} />
-        <PrivateRoute path="/notes/bookmarks" component={NotesBookmarkPage} />
-        <PrivateRoute path="/notes/:noteId" component={Note} />
-        <PrivateRoute exact path="/notes" component={NotesPage} />
+          {/* NOTE ROUTES */}
+          <PrivateRoute path="/notes/upload" component={UploadNotesPage} />
+          <PrivateRoute path="/notes/bookmarks" component={NotesBookmarkPage} />
+          <PrivateRoute path="/notes/:noteId" component={Note} />
+          <PrivateRoute exact path="/notes" component={NotesPage} />
 
-        {/* HOME ROUTES */}
-        <Route path="/login" component={Login} />
-        <Route path="/signup" component={Signup} />
-        <PrivateRoute exact path="/" component={HomePage} />
-      </Switch>
-    </Suspense>
-  </Router>
+          {/* HOME ROUTES */}
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={Signup} />
+          <PrivateRoute exact path="/" component={HomePage} />
+        </Switch>
+      </Suspense>
+    </Router>
+  </React.Fragment>
 );
 
 export default MainRouter;

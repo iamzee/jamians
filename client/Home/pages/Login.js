@@ -16,10 +16,10 @@ const styles = theme => ({
   root: {
     maxWidth: 600,
     margin: 'auto',
-    marginTop: theme.spacing (10),
-    padding: theme.spacing (5),
-    [theme.breakpoints.down ('xs')]: {
-      padding: theme.spacing (2),
+    marginTop: theme.spacing(10),
+    padding: theme.spacing(5),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2),
     },
   },
   title: {
@@ -41,48 +41,46 @@ class Login extends React.Component {
 
   componentDidMount = () => {
     if (this.props.location.search === '?new=true') {
-      console.log ('TRUE');
-      this.setState (() => ({open: true}));
+      console.log('TRUE');
+      this.setState(() => ({open: true}));
     }
   };
 
   onEmailChange = e => {
     const email = e.target.value;
-    this.setState (() => ({email}));
+    this.setState(() => ({email}));
   };
 
   onPasswordChange = e => {
     const password = e.target.value;
-    this.setState (() => ({password}));
+    this.setState(() => ({password}));
   };
 
   onSubmit = async () => {
     if (!this.state.email || !this.state.password) {
-      this.setState (() => ({error: 'All fields are necessary.'}));
+      this.setState(() => ({error: 'All fields are necessary.'}));
     } else {
-      this.setState (() => ({logging: true}));
+      this.setState(() => ({logging: true}));
       const user = {
         email: this.state.email,
         password: this.state.password,
       };
-      // const error = await this.props.dispatch (startLogin (user));
-      // console.log (value);
-      const error = await login (user);
+      const error = await login(user);
       if (error) {
-        this.setState (() => ({error}));
-        this.setState (() => ({logging: false}));
+        this.setState(() => ({error}));
+        this.setState(() => ({logging: false}));
       } else {
-        this.setState (() => ({logging: false}));
-        this.props.history.push ('/');
+        this.setState(() => ({logging: false}));
+        this.props.history.push('/');
       }
     }
   };
 
   onSnackbarClose = () => {
-    this.setState (() => ({error: ''}));
+    this.setState(() => ({error: ''}));
   };
 
-  render () {
+  render() {
     const {classes} = this.props;
     return (
       <div>
@@ -118,35 +116,39 @@ class Login extends React.Component {
             onChange={this.onPasswordChange}
           />
           <br />
-          {this.state.logging
-            ? <Button variant="contained" color="secondary">
-                <CircularProgress size={20} color="inherit" />
-                Logging in
-              </Button>
-            : <Button
-                variant="contained"
-                color="secondary"
-                onClick={this.onSubmit}
-              >
-                Login
-              </Button>}
+          {this.state.logging ? (
+            <Button variant="contained" color="secondary">
+              <CircularProgress size={20} color="inherit" />
+              Logging in
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={this.onSubmit}
+            >
+              Login
+            </Button>
+          )}
         </div>
 
-        {this.state.error &&
+        {this.state.error && (
           <SnackbarComponent
             variant="error"
             message={this.state.error}
             onClose={this.onSnackbarClose}
-          />}
-        {this.state.open &&
+          />
+        )}
+        {this.state.open && (
           <SnackbarComponent
             variant="success"
             message="Account created. Login to your account."
             onClose={() => {}}
-          />}
+          />
+        )}
       </div>
     );
   }
 }
 
-export default withStyles (styles) (Login);
+export default withStyles(styles)(Login);
