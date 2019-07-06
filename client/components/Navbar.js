@@ -30,14 +30,14 @@ import FaceIcon from '@material-ui/icons/FaceOutlined';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    marginBottom: theme.spacing.unit * 5,
+    marginBottom: theme.spacing(5),
   },
   grow: {
     flexGrow: 1,
     color: '#fff',
   },
   iconButton: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     color: '#fff',
   },
   list: {
@@ -52,7 +52,7 @@ const styles = theme => ({
     color: 'black',
   },
   listTitle: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     backgroundColor: theme.palette.primary.main,
   },
   listTitleText: {
@@ -76,10 +76,10 @@ class Navbar extends React.Component {
   };
 
   toggleDrawer = open => () => {
-    this.setState (() => ({open}));
+    this.setState(() => ({open}));
   };
 
-  render () {
+  render() {
     const {classes} = this.props;
     return (
       <div>
@@ -88,7 +88,7 @@ class Navbar extends React.Component {
             <Toolbar>
               <IconButton
                 className={classes.iconButton}
-                onClick={this.toggleDrawer (true)}
+                onClick={this.toggleDrawer(true)}
               >
                 <MenuIcon />
               </IconButton>
@@ -100,12 +100,12 @@ class Navbar extends React.Component {
         </div>
 
         <div>
-          <Drawer open={this.state.open} onClose={this.toggleDrawer (false)}>
+          <Drawer open={this.state.open} onClose={this.toggleDrawer(false)}>
             <div
               tabIndex={0}
               role="button"
-              onKeyDown={this.toggleDrawer (false)}
-              onClick={this.toggleDrawer (false)}
+              onKeyDown={this.toggleDrawer(false)}
+              onClick={this.toggleDrawer(false)}
               style={{height: '100%'}}
             >
               <div className={classes.list} style={{height: '100%'}}>
@@ -194,7 +194,6 @@ class Navbar extends React.Component {
                     <HelpIcon />
                     <ListItemText primary={'Help'} />
                   </ListItem>
-
                 </List>
               </div>
             </div>
@@ -205,4 +204,4 @@ class Navbar extends React.Component {
   }
 }
 
-export default withStyles (styles) (Navbar);
+export default withStyles(styles)(Navbar);

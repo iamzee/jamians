@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import {withStyles} from '@material-ui/core/styles';
 
 import {
   sendFriendRequest,
@@ -12,6 +13,12 @@ import {
 } from '../../api/user';
 import {isAuthenticated} from '../../helpers/auth';
 import SnackbarComponent from '../../components/SnackbarComponent';
+
+const styles = theme => ({
+  link: {
+    textDecoration: 'none',
+  },
+});
 
 class ProfileActionButton extends React.Component {
   state = {
@@ -90,6 +97,7 @@ class ProfileActionButton extends React.Component {
 
   render() {
     const {status, message} = this.state;
+    const {classes} = this.props;
     switch (status) {
       case 'SENDING': {
         return <CircularProgress size={24} />;
@@ -97,7 +105,10 @@ class ProfileActionButton extends React.Component {
       case 'ME': {
         return (
           <React.Fragment>
-            <Link to={`/users/${this.props.user._id}/edit`}>
+            <Link
+              className={classes.link}
+              to={`/users/${this.props.user._id}/edit`}
+            >
               <Button color="secondary">Edit Profile</Button>
             </Link>
             {message && (
@@ -183,4 +194,4 @@ class ProfileActionButton extends React.Component {
   }
 }
 
-export default ProfileActionButton;
+export default withStyles(styles)(ProfileActionButton);
