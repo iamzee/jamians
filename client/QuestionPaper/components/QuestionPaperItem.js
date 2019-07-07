@@ -8,10 +8,11 @@ import {withStyles} from '@material-ui/core/styles';
 const styles = theme => ({
   link: {
     textDecoration: 'none',
+    color: 'black',
   },
   listItem: {
     '&:hover': {
-      backgroundColor: theme.questionPaper.tertiary,
+      backgroundColor: theme.palette.tertiary,
     },
   },
 });

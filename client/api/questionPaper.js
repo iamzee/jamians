@@ -22,29 +22,40 @@ export const createQuestionPaper = async (
   } catch (e) {
     console.log (e);
   }
-
-  // return axios({
-  //   method: 'post',
-  //   url: '/api/questionPaper',
-  //   data,
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  // }).then(({data}) => {
-  //   return data;
-  // });
 };
 
-export const listQuestionPapers = ({department, course, semester, subject}) => {
+export const listQuestionPapers = async ({
+  department,
+  course,
+  semester,
+  subject,
+}) => {
   const url = `/api/questionPaper?department=${department || ''}&course=${course || ''}&semester=${semester || ''}&subject=${subject || ''}`;
-  return axios ({
-    method: 'get',
-    url,
-  }).then (({data}) => {
-    console.log (data.questionPapers);
+
+  try {
+    const {data} = await axios ({
+      method: 'get',
+      url,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
     return data.questionPapers;
-  });
+  } catch (e) {
+    console.log (e.response);
+  }
 };
+
+// export const listQuestionPapers = ({department, course, semester, subject}) => {
+//   const url = `/api/questionPaper?department=${department || ''}&course=${course || ''}&semester=${semester || ''}&subject=${subject || ''}`;
+//   return axios ({
+//     method: 'get',
+//     url,
+//   }).then (({data}) => {
+//     console.log (data.questionPapers);
+//     return data.questionPapers;
+//   });
+// };
 
 export const readQuestionPaper = questionPaperId => {
   return axios ({

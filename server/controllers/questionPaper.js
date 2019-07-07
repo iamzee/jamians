@@ -49,7 +49,9 @@ export const list = async (req, res) => {
   else if (department) queryObject = {department};
 
   try {
-    const questionPapers = await QuestionPaper.find (queryObject);
+    const questionPapers = await QuestionPaper.find (queryObject).sort (
+      '-year'
+    );
     res.send ({questionPapers});
   } catch (e) {
     res.status (500).send (e);

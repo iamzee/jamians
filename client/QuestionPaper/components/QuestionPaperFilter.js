@@ -10,9 +10,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {withStyles} from '@material-ui/core/styles';
 
-import {listDepartments, readDepartment} from '../../api/department.api';
-import {readCourse} from '../../api/course.api';
-import {semesters} from '../../helpers/note.helper';
+import {listDepartments} from '../../api/department';
+import {listCourses} from '../../api/course';
+import {listSubjects} from '../../api/subject';
+import {semesters} from '../../helpers/notes';
 
 const styles = theme => ({
   dialog: {
@@ -22,11 +23,11 @@ const styles = theme => ({
   textField: {
     minWidth: 300,
     margin: 'auto',
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing (2),
   },
   progress: {
-    marginLeft: theme.spacing.unit * 2,
-    marginRight: theme.spacing.unit * 2,
+    marginLeft: theme.spacing (2),
+    marginRight: theme.spacing (2),
   },
 });
 
@@ -45,16 +46,17 @@ class QuestionPaperFilter extends React.Component {
     showSubjects: false,
   };
 
-  componentDidMount() {
-    listDepartments().then(departments => {
-      this.setState(() => ({
-        departments,
-      }));
-    });
-  }
+  componentDidMount = async () => {
+    const departments = await listDepartments ();
+    this.setState (() => ({
+      departments,
+    }));
+  };
 
-  onDepartmentChange = e => {
-    this.setState(() => ({
+  onDepartmentChange = async e => {
+    const department = e.target.value;
+
+    this.setState (() => ({
       department,
       course: '',
       showCourseLoader: true,
@@ -62,69 +64,63 @@ class QuestionPaperFilter extends React.Component {
       showSubjects: false,
     }));
 
-    const department = e.target.value;
-    this.setState(() => ({department}));
-    readDepartment(department).then(({courses}) => {
-      this.setState(() => ({
-        courses,
-        showCourseLoader: false,
-        showCourses: true,
-      }));
-    });
+    const courses = await listCourses (department);
+    this.setState (() => ({
+      courses,
+      showCourseLoader: false,
+      showCourses: true,
+    }));
   };
 
   onCourseChange = e => {
     const course = e.target.value;
-    this.setState(() => ({course, subject: ''}));
-
-    readCourse(course).then(({subjects}) => {
-      this.setState(() => ({
-        subjects,
-        filteredSubjects: subjects,
-        showSubjects: false,
-      }));
-    });
+    this.setState (() => ({course, subject: ''}));
   };
 
-  onSemesterChange = e => {
-    this.setState(() => ({showSubjectLoader: true}));
+  onSemesterChange = async e => {
     const semester = e.target.value;
-    this.setState(() => ({
-      semester,
-      filteredSubjects: this.state.subjects.filter(s => {
-        return s.semester === semester;
-      }),
+    this.setState (() => ({showSubjectLoader: true, semester}));
+
+    const subjects = await listSubjects (this.state.course, semester);
+    this.setState (() => ({
       showSubjects: true,
       showSubjectLoader: false,
+      subjects,
     }));
   };
 
   onSubjectChange = e => {
     const subject = e.target.value;
-    this.setState(() => ({subject}));
+    this.setState (() => ({subject}));
   };
 
   handleClickOpen = () => {
-    this.setState(() => ({open: true}));
+    this.setState (() => ({open: true}));
   };
 
   handleClose = () => {
-    this.setState(() => ({open: false}));
+    this.setState (() => ({open: false}));
   };
 
   submit = () => {
     const {department, course, semester, subject} = this.state;
-    this.props.history.push(
+    this.props.history.push (
       `/question_papers?department=${department}&course=${course}&semester=${semester}&subject=${subject}`
     );
-    this.setState(() => ({open: false}));
+    this.setState (() => ({open: false}));
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
     return (
       <div>
-        <Button onClick={this.handleClickOpen}>Filter</Button>
+        <Button
+          onClick={this.handleClickOpen}
+          variant="contained"
+          color="secondary"
+        >
+          Filter
+        </Button>
 
         <Dialog
           className={classes.dialog}
@@ -143,22 +139,21 @@ class QuestionPaperFilter extends React.Component {
               label="Department"
               variant="outlined"
             >
-              {this.state.departments.map(d => (
+              {this.state.departments.map (d => (
                 <MenuItem key={d._id} value={d._id}>
                   {d.name}
                 </MenuItem>
               ))}
             </TextField>
             <br />
-            {this.state.showCourseLoader && (
+            {this.state.showCourseLoader &&
               <CircularProgress
                 className={classes.progress}
                 size={24}
                 variant="indeterminate"
-              />
-            )}
+              />}
 
-            {this.state.showCourses && (
+            {this.state.showCourses &&
               <div>
                 <TextField
                   className={classes.textField}
@@ -169,7 +164,7 @@ class QuestionPaperFilter extends React.Component {
                   label="Course"
                   variant="outlined"
                 >
-                  {this.state.courses.map(course => (
+                  {this.state.courses.map (course => (
                     <MenuItem key={course._id} value={course._id}>
                       {course.name}
                     </MenuItem>
@@ -185,7 +180,7 @@ class QuestionPaperFilter extends React.Component {
                   label="Semester"
                   variant="outlined"
                 >
-                  {semesters.map(semester => (
+                  {semesters.map (semester => (
                     <MenuItem key={semester.value} value={semester.value}>
                       {semester.label}
                     </MenuItem>
@@ -193,15 +188,14 @@ class QuestionPaperFilter extends React.Component {
                 </TextField>
                 <br />
 
-                {this.state.showSubjectLoader && (
+                {this.state.showSubjectLoader &&
                   <CircularProgress
                     className={classes.progress}
                     size={24}
                     variant="indeterminate"
-                  />
-                )}
+                  />}
 
-                {this.state.showSubjects && (
+                {this.state.showSubjects &&
                   <TextField
                     className={classes.textField}
                     select
@@ -211,15 +205,13 @@ class QuestionPaperFilter extends React.Component {
                     label="Subject"
                     variant="outlined"
                   >
-                    {this.state.filteredSubjects.map(subject => (
+                    {this.state.subjects.map (subject => (
                       <MenuItem key={subject._id} value={subject._id}>
                         {subject.name}
                       </MenuItem>
                     ))}
-                  </TextField>
-                )}
-              </div>
-            )}
+                  </TextField>}
+              </div>}
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose}>Cancel</Button>
@@ -231,4 +223,4 @@ class QuestionPaperFilter extends React.Component {
   }
 }
 
-export default withStyles(styles)(QuestionPaperFilter);
+export default withStyles (styles) (QuestionPaperFilter);

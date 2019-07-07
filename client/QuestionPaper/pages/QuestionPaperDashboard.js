@@ -21,7 +21,6 @@ const styles = theme => ({
   },
   title: {
     fontWeight: 300,
-    color: theme.questionPaper.primary,
   },
   filters: {
     marginTop: theme.spacing (2),
