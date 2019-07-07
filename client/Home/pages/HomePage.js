@@ -8,26 +8,22 @@ import Grid from '@material-ui/core/Grid';
 
 import NotesIcon from '@material-ui/icons/ClassOutlined';
 import QuestionPaperIcon from '@material-ui/icons/SchoolOutlined';
-import DiscussionIcon from '@material-ui/icons/QuestionAnswerOutlined';
 import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 import EventIcon from '@material-ui/icons/EventOutlined';
-import NavigationIcon from '@material-ui/icons/NavigationOutlined';
 import HelpIcon from '@material-ui/icons/ContactSupportOutlined';
 import SyllabusIcon from '@material-ui/icons/AssignmentOutlined';
 import TimeTableIcon from '@material-ui/icons/CalendarTodayOutlined';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCartOutlined';
-import ConfessIcon from '@material-ui/icons/NaturePeopleOutlined';
-import NewFeaturesIcon from '@material-ui/icons/NewReleasesOutlined';
+import FaceIcon from '@material-ui/icons/Face';
 import {withStyles} from '@material-ui/core/styles';
 
 const styles = theme => ({
   appbar: {background: theme.palette.primary.main},
   title: {flexGrow: 1},
   container: {
-    marginTop: theme.spacing(10),
-    padding: theme.spacing(5),
-    [theme.breakpoints.down('xs')]: {
-      padding: theme.spacing(2),
+    marginTop: theme.spacing (10),
+    padding: theme.spacing (5),
+    [theme.breakpoints.down ('xs')]: {
+      padding: theme.spacing (2),
     },
   },
   link: {
@@ -37,7 +33,7 @@ const styles = theme => ({
     color: 'black',
   },
   linkText: {
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing (2),
   },
 });
 
@@ -88,14 +84,6 @@ const HomePage = props => {
             </Link>
           </Grid>
           <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Link className={classes.link} to="/discussion">
-              <DiscussionIcon />
-              <Typography className={classes.linkText} variant="h6">
-                Discussion
-              </Typography>
-            </Link>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
             <Link className={classes.link} to="/events">
               <EventIcon />
               <Typography className={classes.linkText} variant="h6">
@@ -104,34 +92,10 @@ const HomePage = props => {
             </Link>
           </Grid>
           <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Link className={classes.link} to="/notes">
-              <ConfessIcon />
+            <Link className={classes.link} to="/users">
+              <FaceIcon />
               <Typography className={classes.linkText} variant="h6">
-                Confession
-              </Typography>
-            </Link>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Link className={classes.link} to="/notes">
-              <ShoppingCartIcon />
-              <Typography className={classes.linkText} variant="h6">
-                Buy / Sell
-              </Typography>
-            </Link>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Link className={classes.link} to="/notes">
-              <NavigationIcon />
-              <Typography className={classes.linkText} variant="h6">
-                Navigate
-              </Typography>
-            </Link>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Link className={classes.link} to="/notes">
-              <NewFeaturesIcon />
-              <Typography className={classes.linkText} variant="h6">
-                New Features
+                Find People
               </Typography>
             </Link>
           </Grid>
@@ -157,4 +121,4 @@ const HomePage = props => {
   );
 };
 
-export default withStyles(styles)(HomePage);
+export default withStyles (styles) (HomePage);

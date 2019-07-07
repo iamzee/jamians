@@ -14,30 +14,24 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import NotesIcon from '@material-ui/icons/ClassOutlined';
 import QuestionPaperIcon from '@material-ui/icons/SchoolOutlined';
-import DiscussionIcon from '@material-ui/icons/QuestionAnswerOutlined';
-import LogoutIcon from '@material-ui/icons/ExitToAppOutlined';
 import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 import EventIcon from '@material-ui/icons/EventOutlined';
-import NavigationIcon from '@material-ui/icons/NavigationOutlined';
 import HelpIcon from '@material-ui/icons/ContactSupportOutlined';
 import SyllabusIcon from '@material-ui/icons/AssignmentOutlined';
 import TimeTableIcon from '@material-ui/icons/CalendarTodayOutlined';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCartOutlined';
-import ConfessIcon from '@material-ui/icons/NaturePeopleOutlined';
-import NewFeaturesIcon from '@material-ui/icons/NewReleasesOutlined';
 import FaceIcon from '@material-ui/icons/FaceOutlined';
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    marginBottom: theme.spacing(5),
+    marginBottom: theme.spacing (5),
   },
   grow: {
     flexGrow: 1,
     color: '#fff',
   },
   iconButton: {
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing (1),
     color: '#fff',
   },
   list: {
@@ -52,11 +46,14 @@ const styles = theme => ({
     color: 'black',
   },
   listTitle: {
-    padding: theme.spacing(2),
+    padding: theme.spacing (2),
     backgroundColor: theme.palette.primary.main,
   },
   listTitleText: {
     color: '#fff',
+  },
+  listItemText: {
+    paddingLeft: theme.spacing (1),
   },
   link: {
     textDecoration: 'none',
@@ -76,10 +73,10 @@ class Navbar extends React.Component {
   };
 
   toggleDrawer = open => () => {
-    this.setState(() => ({open}));
+    this.setState (() => ({open}));
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
     return (
       <div>
@@ -88,7 +85,7 @@ class Navbar extends React.Component {
             <Toolbar>
               <IconButton
                 className={classes.iconButton}
-                onClick={this.toggleDrawer(true)}
+                onClick={this.toggleDrawer (true)}
               >
                 <MenuIcon />
               </IconButton>
@@ -100,12 +97,12 @@ class Navbar extends React.Component {
         </div>
 
         <div>
-          <Drawer open={this.state.open} onClose={this.toggleDrawer(false)}>
+          <Drawer open={this.state.open} onClose={this.toggleDrawer (false)}>
             <div
               tabIndex={0}
               role="button"
-              onKeyDown={this.toggleDrawer(false)}
-              onClick={this.toggleDrawer(false)}
+              onKeyDown={this.toggleDrawer (false)}
+              onClick={this.toggleDrawer (false)}
               style={{height: '100%'}}
             >
               <div className={classes.list} style={{height: '100%'}}>
@@ -121,78 +118,75 @@ class Navbar extends React.Component {
                   <Link to="/notes" className={classes.link}>
                     <ListItem button className={classes.listItem}>
                       <NotesIcon />
-                      <ListItemText primary={'Notes'} />
+                      <ListItemText
+                        primary={'Notes'}
+                        className={classes.listItemText}
+                      />
                     </ListItem>
                   </Link>
 
                   <Link to="/question_papers" className={classes.link}>
                     <ListItem button className={classes.listItem}>
                       <QuestionPaperIcon />
-                      <ListItemText primary={'Question Papers'} />
+                      <ListItemText
+                        primary={'Question Papers'}
+                        className={classes.listItemText}
+                      />
                     </ListItem>
                   </Link>
 
                   <ListItem button className={classes.listItem}>
                     <SyllabusIcon />
-                    <ListItemText primary={'Syllabus'} />
+                    <ListItemText
+                      primary={'Syllabus'}
+                      className={classes.listItemText}
+                    />
                   </ListItem>
 
                   <ListItem button className={classes.listItem}>
                     <TimeTableIcon />
-                    <ListItemText primary={'Time Table'} />
+                    <ListItemText
+                      primary={'Time Table'}
+                      className={classes.listItemText}
+                    />
                   </ListItem>
 
                   <Link to="/events" className={classes.link}>
                     <ListItem button className={classes.listItem}>
                       <EventIcon />
-                      <ListItemText primary={'Events'} />
+                      <ListItemText
+                        primary={'Events'}
+                        className={classes.listItemText}
+                      />
                     </ListItem>
                   </Link>
 
                   <Link to="/users" className={classes.link}>
                     <ListItem button className={classes.listItem}>
                       <FaceIcon />
-                      <ListItemText primary={'Find People'} />
+                      <ListItemText
+                        primary={'Find People'}
+                        className={classes.listItemText}
+                      />
                     </ListItem>
                   </Link>
-
-                  <Link to="/discussion" className={classes.link}>
-                    <ListItem button className={classes.listItem}>
-                      <DiscussionIcon />
-                      <ListItemText primary={'Discussion'} />
-                    </ListItem>
-                  </Link>
-
-                  <ListItem button className={classes.listItem}>
-                    <ConfessIcon />
-                    <ListItemText primary={'Confess'} />
-                  </ListItem>
-
-                  <ListItem button className={classes.listItem}>
-                    <ShoppingCartIcon />
-                    <ListItemText primary={'Buy / Sell'} />
-                  </ListItem>
-
-                  <ListItem button className={classes.listItem}>
-                    <NavigationIcon />
-                    <ListItemText primary={'Navigate'} />
-                  </ListItem>
-
-                  <ListItem button className={classes.listItem}>
-                    <NewFeaturesIcon />
-                    <ListItemText primary={'New Features'} />
-                  </ListItem>
 
                   <Link to="/settings" className={classes.link}>
                     <ListItem button className={classes.listItem}>
                       <SettingsIcon />
-                      <ListItemText primary={'Settings'} />
+                      <ListItemText
+                        primary={'Settings'}
+                        className={classes.listItemText}
+                      />
                     </ListItem>
                   </Link>
 
                   <ListItem button className={classes.listItem}>
                     <HelpIcon />
-                    <ListItemText primary={'Help'} />
+                    <ListItemText
+                      primary={'Help'}
+                      className={classes.listItemText}
+                    />
                   </ListItem>
                 </List>
               </div>
@@ -204,4 +198,4 @@ class Navbar extends React.Component {
   }
 }
 
-export default withStyles(styles)(Navbar);
+export default withStyles (styles) (Navbar);
