@@ -15,7 +15,7 @@ import Tab from '@material-ui/core/Tab';
 import {withStyles} from '@material-ui/styles';
 
 import {readEvent} from '../../api/event';
-import {getSAS, download} from '../../api/upload.api';
+import {getSAS, download} from '../../api/upload';
 import {isAuthenticated} from '../../helpers/auth';
 import EventAbout from '../components/EventAbout';
 import GoingButton from '../components/GoingButton';
@@ -28,23 +28,23 @@ const styles = theme => ({
   root: {
     maxWidth: 600,
     margin: 'auto',
-    marginTop: theme.spacing(15),
-    padding: theme.spacing(5),
-    [theme.breakpoints.down('xs')]: {
-      marginTop: theme.spacing(15),
-      padding: theme.spacing(2),
+    marginTop: theme.spacing (15),
+    padding: theme.spacing (5),
+    [theme.breakpoints.down ('xs')]: {
+      marginTop: theme.spacing (15),
+      padding: theme.spacing (2),
     },
   },
   mainInfo: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing (2),
     display: 'flex',
     alignItems: 'center',
   },
   mainInfoTitle: {
-    marginLeft: theme.spacing(1),
+    marginLeft: theme.spacing (1),
   },
   groupButtons: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing (2),
   },
 });
 
@@ -57,23 +57,23 @@ class Event extends React.Component {
 
   componentDidMount = async () => {
     const {eventId} = this.props.match.params;
-    const {token} = isAuthenticated();
-    const event = await readEvent(eventId, token);
+    const {token} = isAuthenticated ();
+    const event = await readEvent (eventId, token);
 
     if (event.poster) {
-      const token = await getSAS('events');
-      const posterLink = download(token, 'events', event.poster);
-      this.setState(() => ({posterLink}));
+      const token = await getSAS ('events');
+      const posterLink = download (token, 'events', event.poster);
+      this.setState (() => ({posterLink}));
     }
 
-    this.setState(() => ({event}));
+    this.setState (() => ({event}));
   };
 
   onTabChange = (e, newValue) => {
-    this.setState(() => ({tab: newValue}));
+    this.setState (() => ({tab: newValue}));
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
     const {event, posterLink} = this.state;
     return (
@@ -82,7 +82,7 @@ class Event extends React.Component {
         <EventsNav />
 
         <div className={classes.root}>
-          {event && (
+          {event &&
             <div>
               <Card>
                 {posterLink && <CardMedia component="img" src={posterLink} />}
@@ -119,7 +119,7 @@ class Event extends React.Component {
                       className={classes.mainInfoTitle}
                     >
                       {event.startDate &&
-                        moment(event.startDate).format('ddd, MMMM DD')}
+                        moment (event.startDate).format ('ddd, MMMM DD')}
                     </Typography>
                   </div>
 
@@ -145,12 +145,11 @@ class Event extends React.Component {
               </AppBar>
               {this.state.tab === 0 && <EventAbout event={event} />}
               {this.state.tab === 1 && <EventDiscussion event={event} />}
-            </div>
-          )}
+            </div>}
         </div>
       </div>
     );
   }
 }
 
-export default withStyles(styles)(Event);
+export default withStyles (styles) (Event);

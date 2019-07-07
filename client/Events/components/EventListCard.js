@@ -10,13 +10,13 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
-import {getSAS, download} from '../../api/upload.api';
+import {getSAS, download} from '../../api/upload';
 import {readUser} from '../../api/user';
 import {isAuthenticated} from '../../helpers/auth';
 
 const styles = theme => ({
   card: {
-    marginBottom: theme.spacing(5),
+    marginBottom: theme.spacing (5),
   },
   link: {
     textDecoration: 'none',
@@ -32,23 +32,22 @@ class EventListCard extends React.Component {
 
   componentDidMount = async () => {
     if (this.props.event.poster) {
-      const token = await getSAS('events');
-      const posterLink = download(token, 'events', this.props.event.poster);
-      this.setState(() => ({posterLink}));
+      const token = await getSAS ('events');
+      const posterLink = download (token, 'events', this.props.event.poster);
+      this.setState (() => ({posterLink}));
     }
 
-    const {token} = isAuthenticated();
-    const {name} = await readUser(this.props.event.createdBy, token);
-    this.setState(() => ({author: name}));
+    const {token} = isAuthenticated ();
+    const {name} = await readUser (this.props.event.createdBy, token);
+    this.setState (() => ({author: name}));
   };
 
-  render() {
+  render () {
     const {classes, event} = this.props;
     return (
       <Card className={classes.card}>
-        {this.state.posterLink && (
-          <CardMedia component="img" src={this.state.posterLink} />
-        )}
+        {this.state.posterLink &&
+          <CardMedia component="img" src={this.state.posterLink} />}
         <CardContent>
           <Link to={`/events/${event._id}`} className={classes.link}>
             <Typography gutterBottom variant="h5">
@@ -57,7 +56,8 @@ class EventListCard extends React.Component {
           </Link>
 
           <Typography variant="body2" color="primary" component="p">
-            {event.startDate && moment(event.startDate).format('ddd, MMMM DD')}
+            {event.startDate &&
+              moment (event.startDate).format ('ddd, MMMM DD')}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
             {this.state.author}
@@ -74,4 +74,4 @@ class EventListCard extends React.Component {
   }
 }
 
-export default withStyles(styles)(EventListCard);
+export default withStyles (styles) (EventListCard);

@@ -10,18 +10,18 @@ import EventsNav from '../components/EventsNav';
 // import {isAuthenticated} from '../../api/auth.api';
 import {isAuthenticated} from '../../helpers/auth';
 import {createEvent} from '../../api/event';
-import {getSAS, upload} from '../../api/upload.api';
+import {getSAS, upload} from '../../api/upload';
 import SnackbarComponent from '../../components/SnackbarComponent';
 
 const styles = theme => ({
   root: {
     maxWidth: 600,
     margin: 'auto',
-    marginTop: theme.spacing.unit * 15,
-    padding: theme.spacing.unit * 5,
-    [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing.unit * 15,
-      padding: theme.spacing.unit * 2,
+    marginTop: theme.spacing (15),
+    padding: theme.spacing (5),
+    [theme.breakpoints.down ('sm')]: {
+      marginTop: theme.spacing (15),
+      padding: theme.spacing (2),
     },
   },
   title: {
@@ -35,37 +35,37 @@ class NewEventPage extends React.Component {
   };
 
   onSubmit = async (event, cb) => {
-    const {token} = isAuthenticated();
+    const {token} = isAuthenticated ();
     if (event.poster) {
-      getSAS('events').then(sasToken => {
-        const {speedSummary, blobName} = upload(
+      getSAS ('events').then (sasToken => {
+        const {speedSummary, blobName} = upload (
           sasToken,
           event.poster,
           'events'
         );
 
-        speedSummary.on('progress', async () => {
-          const progressPercent = speedSummary.getCompletePercent();
+        speedSummary.on ('progress', async () => {
+          const progressPercent = speedSummary.getCompletePercent ();
 
           if (progressPercent == 100) {
-            await createEvent({...event, poster: blobName}, token);
-            cb();
-            this.setState(() => ({done: true}));
+            await createEvent ({...event, poster: blobName}, token);
+            cb ();
+            this.setState (() => ({done: true}));
           }
         });
       });
     } else {
-      await createEvent({...event, poster: null}, token);
-      cb();
-      this.setState(() => ({done: true}));
+      await createEvent ({...event, poster: null}, token);
+      cb ();
+      this.setState (() => ({done: true}));
     }
   };
 
   onSnackbarClose = () => {
-    this.setState(() => ({done: false}));
+    this.setState (() => ({done: false}));
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
     return (
       <div>
@@ -80,16 +80,15 @@ class NewEventPage extends React.Component {
           <EventForm onSubmit={this.onSubmit} />
         </div>
 
-        {this.state.done && (
+        {this.state.done &&
           <SnackbarComponent
             variant="success"
             message="Event added!"
             onClose={this.onSnackbarClose}
-          />
-        )}
+          />}
       </div>
     );
   }
 }
 
-export default withStyles(styles)(NewEventPage);
+export default withStyles (styles) (NewEventPage);
