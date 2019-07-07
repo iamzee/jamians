@@ -1,32 +1,27 @@
 export default theme => ({
   container: {
-    marginTop: theme.spacing.unit * 20,
-    [theme.breakpoints.down('xs')]: {
-      marginTop: theme.spacing.unit * 15,
+    marginTop: theme.spacing (20),
+    [theme.breakpoints.down ('xs')]: {
+      marginTop: theme.spacing (15),
     },
   },
   card: {
     maxWidth: 600,
     margin: 'auto',
     textAlign: 'center',
-    marginBottom: theme.spacing.unit * 5,
+    marginBottom: theme.spacing (5),
   },
   title: {
     fontWeight: 300,
-    marginBottom: theme.spacing.unit * 2,
-    color: theme.questionPaper.primary,
+    marginBottom: theme.spacing (2),
   },
   chooseFileButton: {
-    marginBottom: theme.spacing.unit * 2,
-    backgroundColor: theme.questionPaper.tertiary,
-    '&:hover': {
-      backgroundColor: theme.questionPaper.secondary,
-    },
+    marginBottom: theme.spacing (2),
   },
   textField: {
     width: 300,
     margin: 'auto',
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing (2),
   },
   select: {
     width: 300,
@@ -38,20 +33,13 @@ export default theme => ({
   },
   button: {
     margin: 'auto',
-    marginBottom: theme.spacing.unit * 2,
-    backgroundColor: theme.questionPaper.primary,
-    color: '#fff',
-
-    '&:hover': {
-      backgroundColor: theme.questionPaper.secondary,
-    },
+    marginBottom: theme.spacing (2),
   },
   progress: {
-    marginLeft: theme.spacing.unit * 2,
-    marginRight: theme.spacing.unit * 2,
-    color: theme.questionPaper.tertiary,
+    marginLeft: theme.spacing (2),
+    marginRight: theme.spacing (2),
   },
   margin: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing (1),
   },
 });

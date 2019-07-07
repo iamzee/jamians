@@ -13,10 +13,10 @@ const styles = theme => ({
   root: {
     maxWidth: 600,
     margin: 'auto',
-    marginTop: theme.spacing.unit * 20,
+    marginTop: theme.spacing (20),
     [theme.breakpoints.down ('xs')]: {
-      marginTop: theme.spacing.unit * 15,
-      padding: theme.spacing.unit * 2,
+      marginTop: theme.spacing (15),
+      padding: theme.spacing (2),
     },
   },
   title: {
@@ -24,8 +24,8 @@ const styles = theme => ({
     color: theme.questionPaper.primary,
   },
   filters: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
+    marginTop: theme.spacing (2),
+    marginBottom: theme.spacing (2),
   },
 });
 

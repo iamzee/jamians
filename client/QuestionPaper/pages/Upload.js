@@ -11,18 +11,18 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 import {withStyles} from '@material-ui/core/styles';
 
-import {semesters} from '../../helpers/note.helper';
-import {listDepartments, readDepartment} from '../../api/department.api';
-import {readCourse} from '../../api/course.api';
-import {isAuthenticated} from '../../api/auth.api';
-import {years} from '../../helpers/questionPaper.helper';
-import {getSAS, upload} from '../../api/upload.api';
-import {createQuestionPaper} from '../../api/questionPaper.api';
+import {semesters} from '../../helpers/notes';
+import {listDepartments} from '../../api/department';
+import {listCourses} from '../../api/course';
+import {listSubjects} from '../../api/subject';
+import {years} from '../../helpers/questionPaper';
+import {getSAS, upload} from '../../api/upload';
+import {createQuestionPaper} from '../../api/questionPaper';
 
 import styles from '../styles/upload.style';
 import Navbar from '../../components/Navbar';
 import QuestionPaperNav from '../components/QuestionPaperNav';
-import SnackbarContentWrapper from '../../components/SnackbarContentWrapper';
+import SnackbarComponent from '../../components/SnackbarComponent';
 
 class Upload extends React.Component {
   state = {
@@ -30,7 +30,6 @@ class Upload extends React.Component {
     semester: '',
     departments: [],
     subjects: [],
-    filteredSubjects: [],
     department: '',
     subject: '',
     courses: [],
@@ -39,81 +38,83 @@ class Upload extends React.Component {
     error: '',
     progressPercent: 0,
     uploading: false,
+    uploaded: false,
     showCourseLoader: false,
     showCourses: false,
     showSubjectLoader: false,
     showSubjects: false,
+    showSemesters: false,
+    showSemestersLoading: false,
     openSnackbar: false,
   };
 
-  componentDidMount() {
-    listDepartments().then(departments => {
-      this.setState(() => ({
-        departments,
-      }));
-    });
-  }
-
-  onFileChange = e => {
-    const file = e.target.files[0];
-    this.setState(() => ({file}));
+  componentDidMount = async () => {
+    const departments = await listDepartments ();
+    this.setState (() => ({departments}));
   };
 
-  onSemesterChange = e => {
-    this.setState(() => ({showSubjectLoader: true}));
-    const semester = e.target.value;
-    this.setState(() => ({
-      semester,
-      filteredSubjects: this.state.subjects.filter(s => {
-        return s.semester === semester;
-      }),
-      showSubjects: true,
-      showSubjectLoader: false,
-    }));
-  };
-
-  onDepartmentChange = e => {
+  onDepartmentChange = async e => {
     const department = e.target.value;
-    this.setState(() => ({
+
+    this.setState (() => ({
       department,
       course: '',
       showCourseLoader: true,
       showCourses: false,
       showSubjects: false,
     }));
-    readDepartment(department).then(({courses}) => {
-      this.setState(() => ({
-        courses,
-        showCourseLoader: false,
-        showCourses: true,
-      }));
-    });
+
+    const courses = await listCourses (department);
+    this.setState (() => ({
+      courses,
+      showCourseLoader: false,
+      showCourses: true,
+    }));
   };
 
   onCourseChange = e => {
+    this.setState (() => ({showSemestersLoading: true, showSemesters: false}));
     const course = e.target.value;
-    this.setState(() => ({course, subject: ''}));
+    this.setState (() => ({
+      course,
+      subject: '',
+      showSemesters: true,
+      showSemestersLoading: false,
+    }));
+  };
 
-    readCourse(course).then(({subjects}) => {
-      this.setState(() => ({
-        subjects,
-        filteredSubjects: subjects,
-        showSubjects: false,
-      }));
-    });
+  onSemesterChange = async e => {
+    const semester = e.target.value;
+    this.setState (() => ({
+      showSubjectLoader: true,
+      showSubjects: false,
+      semester,
+    }));
+
+    const subjects = await listSubjects (this.state.course, semester);
+    this.setState (() => ({
+      showSubjects: true,
+      showSubjectLoader: false,
+      subjects,
+    }));
+  };
+
+  onFileChange = e => {
+    const file = e.target.files[0];
+    this.setState (() => ({file}));
   };
 
   onSubjectChange = e => {
     const subject = e.target.value;
-    this.setState(() => ({subject}));
+    this.setState (() => ({subject}));
   };
 
   onYearChange = e => {
     const year = e.target.value;
-    this.setState(() => ({year}));
+    this.setState (() => ({year}));
   };
 
-  onSubmit = e => {
+  onSubmit = async e => {
     if (
       !this.state.semester ||
       !this.state.department ||
@@ -122,52 +123,50 @@ class Upload extends React.Component {
       !this.state.year ||
       !this.state.file
     ) {
-      this.setState(() => ({error: 'All fields are necessary!'}));
+      this.setState (() => ({error: 'All fields are necessary!'}));
     } else if (this.state.file.type !== 'application/pdf') {
-      this.setState(() => ({error: 'Upload only pdf file.'}));
+      this.setState (() => ({error: 'Upload only pdf file.'}));
     } else {
-      this.setState(() => ({uploading: true, error: ''}));
+      this.setState (() => ({uploading: true, error: ''}));
 
-      getSAS('question-papers').then(sasToken => {
-        const {speedSummary, blobName} = upload(
-          sasToken,
-          this.state.file,
-          'question-papers'
-        );
+      const sasToken = await getSAS ('question-papers');
 
-        speedSummary.on('progress', () => {
-          const progressPercent = speedSummary.getCompletePercent();
-          this.setState(() => ({
-            progressPercent,
-          }));
+      const {speedSummary, blobName} = await upload (
+        sasToken,
+        this.state.file,
+        'question-papers'
+      );
 
-          if (progressPercent == 100) {
-            isAuthenticated().then(user => {
-              const questionPaper = {
-                name: blobName,
-                department: this.state.department,
-                course: this.state.course,
-                subject: this.state.subject,
-                semester: this.state.semester,
-                year: this.state.year,
-                uploadedBy: user._id,
-              };
+      speedSummary.on ('progress', async () => {
+        const progressPercent = speedSummary.getCompletePercent ();
+        this.setState (() => ({
+          progressPercent,
+        }));
 
-              createQuestionPaper(questionPaper).then(data => {
-                this.setState(() => ({uploading: false, openSnackbar: true}));
-              });
-            });
-          }
-        });
+        if (progressPercent == 100) {
+          const questionPaper = {
+            name: blobName,
+            year: this.state.year,
+          };
+
+          await createQuestionPaper (
+            questionPaper,
+            this.state.department,
+            this.state.course,
+            this.state.semester,
+            this.state.subject
+          );
+          this.setState (() => ({uploading: false, uploaded: true}));
+        }
       });
     }
   };
 
-  handleSnackbarClose = () => {
-    this.setState(() => ({openSnackbar: false}));
+  onSnackbarClose = () => {
+    this.setState (() => ({error: ''}));
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
     return (
       <div>
@@ -191,17 +190,17 @@ class Upload extends React.Component {
               <label htmlFor="file-upload">
                 <Button
                   className={classes.chooseFileButton}
-                  variant="contained"
+                  variant="outlined"
                   component="span"
+                  color="secondary"
                 >
                   Choose File
                 </Button>
               </label>
-              {this.state.file && (
+              {this.state.file &&
                 <Typography variant="subtitle2">
                   {this.state.file.name}
-                </Typography>
-              )}
+                </Typography>}
               <br />
 
               <TextField
@@ -213,7 +212,7 @@ class Upload extends React.Component {
                 label="Department"
                 variant="outlined"
               >
-                {this.state.departments.map(d => (
+                {this.state.departments.map (d => (
                   <MenuItem key={d._id} value={d._id}>
                     {d.name}
                   </MenuItem>
@@ -221,15 +220,14 @@ class Upload extends React.Component {
               </TextField>
               <br />
 
-              {this.state.showCourseLoader && (
+              {this.state.showCourseLoader &&
                 <CircularProgress
                   className={classes.progress}
                   size={24}
                   variant="indeterminate"
-                />
-              )}
+                />}
 
-              {this.state.showCourses && (
+              {this.state.showCourses &&
                 <div>
                   <TextField
                     className={classes.textField}
@@ -240,7 +238,7 @@ class Upload extends React.Component {
                     label="Course"
                     variant="outlined"
                   >
-                    {this.state.courses.map(course => (
+                    {this.state.courses.map (course => (
                       <MenuItem key={course._id} value={course._id}>
                         {course.name}
                       </MenuItem>
@@ -248,51 +246,61 @@ class Upload extends React.Component {
                   </TextField>
                   <br />
 
-                  <TextField
-                    value={this.state.semester}
-                    onChange={this.onSemesterChange}
-                    className={classes.textField}
-                    select
-                    margin="normal"
-                    label="Semester"
-                    variant="outlined"
-                  >
-                    {semesters.map(semester => (
-                      <MenuItem key={semester.value} value={semester.value}>
-                        {semester.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-
-                  {this.state.showSubjectLoader && (
+                  {this.state.showSemestersLoading &&
                     <CircularProgress
                       className={classes.progress}
                       size={24}
                       variant="indeterminate"
-                    />
-                  )}
+                    />}
 
-                  {this.state.showSubjects && (
-                    <TextField
-                      className={classes.textField}
-                      select
-                      value={this.state.subject}
-                      onChange={this.onSubjectChange}
-                      margin="normal"
-                      label="Subject"
-                      variant="outlined"
-                    >
-                      {this.state.filteredSubjects.map(subject => (
-                        <MenuItem key={subject._id} value={subject._id}>
-                          {subject.name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  )}
+                  {this.state.showSemesters &&
+                    <React.Fragment>
+                      <TextField
+                        value={this.state.semester}
+                        onChange={this.onSemesterChange}
+                        className={classes.textField}
+                        select
+                        margin="normal"
+                        label="Semester"
+                        variant="outlined"
+                      >
+                        {semesters.map (semester => (
+                          <MenuItem key={semester.value} value={semester.value}>
+                            {semester.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
 
-                  <br />
-                </div>
-              )}
+                      <br />
+
+                      {this.state.showSubjectLoader &&
+                        <CircularProgress
+                          className={classes.progress}
+                          size={24}
+                          variant="indeterminate"
+                        />}
+
+                      {this.state.showSubjects &&
+                        <TextField
+                          className={classes.textField}
+                          select
+                          value={this.state.subject}
+                          onChange={this.onSubjectChange}
+                          margin="normal"
+                          label="Subject"
+                          variant="outlined"
+                        >
+                          {this.state.subjects.map (subject => (
+                            <MenuItem key={subject._id} value={subject._id}>
+                              {subject.name}
+                            </MenuItem>
+                          ))}
+                        </TextField>}
+
+                      <br />
+                    </React.Fragment>}
+
+                </div>}
 
               <br />
 
@@ -305,61 +313,57 @@ class Upload extends React.Component {
                 label="Question Paper Year"
                 variant="outlined"
               >
-                {years.map(year => (
+                {years.map (year => (
                   <MenuItem key={year.value} value={year.value}>
                     {year.label}
                   </MenuItem>
                 ))}
               </TextField>
               <br />
-
-              {this.state.error && <Typography>{this.state.error}</Typography>}
             </CardContent>
             <CardActions>
-              {this.state.uploading ? (
-                <Button
-                  variant="contained"
-                  className={classes.button}
-                  color="primary"
-                >
-                  Uploading
-                  <CircularProgress
-                    className={classes.progress}
-                    size={24}
-                    variant="indeterminate"
-                  />
-                </Button>
-              ) : (
-                <Button
-                  variant="contained"
-                  className={classes.button}
-                  onClick={this.onSubmit}
-                >
-                  Upload
-                </Button>
-              )}
+              {this.state.uploading
+                ? <Button
+                    variant="contained"
+                    className={classes.button}
+                    color="primary"
+                    color="secondary"
+                  >
+                    Uploading
+                    <CircularProgress
+                      className={classes.progress}
+                      size={24}
+                      variant="indeterminate"
+                      color="inherit"
+                    />
+                  </Button>
+                : <Button
+                    variant="contained"
+                    className={classes.button}
+                    onClick={this.onSubmit}
+                    color="secondary"
+                  >
+                    Upload
+                  </Button>}
             </CardActions>
           </Card>
         </div>
-
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          open={this.state.openSnackbar}
-          onClose={this.handleClose}
-        >
-          <SnackbarContentWrapper
-            onClose={this.handleSnackbarClose}
+        {this.state.uploaded &&
+          <SnackbarComponent
             variant="success"
-            message="Question Paper Uploaded!!"
-            className={classes.margin}
-          />
-        </Snackbar>
+            message="Notes uploaded!"
+            onClose={this.onSnackbarClose}
+          />}
+        {this.state.error &&
+          <SnackbarComponent
+            variant="error"
+            message={this.state.error}
+            onClose={this.onSnackbarClose}
+          />}
+
       </div>
     );
   }
 }
 
-export default withStyles(styles)(Upload);
+export default withStyles (styles) (Upload);
