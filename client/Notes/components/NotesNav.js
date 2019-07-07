@@ -11,13 +11,13 @@ import {withStyles} from '@material-ui/core/styles';
 
 const styles = theme => ({
   appbar: {
-    marginTop: theme.spacing.unit * 7,
+    marginTop: theme.spacing (7),
   },
   link: {
     textDecoration: 'none',
     display: 'flex',
     alignItems: 'center',
-    marginRight: theme.spacing.unit * 2,
+    marginRight: theme.spacing (2),
     color: 'black',
   },
 });
@@ -47,4 +47,4 @@ const NotesNav = props => {
   );
 };
 
-export default withStyles(styles)(NotesNav);
+export default withStyles (styles) (NotesNav);

@@ -4,7 +4,6 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import {withStyles} from '@material-ui/core/styles';
 
-// import Navbar from '../components/Navbar';
 import Navbar from '../../components/Navbar';
 import QuestionPaperNav from '../components/QuestionPaperNav';
 import QuestionPaperFilter from '../components/QuestionPaperFilter';
@@ -15,7 +14,7 @@ const styles = theme => ({
     maxWidth: 600,
     margin: 'auto',
     marginTop: theme.spacing.unit * 20,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down ('xs')]: {
       marginTop: theme.spacing.unit * 15,
       padding: theme.spacing.unit * 2,
     },
@@ -31,7 +30,7 @@ const styles = theme => ({
 });
 
 class QuestionPaperDashboard extends React.Component {
-  render() {
+  render () {
     const {classes} = this.props;
     const queryString = this.props.location.search;
     return (
@@ -56,4 +55,4 @@ class QuestionPaperDashboard extends React.Component {
   }
 }
 
-export default withStyles(styles)(QuestionPaperDashboard);
+export default withStyles (styles) (QuestionPaperDashboard);
