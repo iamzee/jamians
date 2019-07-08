@@ -14,7 +14,7 @@ import {getSAS, download} from '../../api/upload';
 import Navbar from '../../components/Navbar';
 import QuestionPaperNav from '../components/QuestionPaperNav';
 import PageLoader from '../../components/PageLoader';
-// import BookmarkButton from '../components/BookmarkButton';
+import BookmarkButton from '../components/BookmarkButton';
 
 const styles = theme => ({
   container: {
@@ -126,7 +126,7 @@ class QuestionPaper extends React.Component {
                   >
                     View
                   </Button>
-                  {/* <BookmarkButton questionPaper={questionPaper} /> */}
+                  <BookmarkButton questionPaper={questionPaper} />
                 </CardActions>
               </Card>
             : <PageLoader />}

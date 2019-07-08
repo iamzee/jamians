@@ -61,39 +61,32 @@ export const read = async id => {
   }
 };
 
-export const addBookmark = questionPaperId => {
-  return axios ({
-    method: 'post',
-    url: '/api/questionPaper/' + questionPaperId,
-    data: JSON.stringify ({
-      type: 'ADD_BOOKMARK',
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then (({data}) => {
-      console.log (data);
-      return data;
-    })
-    .catch (err => {
-      console.log (err.response);
+export const addBookmark = async id => {
+  try {
+    return await axios ({
+      method: 'post',
+      url: `/api/questionPaper/${id}/bookmark`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
     });
+  } catch (e) {
+    console.log (e);
+  }
 };
 
-export const removeBookmark = questionPaperId => {
-  return axios ({
-    method: 'post',
-    url: '/api/questionPaper/' + questionPaperId,
-    data: JSON.stringify ({
-      type: 'REMOVE_BOOKMARK',
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  }).then (({data}) => {
-    return data;
-  });
+export const removeBookmark = async id => {
+  try {
+    return await axios ({
+      method: 'delete',
+      url: `/api/questionPaper/${id}/bookmark`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+  } catch (e) {
+    console.log (e);
+  }
 };
 
 export const getBookmarkedQuestionPapers = () => {

@@ -35,16 +35,16 @@ const QuestionPaperBookmarkPage = lazy (() =>
 );
 
 // DISCUSSION IMPORTS
-const DiscussionList = lazy (() =>
-  import ('../Discussion/pages/DiscussionList')
-);
-const NewDiscussionPage = lazy (() =>
-  import ('../Discussion/pages/NewDiscussionPage')
-);
-const Discussion = lazy (() => import ('../Discussion/pages/Discussion'));
+// const DiscussionList = lazy (() =>
+//   import ('../Discussion/pages/DiscussionList')
+// );
+// const NewDiscussionPage = lazy (() =>
+//   import ('../Discussion/pages/NewDiscussionPage')
+// );
+// const Discussion = lazy (() => import ('../Discussion/pages/Discussion'));
 
 // SETTINGS IMPORTS
-const Settings = lazy (() => import ('../Settings/pages/Settings'));
+// const Settings = lazy (() => import ('../Settings/pages/Settings'));
 
 // EVENT IMPORTS
 const Event = lazy (() => import ('../Events/pages/Event'));
@@ -56,7 +56,6 @@ const EventBookmarksPage = lazy (() =>
 const EventEditPage = lazy (() => import ('../Events/pages/EventEditPage'));
 
 // HOME IMPORTS
-const StartPage = lazy (() => import ('../Home/pages/StartPage'));
 const HomePage = lazy (() => import ('../Home/pages/HomePage'));
 
 const history = createHistory ();
@@ -85,15 +84,15 @@ const MainRouter = props => (
           <PrivateRoute path="/events" component={EventsDashboard} />
 
           {/* SETTINGS ROUTES */}
-          <PrivateRoute path="/settings" component={Settings} />
+          {/* <PrivateRoute path="/settings" component={Settings} /> */}
 
           {/* DISCUSSION ROUTES */}
-          <PrivateRoute path="/discussion/new" component={NewDiscussionPage} />
+          {/* <PrivateRoute path="/discussion/new" component={NewDiscussionPage} />
           <PrivateRoute
             path="/discussion/:discussionId"
             component={Discussion}
           />
-          <PrivateRoute path="/discussion" component={DiscussionList} />
+          <PrivateRoute path="/discussion" component={DiscussionList} /> */}
 
           {/* QUESTION PAPER ROUTES */}
           <PrivateRoute path="/question_papers/upload" component={Upload} />

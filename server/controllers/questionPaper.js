@@ -78,81 +78,58 @@ export const read = async (req, res) => {
   }
 };
 
-export const update = (req, res) => {
-  const {type} = req.body;
-  const {user} = req;
-  const {questionPaperId} = req.params;
+export const addBookmark = async (req, res) => {
+  const userId = req.user._id;
+  const {id} = req.params;
 
-  switch (type) {
-    case 'ADD_BOOKMARK': {
-      return QuestionPaper.findByIdAndUpdate (
-        questionPaperId,
-        {$push: {bookmarks: user._id}},
-        {new: true}
-      )
-        .then (doc => {
-          res.status (200).json (doc);
-        })
-        .catch (err => {
-          res.status (400).json ({
-            err,
-            errorMessage: 'Unable to update question paper!',
-          });
-        });
+  try {
+    const alreadyBookmarked = await QuestionPaper.findOne ({
+      _id: id,
+      bookmarks: {$eq: userId},
+    });
+
+    if (alreadyBookmarked) {
+      return res.status (400).send ();
     }
-    case 'REMOVE_BOOKMARK': {
-      return QuestionPaper.findByIdAndUpdate (
-        questionPaperId,
-        {$pull: {bookmarks: user._id}},
-        {new: true}
-      )
-        .then (doc => {
-          res.status (200).json (doc);
-        })
-        .catch (err => {
-          res.status (400).json ({
-            err,
-            errorMessage: 'Unable to update question paper!',
-          });
-        });
+
+    const questionPaper = await QuestionPaper.findByIdAndUpdate (
+      id,
+      {$push: {bookmarks: userId}},
+      {new: true}
+    );
+    if (!questionPaper) {
+      res.status (404).send ();
     }
-    default: {
-      return res.status (400).json ({
-        errorMessage: 'Invalid action type!',
-      });
-    }
+    res.send (questionPaper);
+  } catch (e) {
+    res.status (400).send (e);
   }
 };
 
-export const listBookmarks = (req, res) => {
-  const user = req.user;
+export const removeBookmark = async (req, res) => {
+  const userId = req.user._id;
+  const {id} = req.params;
 
-  QuestionPaper.find ({bookmarks: {$eq: user._id}})
-    .populate ('department', 'name')
-    .populate ('subject', 'name')
-    .populate ('uploadedBy', 'name')
-    .then (docs => {
-      res.status (200).json ({
-        questionPapers: docs,
-      });
-    })
-    .catch (err => {
-      res.status (400).json ({
-        err,
-        errorMessage: 'Unable to list bookmarked question papers',
-      });
+  try {
+    const alreadyBookmarked = await QuestionPaper.findOne ({
+      _id: id,
+      bookmarks: {$eq: userId},
     });
-};
 
-export const count = (req, res) => {
-  QuestionPaper.count ()
-    .then (count => {
-      res.status (200).json ({count});
-    })
-    .catch (err => {
-      res.status (400).json ({
-        err,
-        errorMessage: 'Unable to count notes.',
-      });
-    });
+    if (!alreadyBookmarked) {
+      return res.status (400).send ();
+    }
+
+    const questionPaper = await QuestionPaper.findByIdAndUpdate (
+      id,
+      {$pull: {bookmarks: userId}},
+      {new: true}
+    );
+    if (!questionPaper) {
+      res.status (404).send ();
+    }
+    res.send (questionPaper);
+  } catch (e) {
+    res.status (400).send (e);
+  }
 };

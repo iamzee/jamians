@@ -3,9 +3,8 @@ import {
   create,
   list,
   read,
-  update,
-  listBookmarks,
-  count,
+  addBookmark,
+  removeBookmark,
 } from '../controllers/questionPaper';
 
 import auth from '../middlewares/auth';
@@ -14,10 +13,11 @@ const router = express.Router ();
 
 router.route ('/api/questionPaper').post (auth, create).get (auth, list);
 
-router.route ('/api/questionPaper/count').get (count);
+router.route ('/api/questionPaper/:id').get (auth, read);
 
-router.route ('/api/questionPaper/bookmarks').get (listBookmarks);
-
-router.route ('/api/questionPaper/:id').get (auth, read).post (update);
+router
+  .route ('/api/questionPaper/:id/bookmark')
+  .post (auth, addBookmark)
+  .delete (auth, removeBookmark);
 
 export default router;
