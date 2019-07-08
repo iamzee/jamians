@@ -24,8 +24,6 @@ export default () => {
         <script src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="/main.bundle.js"></script>
         <script type="text/javascript" src="/js/azure-storage.blob.js"></script>
-        
-        
       </body>
     </html>  
   `;

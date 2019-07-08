@@ -16,6 +16,7 @@ import questionPaperRoutes from './routes/questionPaper';
 import chatRoutes from './routes/chat.route';
 import discussionRoutes from './routes/discussion.route';
 import eventRoutes from './routes/event';
+import notificationRoutes from './routes/notification';
 
 import template from '../template';
 
@@ -40,6 +41,7 @@ app.use ('/', questionPaperRoutes);
 app.use ('/', chatRoutes);
 app.use ('/', discussionRoutes);
 app.use ('/', eventRoutes);
+app.use ('/', notificationRoutes);
 
 app.get ('*', (req, res) => {
   res.send (template ());
