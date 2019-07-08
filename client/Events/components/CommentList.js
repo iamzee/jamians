@@ -10,20 +10,30 @@ class CommentList extends React.Component {
   };
 
   componentDidMount = async () => {
-    const {token} = isAuthenticated();
-    const comments = await listComment(
-      this.props.discussion.event,
-      this.props.discussion._id,
-      token
-    );
-    this.setState(() => ({comments}));
+    const {socket} = this.props;
+
+    socket.on ('comments', comments => {
+      this.setState (() => ({comments}));
+    });
+
+    socket.on ('commentToClients', comment => {
+      console.log ('COMMMMMMMM', comment);
+    });
+
+    // const {token} = isAuthenticated();
+    // const comments = await listComment(
+    //   this.props.discussion.event,
+    //   this.props.discussion._id,
+    //   token
+    // );
+    // this.setState(() => ({comments}));
   };
 
-  render() {
+  render () {
     return (
       <div>
         {this.state.comments.length > 0 &&
-          this.state.comments.map(c => (
+          this.state.comments.map (c => (
             <CommentListItem key={c._id} comment={c} />
           ))}
       </div>

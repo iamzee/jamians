@@ -15,15 +15,15 @@ import SnackbarComponent from '../../components/SnackbarComponent';
 
 const styles = theme => ({
   paper: {
-    padding: theme.spacing(2),
+    padding: theme.spacing (2),
     display: 'flex',
     alignItems: 'center',
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing (2),
     backgroundColor: '#efefef',
   },
   textField: {
     flex: 1,
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing (2),
   },
 });
 
@@ -36,25 +36,30 @@ class AddDiscussion extends React.Component {
 
   onTextChange = e => {
     const text = e.target.value;
-    this.setState(() => ({text}));
+    this.setState (() => ({text}));
   };
 
   onSnackbarClose = () => {
-    this.setState(() => ({done: false}));
+    this.setState (() => ({done: false}));
   };
 
   onSubmit = async () => {
-    this.setState(() => ({adding: true}));
+    const {socket} = this.props;
+
+    this.setState (() => ({adding: true}));
     const {text} = this.state;
 
     const eventId = this.props.event._id;
-    const {token} = isAuthenticated();
+    const {token} = isAuthenticated ();
 
-    await addDiscussion({text}, eventId, token);
-    this.setState(() => ({adding: false, text: '', done: true}));
+    const discussion = await addDiscussion ({text}, eventId, token);
+
+    socket.emit ('discussionToServer', discussion);
+
+    this.setState (() => ({adding: false, text: '', done: true}));
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
     return (
       <div>
@@ -68,28 +73,25 @@ class AddDiscussion extends React.Component {
             onChange={this.onTextChange}
             placeholder="Comment or Ask Something..."
           />
-          {this.state.adding ? (
-            <CircularProgress size={24} />
-          ) : (
-            <IconButton
-              disabled={!this.state.text}
-              color="primary"
-              onClick={this.onSubmit}
-            >
-              <SendIcon />
-            </IconButton>
-          )}
+          {this.state.adding
+            ? <CircularProgress size={24} />
+            : <IconButton
+                disabled={!this.state.text}
+                color="primary"
+                onClick={this.onSubmit}
+              >
+                <SendIcon />
+              </IconButton>}
         </Paper>
-        {this.state.done && (
+        {this.state.done &&
           <SnackbarComponent
             variant="success"
             message="Discussion added."
             onClose={this.onSnackbarClose}
-          />
-        )}
+          />}
       </div>
     );
   }
 }
 
-export default withStyles(styles)(AddDiscussion);
+export default withStyles (styles) (AddDiscussion);

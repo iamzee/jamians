@@ -16,12 +16,12 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     backgroundColor: '#efefef',
-    padding: theme.spacing(1),
+    padding: theme.spacing (1),
   },
   textField: {
     flex: 1,
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
+    marginLeft: theme.spacing (2),
+    marginRight: theme.spacing (2),
   },
 });
 
@@ -33,22 +33,26 @@ class AddComment extends React.Component {
 
   onCommentChange = e => {
     const comment = e.target.value;
-    this.setState(() => ({comment}));
+    this.setState (() => ({comment}));
   };
 
   onSubmit = async () => {
-    this.setState(() => ({adding: true}));
-    const {token} = isAuthenticated();
-    await addComment(
+    const {socket} = this.props;
+    this.setState (() => ({adding: true}));
+    const {token} = isAuthenticated ();
+    const comment = await addComment (
       {text: this.state.comment},
       this.props.discussion.event,
       this.props.discussion._id,
       token
     );
-    this.setState(() => ({adding: false, comment: ''}));
+
+    socket.emit ('commentToServer', comment);
+
+    this.setState (() => ({adding: false, comment: ''}));
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
     return (
       <div className={classes.commentField}>
@@ -62,20 +66,18 @@ class AddComment extends React.Component {
           onChange={this.onCommentChange}
         />
 
-        {this.state.adding ? (
-          <CircularProgress color="primary" size={24} />
-        ) : (
-          <IconButton
-            color="primary"
-            disabled={!this.state.comment}
-            onClick={this.onSubmit}
-          >
-            <SendIcon />
-          </IconButton>
-        )}
+        {this.state.adding
+          ? <CircularProgress color="primary" size={24} />
+          : <IconButton
+              color="primary"
+              disabled={!this.state.comment}
+              onClick={this.onSubmit}
+            >
+              <SendIcon />
+            </IconButton>}
       </div>
     );
   }
 }
 
-export default withStyles(styles)(AddComment);
+export default withStyles (styles) (AddComment);

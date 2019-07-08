@@ -18,7 +18,7 @@ import CommentList from './CommentList';
 
 const styles = theme => ({
   card: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing (2),
   },
 });
 
@@ -28,10 +28,14 @@ class DiscussionListItem extends React.Component {
   };
 
   setExpanded = () => {
-    this.setState(() => ({expanded: !this.state.expanded}));
+    const {socket} = this.props;
+
+    socket.emit ('joinDiscussion', this.props.discussion);
+
+    this.setState (() => ({expanded: !this.state.expanded}));
   };
 
-  render() {
+  render () {
     const {discussion, classes} = this.props;
     return (
       <Card className={classes.card}>
@@ -42,7 +46,7 @@ class DiscussionListItem extends React.Component {
             </Avatar>
           }
           title={discussion.createdBy.name}
-          subheader={moment(discussion.createdAt).format('MMMM DD, hh:mm A')}
+          subheader={moment (discussion.createdAt).format ('MMMM DD, hh:mm A')}
         />
         <CardContent>
           <Typography variant="h6">{discussion.text}</Typography>
@@ -58,8 +62,8 @@ class DiscussionListItem extends React.Component {
         </CardActions>
         <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <AddComment discussion={discussion} />
-            <CommentList discussion={discussion} />
+            <AddComment discussion={discussion} socket={this.props.socket} />
+            <CommentList discussion={discussion} socket={this.props.socket} />
           </CardContent>
         </Collapse>
       </Card>
@@ -67,4 +71,4 @@ class DiscussionListItem extends React.Component {
   }
 }
 
-export default withStyles(styles)(DiscussionListItem);
+export default withStyles (styles) (DiscussionListItem);

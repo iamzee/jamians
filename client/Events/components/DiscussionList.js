@@ -10,22 +10,38 @@ class DiscussionList extends React.Component {
   };
 
   componentDidMount = async () => {
-    const eventId = this.props.event._id;
-    const {token} = isAuthenticated();
-    const discussions = await listDiscussion(eventId, token);
-    this.setState(() => ({discussions}));
+    const {socket} = this.props;
+    socket.emit ('loadDiscussion', this.props.event._id);
+    socket.on ('discussions', discussions => {
+      // console.log ('DISSSSSSSSSS', discussions);
+      this.setState (() => ({discussions}));
+    });
+
+    socket.on ('discussionToClients', discussion => {
+      this.setState (() => ({
+        discussions: [discussion, ...this.state.discussions],
+      }));
+    });
+
+    // const eventId = this.props.event._id;
+    // const {token} = isAuthenticated ();
+    // const discussions = await listDiscussion (eventId, token);
+    // this.setState (() => ({discussions}));
   };
 
-  render() {
+  render () {
     return (
       <div>
-        {this.state.discussions.length > 0 && (
+        {this.state.discussions.length > 0 &&
           <React.Fragment>
-            {this.state.discussions.map(d => (
-              <DiscussionListItem discussion={d} key={d._id} />
+            {this.state.discussions.map (d => (
+              <DiscussionListItem
+                discussion={d}
+                key={d._id}
+                socket={this.props.socket}
+              />
             ))}
-          </React.Fragment>
-        )}
+          </React.Fragment>}
       </div>
     );
   }
