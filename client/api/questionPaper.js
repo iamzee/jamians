@@ -89,12 +89,17 @@ export const removeBookmark = async id => {
   }
 };
 
-export const getBookmarkedQuestionPapers = () => {
-  return axios ({
-    method: 'get',
-    url: '/api/questionPaper/bookmarks',
-  }).then (({data}) => {
-    console.log (data);
+export const getBookmarkedQuestionPapers = async () => {
+  try {
+    const {data} = await axios ({
+      method: 'get',
+      url: '/api/questionPaper/bookmark',
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
     return data.questionPapers;
-  });
+  } catch (e) {
+    console.log (e.response);
+  }
 };

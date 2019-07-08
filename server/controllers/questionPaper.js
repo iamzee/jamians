@@ -133,3 +133,16 @@ export const removeBookmark = async (req, res) => {
     res.status (400).send (e);
   }
 };
+
+export const listBookmarks = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const questionPapers = await QuestionPaper.find ({
+      bookmarks: {$eq: userId},
+    });
+    res.send ({questionPapers});
+  } catch (e) {
+    res.status (400).send (e);
+  }
+};
