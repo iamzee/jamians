@@ -46,24 +46,19 @@ export const listQuestionPapers = async ({
   }
 };
 
-// export const listQuestionPapers = ({department, course, semester, subject}) => {
-//   const url = `/api/questionPaper?department=${department || ''}&course=${course || ''}&semester=${semester || ''}&subject=${subject || ''}`;
-//   return axios ({
-//     method: 'get',
-//     url,
-//   }).then (({data}) => {
-//     console.log (data.questionPapers);
-//     return data.questionPapers;
-//   });
-// };
-
-export const readQuestionPaper = questionPaperId => {
-  return axios ({
-    method: 'get',
-    url: '/api/questionPaper/' + questionPaperId,
-  }).then (({data}) => {
+export const read = async id => {
+  try {
+    const {data} = await axios ({
+      method: 'get',
+      url: `/api/questionPaper/${id}`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
     return data;
-  });
+  } catch (e) {
+    console.log (e);
+  }
 };
 
 export const addBookmark = questionPaperId => {
