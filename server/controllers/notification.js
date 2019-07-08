@@ -9,14 +9,6 @@ export const create = async (req, res) => {
       return res.status (400).send ();
     }
 
-    const isFriend = req.user.friends.find (
-      friend => friend.toString () === req.body.user.toString ()
-    );
-
-    if (!isFriend) {
-      return res.status (400).send ();
-    }
-
     const notification = new Notification ({
       ...req.body,
       createdBy: req.user._id,

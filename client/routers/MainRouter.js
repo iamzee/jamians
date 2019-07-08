@@ -5,6 +5,11 @@ import createHistory from 'history/createBrowserHistory';
 import PrivateRoute from './PrivateRouter';
 import PageLoader from '../components/PageLoader';
 
+// NOTIFICATION IMPORTS
+const NotificationDashboard = lazy (() =>
+  import ('../Notifications/pages/NotificationDashboard')
+);
+
 // USER  IMPORTS
 const EditProfile = lazy (() => import ('../Users/pages/EditProfile'));
 const UsersDashboard = lazy (() => import ('../Users/pages/UsersDashboard'));
@@ -65,6 +70,13 @@ const MainRouter = props => (
     <Router history={history}>
       <Suspense fallback={<PageLoader />}>
         <Switch>
+
+          {/* NOTIFICATION ROUTES */}
+          <PrivateRoute
+            path="/notifications"
+            component={NotificationDashboard}
+          />
+
           {/* USER ROUTES */}
           <PrivateRoute path="/users/:userId/edit" component={EditProfile} />
           <PrivateRoute path="/users/:userId" component={Profile} />
