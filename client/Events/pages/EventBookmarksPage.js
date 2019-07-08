@@ -10,7 +10,7 @@ import {withStyles} from '@material-ui/core/styles';
 
 import Navbar from '../../components/Navbar';
 import EventsNav from '../components/EventsNav';
-import {getBookmarks} from '../../api/event.api';
+import {getBookmarks} from '../../api/event';
 
 // import EventsList from '../components/EventsList';
 
@@ -20,7 +20,7 @@ const styles = theme => ({
     margin: 'auto',
     marginTop: theme.spacing.unit * 15,
     padding: theme.spacing.unit * 5,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down ('sm')]: {
       marginTop: theme.spacing.unit * 15,
       padding: theme.spacing.unit * 2,
     },
@@ -43,13 +43,13 @@ class EventBookmarksPage extends React.Component {
     events: [],
   };
 
-  componentDidMount() {
-    getBookmarks().then(events => {
-      this.setState(() => ({events}));
+  componentDidMount () {
+    getBookmarks ().then (events => {
+      this.setState (() => ({events}));
     });
   }
 
-  render() {
+  render () {
     const {classes} = this.props;
     const settings = {
       dots: true,
@@ -85,4 +85,4 @@ class EventBookmarksPage extends React.Component {
   }
 }
 
-export default withStyles(styles)(EventBookmarksPage);
+export default withStyles (styles) (EventBookmarksPage);
