@@ -1,24 +1,10 @@
 import React from 'react';
 
 import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
-import {withStyles} from '@material-ui/core/styles';
 
 import {addBookmark, removeBookmark} from '../../api/notes';
 import {isAuthenticated} from '../../helpers/auth';
 import SnackbarComponent from '../../components/SnackbarComponent';
-import SnackbarContentWrapper from '../../components/SnackbarContentWrapper';
-
-const styles = theme => ({
-  button: {
-    color: theme.palette.secondary.main,
-    marginRight: theme.spacing (2),
-    '&:hover': {
-      backgroundColor: theme.palette.secondary.main,
-      color: '#fff',
-    },
-  },
-});
 
 class BookmarkButton extends React.Component {
   state = {
@@ -41,20 +27,18 @@ class BookmarkButton extends React.Component {
     }
   }
 
-  handleAddBookmarkSnackbarClose = () => {
-    this.setState (() => ({openAddBookmarkSnackbar: false}));
-  };
-
-  handleRemoveBookmarkSnackbarClose = () => {
-    this.setState (() => ({openRemoveBookmarkSnackbar: false}));
+  onSnackbarClose = () => {
+    this.setState (() => ({
+      openAddBookmarkSnackbar: false,
+      openRemoveBookmarkSnackbar: false,
+    }));
   };
 
   onAddBookmark = async () => {
     this.setState (() => ({addingBookmark: true}));
     const noteId = this.props.note._id;
-    const {token} = isAuthenticated ();
 
-    await addBookmark (noteId, token);
+    await addBookmark (noteId);
     this.setState (() => ({
       bookmarked: true,
       addingBookmark: false,
@@ -64,10 +48,9 @@ class BookmarkButton extends React.Component {
 
   onRemoveBookmark = async () => {
     this.setState (() => ({removingBookmark: true}));
-    const {token} = isAuthenticated ();
     const noteId = this.props.note._id;
 
-    await removeBookmark (noteId, token);
+    await removeBookmark (noteId);
     this.setState (() => ({
       bookmarked: false,
       removingBookmark: false,
@@ -76,54 +59,34 @@ class BookmarkButton extends React.Component {
   };
 
   render () {
-    const {classes} = this.props;
-
     return (
       <div>
         {this.state.bookmarked
-          ? <Button className={classes.button} onClick={this.onRemoveBookmark}>
+          ? <Button onClick={this.onRemoveBookmark}>
               {this.state.removingBookmark
                 ? 'Removing Bookmark'
                 : 'Remove Bookmark'}
             </Button>
-          : <Button className={classes.button} onClick={this.onAddBookmark}>
+          : <Button onClick={this.onAddBookmark}>
               {this.state.addingBookmark ? 'Adding Bookmark' : 'Add Bookmark'}
             </Button>}
 
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          open={this.state.openAddBookmarkSnackbar}
-          onClose={this.handleClose}
-        >
-          <SnackbarContentWrapper
-            onClose={this.handleAddBookmarkSnackbarClose}
+        {this.state.openAddBookmarkSnackbar &&
+          <SnackbarComponent
             variant="success"
-            message="Added to bookmarks"
-            className={classes.margin}
-          />
-        </Snackbar>
+            message="Bookmark added!"
+            onClose={this.onSnackbarClose}
+          />}
 
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          open={this.state.openRemoveBookmarkSnackbar}
-          onClose={this.handleClose}
-        >
-          <SnackbarContentWrapper
-            onClose={this.handleRemoveBookmarkSnackbarClose}
+        {this.state.openRemoveBookmarkSnackbar &&
+          <SnackbarComponent
             variant="success"
-            message="Removed from bookmarks"
-            className={classes.margin}
-          />
-        </Snackbar>
+            message="Bookmark removed!"
+            onClose={this.onSnackbarClose}
+          />}
       </div>
     );
   }
 }
 
-export default withStyles (styles) (BookmarkButton);
+export default BookmarkButton;

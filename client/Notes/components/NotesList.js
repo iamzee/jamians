@@ -4,7 +4,6 @@ import queryString from 'query-string';
 import List from '@material-ui/core/List';
 
 import {listNotes} from '../../api/notes';
-import {isAuthenticated} from '../../helpers/auth';
 import NoNotes from './NoNotes';
 import NoteItem from './NoteItem';
 import PageLoader from '../../components/PageLoader';
@@ -16,10 +15,9 @@ class NotesList extends React.Component {
   };
 
   componentDidMount = async () => {
-    const {token} = isAuthenticated ();
     const query = queryString.parse (this.props.queryString);
 
-    const notes = await listNotes (query, token);
+    const notes = await listNotes (query);
     this.setState (() => ({notes}));
 
     if (notes.length === 0) {
@@ -28,11 +26,10 @@ class NotesList extends React.Component {
   };
 
   componentDidUpdate = async prevProps => {
-    const {token} = isAuthenticated ();
     if (this.props.queryString !== prevProps.queryString) {
       this.setState (() => ({notes: []}));
       const parsed = queryString.parse (this.props.queryString);
-      const notes = await listNotes (parsed, token);
+      const notes = await listNotes (parsed);
       this.setState (() => ({notes, noNotes: false}));
 
       if (notes.length === 0) {

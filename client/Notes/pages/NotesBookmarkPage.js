@@ -9,7 +9,7 @@ import {getBookmarkedNotes} from '../../api/notes';
 import {isAuthenticated} from '../../helpers/auth';
 import NoteItem from '../components/NoteItem';
 import Navbar from '../../components/Navbar';
-import Loader from '../../components/Loader';
+import PageLoader from '../../components/PageLoader';
 import NoNotes from '../components/NoNotes';
 import NotesNav from '../components/NotesNav';
 
@@ -21,17 +21,17 @@ const styles = theme => ({
   root: {
     maxWidth: 600,
     margin: 'auto',
-    marginTop: theme.spacing(20),
-    [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing(15),
-      padding: theme.spacing(2),
+    marginTop: theme.spacing (20),
+    [theme.breakpoints.down ('xs')]: {
+      marginTop: theme.spacing (15),
+      padding: theme.spacing (2),
     },
   },
   title: {
     fontWeight: 300,
   },
   notesSection: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing (2),
   },
 });
 
@@ -42,15 +42,15 @@ class NotesBookmarkPage extends React.Component {
   };
 
   componentDidMount = async () => {
-    const {token} = isAuthenticated();
-    const notes = await getBookmarkedNotes(token);
-    this.setState(() => ({notes}));
+    const {token} = isAuthenticated ();
+    const notes = await getBookmarkedNotes (token);
+    this.setState (() => ({notes}));
     if (notes.length === 0) {
-      this.setState(() => ({noNotes: true}));
+      this.setState (() => ({noNotes: true}));
     }
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
     return (
       <div>
@@ -65,21 +65,17 @@ class NotesBookmarkPage extends React.Component {
           <Divider />
 
           <div className={classes.notesSection}>
-            {this.state.noNotes ? (
-              <NoNotes />
-            ) : (
-              <div>
-                {this.state.notes.length === 0 ? (
-                  <Loader color="#00adb5" />
-                ) : (
-                  <List className={classes.list}>
-                    {this.state.notes.map(note => (
-                      <NoteItem key={note._id} note={note} />
-                    ))}
-                  </List>
-                )}
-              </div>
-            )}
+            {this.state.noNotes
+              ? <NoNotes />
+              : <div>
+                  {this.state.notes.length === 0
+                    ? <PageLoader />
+                    : <List className={classes.list}>
+                        {this.state.notes.map (note => (
+                          <NoteItem key={note._id} note={note} />
+                        ))}
+                      </List>}
+                </div>}
           </div>
         </div>
       </div>
@@ -87,4 +83,4 @@ class NotesBookmarkPage extends React.Component {
   }
 }
 
-export default withStyles(styles)(NotesBookmarkPage);
+export default withStyles (styles) (NotesBookmarkPage);

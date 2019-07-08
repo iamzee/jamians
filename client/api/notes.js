@@ -1,37 +1,34 @@
 import axios from 'axios';
+import {isAuthenticated} from '../helpers/auth';
+const {token} = isAuthenticated ();
 
 export const createNote = async (
   note,
   department,
   course,
   semester,
-  subject,
-  token
+  subject
 ) => {
   try {
-    return await axios({
+    return await axios ({
       method: 'post',
       url: `/api/notes?department=${department}&course=${course}&semester=${semester}&subject=${subject}`,
-      data: JSON.stringify(note),
+      data: JSON.stringify (note),
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
       },
     });
   } catch (e) {
-    console.log(e.response);
+    console.log (e.response);
   }
 };
 
-export const listNotes = async (
-  {department, course, semester, subject},
-  token
-) => {
-  const url = `/api/notes?department=${department || ''}&course=${course ||
-    ''}&semester=${semester || ''}&subject=${subject || ''}`;
+export const listNotes = async ({department, course, semester, subject}) => {
+  const url = `/api/notes?department=${department || ''}&course=${course || ''}&semester=${semester || ''}&subject=${subject || ''}`;
 
   try {
-    const {data} = await axios({
+    const {data} = await axios ({
       method: 'get',
       url,
       headers: {
@@ -41,13 +38,13 @@ export const listNotes = async (
 
     return data.notes;
   } catch (e) {
-    console.log(e.response);
+    console.log (e.response);
   }
 };
 
-export const readNote = async (noteId, token) => {
+export const readNote = async noteId => {
   try {
-    const {data} = await axios({
+    const {data} = await axios ({
       methos: 'get',
       url: '/api/notes/' + noteId,
       headers: {
@@ -56,13 +53,13 @@ export const readNote = async (noteId, token) => {
     });
     return data;
   } catch (e) {
-    console.log(e.response);
+    console.log (e.response);
   }
 };
 
-export const addBookmark = async (noteId, token) => {
+export const addBookmark = async noteId => {
   try {
-    return await axios({
+    return await axios ({
       method: 'post',
       url: `/api/notes/${noteId}/bookmark`,
       headers: {
@@ -70,13 +67,13 @@ export const addBookmark = async (noteId, token) => {
       },
     });
   } catch (e) {
-    console.log(e.response);
+    console.log (e.response);
   }
 };
 
-export const removeBookmark = async (noteId, token) => {
+export const removeBookmark = async noteId => {
   try {
-    return await axios({
+    return await axios ({
       method: 'delete',
       url: `/api/notes/${noteId}/bookmark`,
       headers: {
@@ -84,13 +81,13 @@ export const removeBookmark = async (noteId, token) => {
       },
     });
   } catch (e) {
-    console.log(e.response);
+    console.log (e.response);
   }
 };
 
-export const getBookmarkedNotes = async token => {
+export const getBookmarkedNotes = async () => {
   try {
-    const {data} = await axios({
+    const {data} = await axios ({
       method: 'get',
       url: `/api/notes/bookmark`,
       headers: {
@@ -100,6 +97,6 @@ export const getBookmarkedNotes = async token => {
 
     return data.notes;
   } catch (e) {
-    console.log(e.response);
+    console.log (e.response);
   }
 };
