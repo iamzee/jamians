@@ -15,23 +15,48 @@ import {withStyles} from '@material-ui/core/styles';
 
 import AddComment from './AddComment';
 import CommentList from './CommentList';
+import {isAuthenticated} from '../../helpers/auth';
+import {listComment, addComment} from '../../api/event';
 
 const styles = theme => ({
   card: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing (2),
   },
 });
 
 class DiscussionListItem extends React.Component {
   state = {
     expanded: false,
+    comments: [],
+  };
+
+  componentDidMount = async () => {
+    const {token} = isAuthenticated ();
+    const comments = await listComment (
+      this.props.discussion.event,
+      this.props.discussion._id,
+      token
+    );
+    this.setState (() => ({comments}));
+  };
+
+  onSubmit = async text => {
+    const {discussion} = this.props;
+    const {token} = isAuthenticated ();
+    const comment = await addComment (
+      {text},
+      discussion.event,
+      discussion._id,
+      token
+    );
+    this.setState (() => ({comments: [comment, ...this.state.comments]}));
   };
 
   setExpanded = () => {
-    this.setState(() => ({expanded: !this.state.expanded}));
+    this.setState (() => ({expanded: !this.state.expanded}));
   };
 
-  render() {
+  render () {
     const {discussion, classes} = this.props;
     return (
       <Card className={classes.card}>
@@ -42,7 +67,7 @@ class DiscussionListItem extends React.Component {
             </Avatar>
           }
           title={discussion.createdBy.name}
-          subheader={moment(discussion.createdAt).format('MMMM DD, hh:mm A')}
+          subheader={moment (discussion.createdAt).format ('MMMM DD, hh:mm A')}
         />
         <CardContent>
           <Typography variant="h6">{discussion.text}</Typography>
@@ -58,8 +83,9 @@ class DiscussionListItem extends React.Component {
         </CardActions>
         <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <AddComment discussion={discussion} />
-            <CommentList discussion={discussion} />
+            <AddComment onSubmit={this.onSubmit} />
+            {this.state.comments.length > 0 &&
+              <CommentList comments={this.state.comments} />}
           </CardContent>
         </Collapse>
       </Card>
@@ -67,4 +93,4 @@ class DiscussionListItem extends React.Component {
   }
 }
 
-export default withStyles(styles)(DiscussionListItem);
+export default withStyles (styles) (DiscussionListItem);
