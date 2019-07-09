@@ -99,14 +99,14 @@ const HomePage = props => {
               </Typography>
             </Link>
           </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
+          {/* <Grid item xs={12} sm={6} md={4} lg={3}>
             <Link className={classes.link} to="/settings">
               <SettingsIcon />
               <Typography className={classes.linkText} variant="h6">
                 Settings
               </Typography>
             </Link>
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={6} md={4} lg={3}>
             <Link className={classes.link} to="/notes">
               <HelpIcon />

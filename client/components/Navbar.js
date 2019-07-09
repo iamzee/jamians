@@ -224,7 +224,7 @@ class Navbar extends React.Component {
                     </ListItem>
                   </Link>
 
-                  <Link to="/settings" className={classes.link}>
+                  {/* <Link to="/settings" className={classes.link}>
                     <ListItem button className={classes.listItem}>
                       <SettingsIcon />
                       <ListItemText
@@ -232,7 +232,7 @@ class Navbar extends React.Component {
                         className={classes.listItemText}
                       />
                     </ListItem>
-                  </Link>
+                  </Link> */}
 
                   <ListItem button className={classes.listItem}>
                     <HelpIcon />
