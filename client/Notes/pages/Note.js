@@ -32,12 +32,7 @@ const styles = theme => ({
     marginTop: theme.spacing (2),
   },
   button: {
-    color: theme.palette.secondary.main,
     marginRight: theme.spacing (2),
-    '&:hover': {
-      backgroundColor: theme.palette.secondary.main,
-      color: '#fff',
-    },
   },
 });
 
@@ -120,7 +115,11 @@ class Note extends React.Component {
                   </div>
                 </CardContent>
                 <CardActions>
-                  <Button className={classes.button} onClick={this.onView}>
+                  <Button
+                    color="secondary"
+                    className={classes.button}
+                    onClick={this.onView}
+                  >
                     View
                   </Button>
                   <BookmarkButton note={note} />

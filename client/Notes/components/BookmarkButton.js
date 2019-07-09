@@ -62,13 +62,15 @@ class BookmarkButton extends React.Component {
     return (
       <div>
         {this.state.bookmarked
-          ? <Button onClick={this.onRemoveBookmark}>
+          ? <Button color="secondary" onClick={this.onRemoveBookmark}>
               {this.state.removingBookmark
-                ? 'Removing Bookmark'
+                ? 'Removing Bookmark...'
                 : 'Remove Bookmark'}
             </Button>
-          : <Button onClick={this.onAddBookmark}>
-              {this.state.addingBookmark ? 'Adding Bookmark' : 'Add Bookmark'}
+          : <Button color="secondary" onClick={this.onAddBookmark}>
+              {this.state.addingBookmark
+                ? 'Adding Bookmark...'
+                : 'Add Bookmark'}
             </Button>}
 
         {this.state.openAddBookmarkSnackbar &&
