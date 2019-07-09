@@ -43,7 +43,10 @@ class Filter extends React.Component {
     subject: '',
     showCourseLoader: false,
     showCourses: false,
+    showSubjectLoader: false,
     showSubjects: false,
+    showSemesterLoader: false,
+    showSemesters: false,
   };
 
   componentDidMount = async () => {
@@ -60,6 +63,7 @@ class Filter extends React.Component {
       showCourseLoader: true,
       showCourses: false,
       showSubjects: false,
+      showSemesters: false,
     }));
 
     const courses = await listCourses (department);
@@ -71,13 +75,23 @@ class Filter extends React.Component {
   };
 
   onCourseChange = e => {
+    this.setState (() => ({showSemesterLoader: true, showSemesters: false}));
     const course = e.target.value;
-    this.setState (() => ({course, subject: ''}));
+    this.setState (() => ({
+      course,
+      subject: '',
+      showSemesterLoader: false,
+      showSemesters: true,
+    }));
   };
 
   onSemesterChange = async e => {
     const semester = e.target.value;
-    this.setState (() => ({showSubjectLoader: true, semester}));
+    this.setState (() => ({
+      showSubjectLoader: true,
+      semester,
+      showSubjects: false,
+    }));
 
     const subjects = await listSubjects (this.state.course, semester);
     this.setState (() => ({
@@ -98,6 +112,20 @@ class Filter extends React.Component {
 
   handleClose = () => {
     this.setState (() => ({open: false}));
+  };
+
+  onClearFilter = () => {
+    this.props.history.push ('/notes');
+    this.setState (() => ({
+      open: false,
+      department: '',
+      course: '',
+      semester: '',
+      subject: '',
+      showCourses: false,
+      showSemesters: false,
+      showSubjects: false,
+    }));
   };
 
   submit = () => {
@@ -169,51 +197,63 @@ class Filter extends React.Component {
                   ))}
                 </TextField>
                 <br />
-                <TextField
-                  className={classes.textField}
-                  select
-                  value={this.state.semester}
-                  onChange={this.onSemesterChange}
-                  margin="normal"
-                  label="Semester"
-                  variant="outlined"
-                >
-                  {semesters.map (semester => (
-                    <MenuItem key={semester.value} value={semester.value}>
-                      {semester.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <br />
 
-                {this.state.showSubjectLoader &&
+                {this.state.showSemesterLoader &&
                   <CircularProgress
                     className={classes.progress}
                     size={24}
                     variant="indeterminate"
                   />}
 
-                {this.state.showSubjects &&
-                  <TextField
-                    className={classes.textField}
-                    select
-                    value={this.state.subject}
-                    onChange={this.onSubjectChange}
-                    margin="normal"
-                    label="Subject"
-                    variant="outlined"
-                  >
-                    {this.state.subjects.map (subject => (
-                      <MenuItem key={subject._id} value={subject._id}>
-                        {subject.name}
-                      </MenuItem>
-                    ))}
-                  </TextField>}
+                {this.state.showSemesters &&
+                  <React.Fragment>
+                    <TextField
+                      className={classes.textField}
+                      select
+                      value={this.state.semester}
+                      onChange={this.onSemesterChange}
+                      margin="normal"
+                      label="Semester"
+                      variant="outlined"
+                    >
+                      {semesters.map (semester => (
+                        <MenuItem key={semester.value} value={semester.value}>
+                          {semester.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    <br />
+                    {this.state.showSubjectLoader &&
+                      <CircularProgress
+                        className={classes.progress}
+                        size={24}
+                        variant="indeterminate"
+                      />}
+                    {this.state.showSubjects &&
+                      <TextField
+                        className={classes.textField}
+                        select
+                        value={this.state.subject}
+                        onChange={this.onSubjectChange}
+                        margin="normal"
+                        label="Subject"
+                        variant="outlined"
+                      >
+                        {this.state.subjects.map (subject => (
+                          <MenuItem key={subject._id} value={subject._id}>
+                            {subject.name}
+                          </MenuItem>
+                        ))}
+                      </TextField>}
+                  </React.Fragment>}
+
               </div>}
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose}>Cancel</Button>
-            <Button onClick={this.submit}>Apply</Button>
+            <Button color="secondary" onClick={this.onClearFilter}>
+              Clear
+            </Button>
+            <Button color="secondary" onClick={this.submit}>Apply</Button>
           </DialogActions>
         </Dialog>
       </div>
