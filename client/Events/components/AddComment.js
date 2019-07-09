@@ -37,18 +37,9 @@ class AddComment extends React.Component {
   };
 
   onSubmit = async () => {
-    const {socket} = this.props;
     this.setState (() => ({adding: true}));
-    const {token} = isAuthenticated ();
-    const comment = await addComment (
-      {text: this.state.comment},
-      this.props.discussion.event,
-      this.props.discussion._id,
-      token
-    );
-
-    socket.emit ('commentToServer', comment);
-
+    const text = this.state.comment;
+    this.props.onSubmit (text);
     this.setState (() => ({adding: false, comment: ''}));
   };
 

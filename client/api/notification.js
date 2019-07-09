@@ -9,11 +9,41 @@ export const createNotification = async notification => {
       url: '/api/notification',
       data: JSON.stringify (notification),
       headers: {
-        'Content-Type': 'application//json',
+        'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
       },
     });
   } catch (e) {
     console.log (e.response);
+  }
+};
+
+export const listNotifications = async () => {
+  try {
+    const {data} = await axios ({
+      method: 'get',
+      url: '/api/notification',
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+
+    return data.notifications;
+  } catch (e) {
+    console.log (e);
+  }
+};
+
+export const markSeen = async id => {
+  try {
+    return await axios ({
+      method: 'patch',
+      url: `/api/notification/${id}`,
+      headers: {
+        Authorization: token,
+      },
+    });
+  } catch (e) {
+    console.log (e);
   }
 };

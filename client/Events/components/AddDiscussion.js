@@ -44,18 +44,12 @@ class AddDiscussion extends React.Component {
   };
 
   onSubmit = async () => {
-    const {socket} = this.props;
-
     this.setState (() => ({adding: true}));
     const {text} = this.state;
 
     const eventId = this.props.event._id;
-    const {token} = isAuthenticated ();
 
-    const discussion = await addDiscussion ({text}, eventId, token);
-
-    socket.emit ('discussionToServer', discussion);
-
+    this.props.onSubmit ({text}, eventId);
     this.setState (() => ({adding: false, text: '', done: true}));
   };
 

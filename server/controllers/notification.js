@@ -20,6 +20,17 @@ export const create = async (req, res) => {
   }
 };
 
+export const list = async (req, res) => {
+  try {
+    const notifications = await Notification.find ({user: req.user._id}).sort (
+      '-createdAt'
+    );
+    res.send ({notifications});
+  } catch (e) {
+    res.status (500).send (e);
+  }
+};
+
 export const update = async (req, res) => {
   console.log ('HI');
   try {

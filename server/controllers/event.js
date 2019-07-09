@@ -230,10 +230,9 @@ export const listDiscussion = async (req, res) => {
   const eventId = req.params.id;
 
   try {
-    const discussions = await EventDiscussion.find ({event: eventId}).populate (
-      'createdBy',
-      'name'
-    );
+    const discussions = await EventDiscussion.find ({event: eventId})
+      .sort ('-createdAt')
+      .populate ('createdBy', 'name');
     res.send ({discussions});
   } catch (e) {
     res.status (500).send ();
@@ -269,7 +268,6 @@ export const addComment = async (req, res) => {
       .execPopulate ();
     res.send (comment);
   } catch (e) {
-    console.log ('ERRRRRRR', e);
     res.status (400).send (e);
   }
 };
@@ -291,6 +289,7 @@ export const listComment = async (req, res) => {
     const comments = await EventDiscussionComment.find ({
       discussion: discussionId,
     })
+      .sort ('-createdAt')
       .populate ('createdBy', 'name')
       .populate ('event', 'createdBy');
     res.send ({comments});

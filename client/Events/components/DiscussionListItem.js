@@ -15,6 +15,8 @@ import {withStyles} from '@material-ui/core/styles';
 
 import AddComment from './AddComment';
 import CommentList from './CommentList';
+import {isAuthenticated} from '../../helpers/auth';
+import {listComment, addComment} from '../../api/event';
 
 const styles = theme => ({
   card: {
@@ -25,13 +27,32 @@ const styles = theme => ({
 class DiscussionListItem extends React.Component {
   state = {
     expanded: false,
+    comments: [],
+  };
+
+  componentDidMount = async () => {
+    const {token} = isAuthenticated ();
+    const comments = await listComment (
+      this.props.discussion.event,
+      this.props.discussion._id,
+      token
+    );
+    this.setState (() => ({comments}));
+  };
+
+  onSubmit = async text => {
+    const {discussion} = this.props;
+    const {token} = isAuthenticated ();
+    const comment = await addComment (
+      {text},
+      discussion.event,
+      discussion._id,
+      token
+    );
+    this.setState (() => ({comments: [comment, ...this.state.comments]}));
   };
 
   setExpanded = () => {
-    const {socket} = this.props;
-
-    socket.emit ('joinDiscussion', this.props.discussion);
-
     this.setState (() => ({expanded: !this.state.expanded}));
   };
 
@@ -62,8 +83,9 @@ class DiscussionListItem extends React.Component {
         </CardActions>
         <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <AddComment discussion={discussion} socket={this.props.socket} />
-            <CommentList discussion={discussion} socket={this.props.socket} />
+            <AddComment onSubmit={this.onSubmit} />
+            {this.state.comments.length > 0 &&
+              <CommentList comments={this.state.comments} />}
           </CardContent>
         </Collapse>
       </Card>

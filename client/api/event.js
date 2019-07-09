@@ -131,7 +131,6 @@ export const addDiscussion = async (discussion, eventId, token) => {
         Authorization: 'Bearer ' + token,
       },
     });
-
     return data;
   } catch (e) {
     console.log (e.response);
