@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
 
+import User from '../models/user';
+import Event from '../models/event';
+import Notification from '../models/notification';
+
 const eventDiscussionSchema = mongoose.Schema (
   {
     text: {
@@ -19,6 +23,22 @@ const eventDiscussionSchema = mongoose.Schema (
     timestamps: true,
   }
 );
+
+eventDiscussionSchema.post ('save', async function (doc, next) {
+  next ();
+  const user = await User.findById (doc.createdBy);
+  const event = await Event.findById (doc.event);
+
+  const notification = {
+    message: `${user.name} commented on the event you created.`,
+    user: event.createdBy,
+    link: `/events/${event._id}`,
+    createdBy: doc.createdBy,
+  };
+
+  const n = new Notification (notification);
+  await n.save ();
+});
 
 const EventDiscussion = mongoose.model (
   'EventDiscussion',
