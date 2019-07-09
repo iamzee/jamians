@@ -11,7 +11,6 @@ import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
 import NotesIcon from '@material-ui/icons/ClassOutlined';
 import QuestionPaperIcon from '@material-ui/icons/SchoolOutlined';
 import SettingsIcon from '@material-ui/icons/SettingsOutlined';
@@ -20,6 +19,14 @@ import HelpIcon from '@material-ui/icons/ContactSupportOutlined';
 import SyllabusIcon from '@material-ui/icons/AssignmentOutlined';
 import TimeTableIcon from '@material-ui/icons/CalendarTodayOutlined';
 import FaceIcon from '@material-ui/icons/FaceOutlined';
+import PersonIcon from '@material-ui/icons/Person';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import Avatar from '@material-ui/core/Avatar';
+import Badge from '@material-ui/core/Badge';
+
+import {me} from '../api/user';
+import {getSAS, download} from '../api/upload';
+import {countUnseen} from '../api/notification';
 
 const styles = theme => ({
   root: {
@@ -61,6 +68,16 @@ const styles = theme => ({
   navButton: {
     color: '#fff',
   },
+  avatar: {
+    margin: 'auto',
+    marginTop: theme.spacing (2),
+    marginBottom: theme.spacing (2),
+    width: 150,
+    height: 150,
+  },
+  avatarSection: {
+    textAlign: 'center',
+  },
 });
 
 class Navbar extends React.Component {
@@ -70,6 +87,25 @@ class Navbar extends React.Component {
     redirectToLogin: false,
     department: '',
     course: '',
+    user: null,
+    avatarLink: null,
+    count: null,
+  };
+
+  componentDidMount = async () => {
+    const user = await me ();
+    this.setState (() => ({user}));
+
+    if (user.avatar) {
+      const sasToken = await getSAS ('avatar');
+      const avatarLink = download (sasToken, 'avatar', user.avatar);
+      this.setState (() => ({
+        avatarLink,
+      }));
+    }
+
+    const count = await countUnseen ();
+    this.setState (() => ({count}));
   };
 
   toggleDrawer = open => () => {
@@ -92,6 +128,14 @@ class Navbar extends React.Component {
               <Typography variant="h6" className={classes.grow}>
                 {this.props.title}
               </Typography>
+              {this.state.count >= 0 &&
+                <Link className={classes.link} to="/notifications">
+                  <IconButton>
+                    <Badge badgeContent={this.state.count} color="secondary">
+                      <NotificationsIcon />
+                    </Badge>
+                  </IconButton>
+                </Link>}
             </Toolbar>
           </AppBar>
         </div>
@@ -106,13 +150,22 @@ class Navbar extends React.Component {
               style={{height: '100%'}}
             >
               <div className={classes.list} style={{height: '100%'}}>
-                <div className={classes.listTitle}>
-                  <Typography variant="h5" className={classes.listTitleText}>
-                    Jamians
-                  </Typography>
-                </div>
 
-                <Divider variant="middle" />
+                <div className={classes.avatarSection}>
+                  {this.state.avatarLink
+                    ? <Avatar
+                        className={classes.avatar}
+                        src={this.state.avatarLink}
+                      />
+                    : <Avatar className={classes.avatar}>
+                        <PersonIcon />
+                      </Avatar>}
+
+                  {this.state.user &&
+                    <Typography variant="h6">
+                      {this.state.user.name}
+                    </Typography>}
+                </div>
 
                 <List>
                   <Link to="/notes" className={classes.link}>

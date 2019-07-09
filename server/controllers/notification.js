@@ -52,3 +52,12 @@ export const update = async (req, res) => {
     res.status (400).send (e);
   }
 };
+
+export const count = async (req, res) => {
+  try {
+    const count = await Notification.count ({user: req.user._id, seen: false});
+    res.send ({count});
+  } catch (e) {
+    res.status (500).send (e);
+  }
+};

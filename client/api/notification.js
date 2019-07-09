@@ -47,3 +47,18 @@ export const markSeen = async id => {
     console.log (e);
   }
 };
+
+export const countUnseen = async () => {
+  try {
+    const {data} = await axios ({
+      method: 'get',
+      url: '/api/notification/count',
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+    return data.count;
+  } catch (e) {
+    console.log (e);
+  }
+};
