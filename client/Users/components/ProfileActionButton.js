@@ -13,6 +13,7 @@ import {
 } from '../../api/user';
 import {isAuthenticated} from '../../helpers/auth';
 import SnackbarComponent from '../../components/SnackbarComponent';
+import {createNotification} from '../../api/notification';
 
 const styles = theme => ({
   link: {
@@ -29,28 +30,28 @@ class ProfileActionButton extends React.Component {
   componentDidMount = () => {
     const {me, user} = this.props;
 
-    const isMe = me._id.toString() === user._id.toString();
-    const isFriend = me.friends.find(
-      friend => friend.toString() === user._id.toString()
+    const isMe = me._id.toString () === user._id.toString ();
+    const isFriend = me.friends.find (
+      friend => friend.toString () === user._id.toString ()
     );
-    const isFriendRequestSent = me.friendRequestsSent.find(
-      friend => friend.toString() === user._id.toString()
+    const isFriendRequestSent = me.friendRequestsSent.find (
+      friend => friend.toString () === user._id.toString ()
     );
-    const isFriendRequestReceived = me.friendRequestsReceived.find(
-      friend => friend.toString() === user._id.toString()
+    const isFriendRequestReceived = me.friendRequestsReceived.find (
+      friend => friend.toString () === user._id.toString ()
     );
 
     if (isMe) {
-      this.setState(() => ({isMe: true, status: 'ME'}));
+      this.setState (() => ({isMe: true, status: 'ME'}));
     } else if (isFriend) {
-      this.setState(() => ({isFriend: true, status: 'FRIEND'}));
+      this.setState (() => ({isFriend: true, status: 'FRIEND'}));
     } else if (isFriendRequestSent) {
-      this.setState(() => ({
+      this.setState (() => ({
         isFriendRequestSent: true,
         status: 'FRIEND_REQUEST_SENT',
       }));
     } else if (isFriendRequestReceived) {
-      this.setState(() => ({
+      this.setState (() => ({
         isFriendRequestReceived: true,
         status: 'FRIEND_REQUEST_RECEIVED',
       }));
@@ -58,44 +59,50 @@ class ProfileActionButton extends React.Component {
   };
 
   onSendFriendRequest = async () => {
-    this.setState(() => ({status: 'SENDING'}));
-    const {token} = isAuthenticated();
-    await sendFriendRequest(this.props.user._id, token);
-    this.setState(() => ({
+    const {user, me} = this.props;
+    this.setState (() => ({status: 'SENDING'}));
+    const {token} = isAuthenticated ();
+    await sendFriendRequest (this.props.user._id, token);
+    await createNotification ({
+      message: `${me.name} has send you a friend request.`,
+      user,
+      link: `/users/${me._id}`,
+    });
+    this.setState (() => ({
       status: 'FRIEND_REQUEST_SENT',
       message: 'Friend request sent.',
     }));
   };
 
   onRemoveFriendRequest = async () => {
-    this.setState(() => ({status: 'SENDING'}));
-    const {token} = isAuthenticated();
-    await removeFriendRequest(this.props.user._id, token);
-    this.setState(() => ({status: '', message: 'Friend request removed.'}));
+    this.setState (() => ({status: 'SENDING'}));
+    const {token} = isAuthenticated ();
+    await removeFriendRequest (this.props.user._id, token);
+    this.setState (() => ({status: '', message: 'Friend request removed.'}));
   };
 
   onAcceptFriendRequest = async () => {
-    this.setState(() => ({status: 'SENDING'}));
-    const {token} = isAuthenticated();
-    await addFriend(this.props.user._id, token);
-    this.setState(() => ({
+    this.setState (() => ({status: 'SENDING'}));
+    const {token} = isAuthenticated ();
+    await addFriend (this.props.user._id, token);
+    this.setState (() => ({
       status: 'FRIEND',
       message: 'Friend request accepted.',
     }));
   };
 
   onRemoveFriend = async () => {
-    this.setState(() => ({status: 'SENDING'}));
-    const {token} = isAuthenticated();
-    await removeFriend(this.props.user._id, token);
-    this.setState(() => ({status: '', message: 'Friend removed.'}));
+    this.setState (() => ({status: 'SENDING'}));
+    const {token} = isAuthenticated ();
+    await removeFriend (this.props.user._id, token);
+    this.setState (() => ({status: '', message: 'Friend removed.'}));
   };
 
   onSnackbarClose = () => {
-    this.setState(() => ({message: ''}));
+    this.setState (() => ({message: ''}));
   };
 
-  render() {
+  render () {
     const {status, message} = this.state;
     const {classes} = this.props;
     switch (status) {
@@ -111,14 +118,13 @@ class ProfileActionButton extends React.Component {
             >
               <Button color="secondary">Edit Profile</Button>
             </Link>
-            {message && (
+            {message &&
               <SnackbarComponent
                 message={message}
                 variant="success"
                 message={message}
                 onClose={this.onSnackbarClose}
-              />
-            )}
+              />}
           </React.Fragment>
         );
       }
@@ -128,14 +134,13 @@ class ProfileActionButton extends React.Component {
             <Button color="secondary" onClick={this.onRemoveFriend}>
               Remove Friend
             </Button>
-            {message && (
+            {message &&
               <SnackbarComponent
                 message={message}
                 variant="success"
                 message={message}
                 onClose={this.onSnackbarClose}
-              />
-            )}
+              />}
           </React.Fragment>
         );
       }
@@ -145,14 +150,13 @@ class ProfileActionButton extends React.Component {
             <Button color="secondary" onClick={this.onRemoveFriendRequest}>
               Remove Friend Request
             </Button>
-            {message && (
+            {message &&
               <SnackbarComponent
                 message={message}
                 variant="success"
                 message={message}
                 onClose={this.onSnackbarClose}
-              />
-            )}
+              />}
           </React.Fragment>
         );
       }
@@ -162,14 +166,13 @@ class ProfileActionButton extends React.Component {
             <Button color="secondary" onClick={this.onAcceptFriendRequest}>
               Accept Friend Request
             </Button>
-            {message && (
+            {message &&
               <SnackbarComponent
                 message={message}
                 variant="success"
                 message={message}
                 onClose={this.onSnackbarClose}
-              />
-            )}
+              />}
           </React.Fragment>
         );
       }
@@ -179,14 +182,13 @@ class ProfileActionButton extends React.Component {
             <Button color="secondary" onClick={this.onSendFriendRequest}>
               Send Friend Request
             </Button>
-            {message && (
+            {message &&
               <SnackbarComponent
                 message={message}
                 variant="success"
                 message={message}
                 onClose={this.onSnackbarClose}
-              />
-            )}
+              />}
           </React.Fragment>
         );
       }
@@ -194,4 +196,4 @@ class ProfileActionButton extends React.Component {
   }
 }
 
-export default withStyles(styles)(ProfileActionButton);
+export default withStyles (styles) (ProfileActionButton);
