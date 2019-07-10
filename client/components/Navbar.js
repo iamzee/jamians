@@ -198,13 +198,15 @@ class Navbar extends React.Component {
                     </ListItem>
                   </Link>
 
-                  <ListItem button className={classes.listItem}>
-                    <TimeTableIcon />
-                    <ListItemText
-                      primary={'Time Table'}
-                      className={classes.listItemText}
-                    />
-                  </ListItem>
+                  <Link to="/timetable" className={classes.link}>
+                    <ListItem button className={classes.listItem}>
+                      <TimeTableIcon />
+                      <ListItemText
+                        primary={'Time Table'}
+                        className={classes.listItemText}
+                      />
+                    </ListItem>
+                  </Link>
 
                   <Link to="/events" className={classes.link}>
                     <ListItem button className={classes.listItem}>

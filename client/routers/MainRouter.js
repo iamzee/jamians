@@ -5,6 +5,9 @@ import createHistory from 'history/createBrowserHistory';
 import PrivateRoute from './PrivateRouter';
 import PageLoader from '../components/PageLoader';
 
+// TIMETABLE IMPORTS
+const TimeTableDashboard = lazy (() => import ('../TimeTable/pages/Dashboard'));
+
 // SYLLABUS IMPORTS
 const SyllabusDashboard = lazy (() =>
   import ('../Syllabus/pages/SyllabusDashboard')
@@ -75,6 +78,9 @@ const MainRouter = props => (
     <Router history={history}>
       <Suspense fallback={<PageLoader />}>
         <Switch>
+
+          {/* TIME TABLE ROUTES */}
+          <PrivateRoute path="/timetable" component={TimeTableDashboard} />
 
           {/* SYLLABUS ROUTES */}
           <PrivateRoute path="/syllabus" component={SyllabusDashboard} />
