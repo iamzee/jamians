@@ -20,7 +20,7 @@ export const listEvents = async (skip, token) => {
   try {
     const {data} = await axios ({
       method: 'get',
-      url: `/api/event?skip=${skip}&limit=2`,
+      url: `/api/event?skip=${skip}&limit=5`,
       headers: {
         Authorization: 'Bearer ' + token,
       },
