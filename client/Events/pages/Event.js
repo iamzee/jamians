@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import {Link} from 'react-router-dom';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -12,6 +13,7 @@ import CategoryIcon from '@material-ui/icons/Category';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/styles';
 
 import {readEvent} from '../../api/event';
@@ -46,6 +48,9 @@ const styles = theme => ({
   groupButtons: {
     marginBottom: theme.spacing (2),
   },
+  link: {
+    textDecoration: 'none',
+  },
 });
 
 class Event extends React.Component {
@@ -74,6 +79,7 @@ class Event extends React.Component {
   };
 
   render () {
+    const {user} = isAuthenticated ();
     const {classes} = this.props;
     const {event, posterLink} = this.state;
     return (
@@ -95,6 +101,14 @@ class Event extends React.Component {
                     <GoingButton event={event} />
                     <BookmarkButton event={event} />
                   </div>
+
+                  {event.createdBy.toString () === user._id.toString () &&
+                    <Link
+                      className={classes.link}
+                      to={`/events/${event._id}/edit`}
+                    >
+                      <Button color="secondary">Edit</Button>
+                    </Link>}
 
                   <Divider />
 

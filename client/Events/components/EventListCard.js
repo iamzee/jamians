@@ -66,9 +66,6 @@ class EventListCard extends React.Component {
             {event.category}
           </Typography>
         </CardContent>
-        <CardActions>
-          <Button color="secondary">Interested</Button>
-        </CardActions>
       </Card>
     );
   }

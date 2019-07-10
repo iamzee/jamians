@@ -102,11 +102,11 @@ const MainRouter = props => (
             component={EventBookmarksPage}
           />
           <PrivateRoute path="/events/new" component={NewEventPage} />
-          <PrivateRoute path="/events/:eventId" component={Event} />
           <PrivateRoute
             path="/events/:eventId/edit"
             component={EventEditPage}
           />
+          <PrivateRoute path="/events/:eventId" component={Event} />
           <PrivateRoute path="/events" component={EventsDashboard} />
 
           {/* SETTINGS ROUTES */}
