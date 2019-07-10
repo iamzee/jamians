@@ -21,7 +21,6 @@ import notificationRoutes from './routes/notification';
 import template from '../template';
 
 import socketio from './socketio/socketio';
-import eventSocket from './socketio/event';
 
 mongoose.Promise = global.Promise;
 mongoose.connect (process.env.MONGODB_MLAB_URI);
@@ -56,4 +55,3 @@ const expressServer = app.listen (PORT, () => {
 
 const io = socketIO (expressServer);
 socketio (io);
-eventSocket (io);

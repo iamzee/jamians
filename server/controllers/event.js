@@ -1,299 +1,335 @@
 import Event from '../models/event';
-import EventDiscussion from '../models/eventDiscussion';
-import EventDiscussionComment from '../models/eventDiscussionComment';
+import formidable from 'formidable';
+import _ from 'lodash';
+import {upload} from '../azure/blob';
+import uuid from 'uuid/v1';
 
-export const create = async (req, res) => {
-  try {
-    const event = new Event ({...req.body, createdBy: req.user._id});
-    await event.save ();
-    res.status (201).send ();
-  } catch (e) {
-    res.status (400).send (e);
-  }
-};
+export const create = (req, res) => {
+  let form = new formidable.IncomingForm ();
+  form.keepExtensions = true;
+  form.maxFileSize = 0.5 * 1024 * 1024;
 
-export const list = async (req, res) => {
-  try {
-    const {skip, limit} = req.query;
-    if (!skip || !limit) {
-      return res
-        .status (400)
-        .send ({error: 'skip and limit query fields are required.'});
-    }
-    const events = await Event.find ()
-      .sort ('-createdAt')
-      .skip (parseInt (skip, 10))
-      .limit (parseInt (limit, 10));
-    res.send ({events});
-  } catch (e) {
-    res.status (500).send ({error: e.message});
-  }
-};
-
-export const read = async (req, res) => {
-  const {id} = req.params;
-
-  try {
-    const event = await Event.findById (id);
-    await event.populate ('going', 'name').execPopulate ();
-    await event.populate ('bookmark', 'name').execPopulate ();
-    if (!event) {
-      return res.status (404).send ();
+  form.parse (req, async function (err, fields, files) {
+    if (err) {
+      return res.status (400).send ({error: err.message});
     }
 
-    res.send (event);
-  } catch (e) {
-    res.status (400).send ({error: e.message});
-  }
-};
+    try {
+      let blobName = uuid ();
 
-export const update = async (req, res) => {
-  const {id} = req.params;
-  const updates = req.body;
+      if (files.poster.type === 'image/png') {
+        blobName = `${blobName}.png`;
+      } else if (files.poster.type === 'image/jpeg') {
+        blobName = `${blobName}.jpg`;
+      } else {
+        return res.status (400).send ({error: 'Invalid file type.'});
+      }
 
-  try {
-    const event = await Event.findOneAndUpdate (
-      {_id: id, createdBy: req.user._id},
-      updates,
-      {new: true}
-    );
+      await upload ('events', blobName, files.poster.path);
 
-    if (!event) {
-      return res.status (404).send ();
+      let event = _.pick (fields, [
+        'title',
+        'body',
+        'startDate',
+        'endDate',
+        'category',
+        'registrationLink',
+      ]);
+
+      event = {...event, poster: blobName, createdBy: req.user._id};
+
+      event = new Event (event);
+
+      await event.save ();
+      res.send (event);
+    } catch (e) {
+      res.status (500).send (e);
     }
-
-    res.send (event);
-  } catch (e) {
-    res.status (400).send ({error: e.message});
-  }
-};
-
-export const remove = async (req, res) => {
-  const {id} = req.params;
-
-  try {
-    const event = await Event.findOneAndRemove ({
-      _id: id,
-      createdBy: req.user._id,
-    });
-
-    if (!event) {
-      return res.status (404).send ();
-    }
-
-    res.send (event);
-  } catch (e) {
-    res.status (400).send ({error: e.message});
-  }
-};
-
-export const addGoing = async (req, res) => {
-  const eventId = req.params.id;
-  const userId = req.user._id;
-
-  try {
-    const eventMatched = await Event.findOne ({
-      _id: eventId,
-      going: {$in: userId},
-    });
-
-    if (eventMatched) {
-      return res.status (400).send ();
-    }
-
-    const event = await Event.findByIdAndUpdate (
-      eventId,
-      {$push: {going: userId}},
-      {new: true}
-    );
-
-    if (!event) {
-      return res.status (404).send ();
-    }
-
-    res.send (event);
-  } catch (e) {
-    res.staus (400).send (e.response);
-  }
-};
-
-export const removeGoing = async (req, res) => {
-  const eventId = req.params.id;
-  const userId = req.user._id;
-
-  try {
-    const eventMatched = await Event.findOne ({
-      _id: eventId,
-      going: {$in: userId},
-    });
-
-    if (!eventMatched) {
-      return res.status (400).send ();
-    }
-
-    const event = await Event.findByIdAndUpdate (
-      eventId,
-      {$pull: {going: userId}},
-      {new: true}
-    );
-
-    if (!event) {
-      return res.status (404).send ();
-    }
-
-    res.send (event);
-  } catch (e) {
-    res.staus (400).send (e);
-  }
-};
-
-export const addBookmark = async (req, res) => {
-  const eventId = req.params.id;
-  const userId = req.user._id;
-
-  try {
-    const eventMatched = await Event.findOne ({
-      _id: eventId,
-      bookmark: {$in: userId},
-    });
-
-    if (eventMatched) {
-      return res.status (400).send ();
-    }
-
-    const event = await Event.findByIdAndUpdate (
-      eventId,
-      {$push: {bookmark: userId}},
-      {new: true}
-    );
-
-    if (!event) {
-      return res.status (404).send ();
-    }
-
-    res.send (event);
-  } catch (e) {
-    res.staus (400).send (e.response);
-  }
-};
-
-export const removeBookmark = async (req, res) => {
-  const eventId = req.params.id;
-  const userId = req.user._id;
-
-  try {
-    const eventMatched = await Event.findOne ({
-      _id: eventId,
-      bookmark: {$in: userId},
-    });
-
-    if (!eventMatched) {
-      return res.status (400).send ();
-    }
-
-    const event = await Event.findByIdAndUpdate (
-      eventId,
-      {$pull: {bookmark: userId}},
-      {new: true}
-    );
-
-    if (!event) {
-      return res.status (404).send ();
-    }
-
-    res.send (event);
-  } catch (e) {
-    res.staus (400).send (e.response);
-  }
-};
-
-export const addDiscussion = async (req, res) => {
-  const eventId = req.params.id;
-  const userId = req.user._id;
-
-  const eventDiscussion = new EventDiscussion ({
-    ...req.body,
-    createdBy: userId,
-    event: eventId,
   });
-
-  try {
-    await eventDiscussion.save ();
-    await eventDiscussion.populate ('createdBy', 'name').execPopulate ();
-    res.send (eventDiscussion);
-  } catch (e) {
-    res.status (400).send (e);
-  }
 };
 
-export const listDiscussion = async (req, res) => {
-  const eventId = req.params.id;
+// export const list = async (req, res) => {
+//   try {
+//     const {skip, limit} = req.query;
+//     if (!skip || !limit) {
+//       return res
+//         .status (400)
+//         .send ({error: 'skip and limit query fields are required.'});
+//     }
+//     const events = await Event.find ()
+//       .sort ('-createdAt')
+//       .skip (parseInt (skip, 10))
+//       .limit (parseInt (limit, 10));
+//     res.send ({events});
+//   } catch (e) {
+//     res.status (500).send ({error: e.message});
+//   }
+// };
 
-  try {
-    const discussions = await EventDiscussion.find ({event: eventId})
-      .sort ('-createdAt')
-      .populate ('createdBy', 'name');
-    res.send ({discussions});
-  } catch (e) {
-    res.status (500).send ();
-  }
-};
+// export const read = async (req, res) => {
+//   const {id} = req.params;
 
-export const addComment = async (req, res) => {
-  const {discussionId} = req.params;
-  const eventId = req.params.id;
-  const userId = req.user._id;
+//   try {
+//     const event = await Event.findById (id);
+//     await event.populate ('going', 'name').execPopulate ();
+//     await event.populate ('bookmark', 'name').execPopulate ();
+//     if (!event) {
+//       return res.status (404).send ();
+//     }
 
-  const comment = new EventDiscussionComment ({
-    ...req.body,
-    createdBy: userId,
-    discussion: discussionId,
-    event: eventId,
-  });
+//     res.send (event);
+//   } catch (e) {
+//     res.status (400).send ({error: e.message});
+//   }
+// };
 
-  try {
-    const matchedDiscussion = await EventDiscussion.findOne ({
-      _id: discussionId,
-      event: eventId,
-    });
+// export const update = async (req, res) => {
+//   const {id} = req.params;
+//   const updates = req.body;
 
-    if (!matchedDiscussion) {
-      return res.status (400).send ();
-    }
+//   try {
+//     const event = await Event.findOneAndUpdate (
+//       {_id: id, createdBy: req.user._id},
+//       updates,
+//       {new: true}
+//     );
 
-    await comment.save ();
-    await comment
-      .populate ('createdBy', 'name')
-      .populate ('event', 'createdBy')
-      .execPopulate ();
-    res.send (comment);
-  } catch (e) {
-    res.status (400).send (e);
-  }
-};
+//     if (!event) {
+//       return res.status (404).send ();
+//     }
 
-export const listComment = async (req, res) => {
-  const {discussionId} = req.params;
-  const eventId = req.params.id;
+//     res.send (event);
+//   } catch (e) {
+//     res.status (400).send ({error: e.message});
+//   }
+// };
 
-  try {
-    const matchedDiscussion = await EventDiscussion.findOne ({
-      _id: discussionId,
-      event: eventId,
-    });
+// export const remove = async (req, res) => {
+//   const {id} = req.params;
 
-    if (!matchedDiscussion) {
-      return res.status (400).send ();
-    }
+//   try {
+//     const event = await Event.findOneAndRemove ({
+//       _id: id,
+//       createdBy: req.user._id,
+//     });
 
-    const comments = await EventDiscussionComment.find ({
-      discussion: discussionId,
-    })
-      .sort ('-createdAt')
-      .populate ('createdBy', 'name')
-      .populate ('event', 'createdBy');
-    res.send ({comments});
-  } catch (e) {
-    res.status (400).send (e);
-  }
-};
+//     if (!event) {
+//       return res.status (404).send ();
+//     }
+
+//     res.send (event);
+//   } catch (e) {
+//     res.status (400).send ({error: e.message});
+//   }
+// };
+
+// export const addGoing = async (req, res) => {
+//   const eventId = req.params.id;
+//   const userId = req.user._id;
+
+//   try {
+//     const eventMatched = await Event.findOne ({
+//       _id: eventId,
+//       going: {$in: userId},
+//     });
+
+//     if (eventMatched) {
+//       return res.status (400).send ();
+//     }
+
+//     const event = await Event.findByIdAndUpdate (
+//       eventId,
+//       {$push: {going: userId}},
+//       {new: true}
+//     );
+
+//     if (!event) {
+//       return res.status (404).send ();
+//     }
+
+//     res.send (event);
+//   } catch (e) {
+//     res.staus (400).send (e.response);
+//   }
+// };
+
+// export const removeGoing = async (req, res) => {
+//   const eventId = req.params.id;
+//   const userId = req.user._id;
+
+//   try {
+//     const eventMatched = await Event.findOne ({
+//       _id: eventId,
+//       going: {$in: userId},
+//     });
+
+//     if (!eventMatched) {
+//       return res.status (400).send ();
+//     }
+
+//     const event = await Event.findByIdAndUpdate (
+//       eventId,
+//       {$pull: {going: userId}},
+//       {new: true}
+//     );
+
+//     if (!event) {
+//       return res.status (404).send ();
+//     }
+
+//     res.send (event);
+//   } catch (e) {
+//     res.staus (400).send (e);
+//   }
+// };
+
+// export const addBookmark = async (req, res) => {
+//   const eventId = req.params.id;
+//   const userId = req.user._id;
+
+//   try {
+//     const eventMatched = await Event.findOne ({
+//       _id: eventId,
+//       bookmark: {$in: userId},
+//     });
+
+//     if (eventMatched) {
+//       return res.status (400).send ();
+//     }
+
+//     const event = await Event.findByIdAndUpdate (
+//       eventId,
+//       {$push: {bookmark: userId}},
+//       {new: true}
+//     );
+
+//     if (!event) {
+//       return res.status (404).send ();
+//     }
+
+//     res.send (event);
+//   } catch (e) {
+//     res.staus (400).send (e.response);
+//   }
+// };
+
+// export const removeBookmark = async (req, res) => {
+//   const eventId = req.params.id;
+//   const userId = req.user._id;
+
+//   try {
+//     const eventMatched = await Event.findOne ({
+//       _id: eventId,
+//       bookmark: {$in: userId},
+//     });
+
+//     if (!eventMatched) {
+//       return res.status (400).send ();
+//     }
+
+//     const event = await Event.findByIdAndUpdate (
+//       eventId,
+//       {$pull: {bookmark: userId}},
+//       {new: true}
+//     );
+
+//     if (!event) {
+//       return res.status (404).send ();
+//     }
+
+//     res.send (event);
+//   } catch (e) {
+//     res.staus (400).send (e.response);
+//   }
+// };
+
+// export const addDiscussion = async (req, res) => {
+//   const eventId = req.params.id;
+//   const userId = req.user._id;
+
+//   const eventDiscussion = new EventDiscussion ({
+//     ...req.body,
+//     createdBy: userId,
+//     event: eventId,
+//   });
+
+//   try {
+//     await eventDiscussion.save ();
+//     await eventDiscussion.populate ('createdBy', 'name').execPopulate ();
+//     res.send (eventDiscussion);
+//   } catch (e) {
+//     res.status (400).send (e);
+//   }
+// };
+
+// export const listDiscussion = async (req, res) => {
+//   const eventId = req.params.id;
+
+//   try {
+//     const discussions = await EventDiscussion.find ({event: eventId})
+//       .sort ('-createdAt')
+//       .populate ('createdBy', 'name');
+//     res.send ({discussions});
+//   } catch (e) {
+//     res.status (500).send ();
+//   }
+// };
+
+// export const addComment = async (req, res) => {
+//   const {discussionId} = req.params;
+//   const eventId = req.params.id;
+//   const userId = req.user._id;
+
+//   const comment = new EventDiscussionComment ({
+//     ...req.body,
+//     createdBy: userId,
+//     discussion: discussionId,
+//     event: eventId,
+//   });
+
+//   try {
+//     const matchedDiscussion = await EventDiscussion.findOne ({
+//       _id: discussionId,
+//       event: eventId,
+//     });
+
+//     if (!matchedDiscussion) {
+//       return res.status (400).send ();
+//     }
+
+//     await comment.save ();
+//     await comment
+//       .populate ('createdBy', 'name')
+//       .populate ('event', 'createdBy')
+//       .execPopulate ();
+//     res.send (comment);
+//   } catch (e) {
+//     res.status (400).send (e);
+//   }
+// };
+
+// export const listComment = async (req, res) => {
+//   const {discussionId} = req.params;
+//   const eventId = req.params.id;
+
+//   try {
+//     const matchedDiscussion = await EventDiscussion.findOne ({
+//       _id: discussionId,
+//       event: eventId,
+//     });
+
+//     if (!matchedDiscussion) {
+//       return res.status (400).send ();
+//     }
+
+//     const comments = await EventDiscussionComment.find ({
+//       discussion: discussionId,
+//     })
+//       .sort ('-createdAt')
+//       .populate ('createdBy', 'name')
+//       .populate ('event', 'createdBy');
+//     res.send ({comments});
+//   } catch (e) {
+//     res.status (400).send (e);
+//   }
+// };
