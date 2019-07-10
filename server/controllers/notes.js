@@ -80,6 +80,27 @@ export const read = async (req, res) => {
   }
 };
 
+export const remove = async (req, res) => {
+  try {
+    const noteId = req.params.id;
+    const userId = req.user._id;
+
+    const note = await Note.findOneAndDelete ({
+      _id: noteId,
+      createdBy: userId,
+    });
+
+    if (!note) {
+      return res.status (404).send ();
+    }
+
+    res.send (note);
+  } catch (e) {
+    console.log (e);
+    res.status (500).send (e);
+  }
+};
+
 export const addBookmark = async (req, res) => {
   const userId = req.user._id;
   const {id} = req.params;

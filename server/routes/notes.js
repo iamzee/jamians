@@ -4,27 +4,23 @@ import {
   create,
   list,
   read,
+  remove,
   addBookmark,
   removeBookmark,
   getBookmarkedNotes,
 } from '../controllers/notes';
 
-const router = express.Router();
+const router = express.Router ();
+
+router.route ('/api/notes').post (auth, create).get (auth, list);
+
+router.route ('/api/notes/bookmark').get (auth, getBookmarkedNotes);
+
+router.route ('/api/notes/:id').get (auth, read).delete (auth, remove);
 
 router
-  .route('/api/notes')
-  .post(auth, create)
-  .get(auth, list);
-
-router.route('/api/notes/bookmark').get(auth, getBookmarkedNotes);
-
-router.route('/api/notes/:id').get(auth, read);
-
-router
-  .route('/api/notes/:id/bookmark')
-  .post(auth, addBookmark)
-  .delete(auth, removeBookmark);
-
-// router.route('/api/note/count').get(noteCtrl.count);
+  .route ('/api/notes/:id/bookmark')
+  .post (auth, addBookmark)
+  .delete (auth, removeBookmark);
 
 export default router;
