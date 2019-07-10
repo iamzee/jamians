@@ -188,13 +188,15 @@ class Navbar extends React.Component {
                     </ListItem>
                   </Link>
 
-                  <ListItem button className={classes.listItem}>
-                    <SyllabusIcon />
-                    <ListItemText
-                      primary={'Syllabus'}
-                      className={classes.listItemText}
-                    />
-                  </ListItem>
+                  <Link to="/syllabus" className={classes.link}>
+                    <ListItem button className={classes.listItem}>
+                      <SyllabusIcon />
+                      <ListItemText
+                        primary={'Syllabus'}
+                        className={classes.listItemText}
+                      />
+                    </ListItem>
+                  </Link>
 
                   <ListItem button className={classes.listItem}>
                     <TimeTableIcon />

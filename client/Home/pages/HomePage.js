@@ -68,7 +68,7 @@ const HomePage = props => {
             </Link>
           </Grid>
           <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Link className={classes.link} to="/notes">
+            <Link className={classes.link} to="/syllabus">
               <SyllabusIcon />
               <Typography className={classes.linkText} variant="h6">
                 Syllabus

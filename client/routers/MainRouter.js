@@ -5,6 +5,11 @@ import createHistory from 'history/createBrowserHistory';
 import PrivateRoute from './PrivateRouter';
 import PageLoader from '../components/PageLoader';
 
+// SYLLABUS IMPORTS
+const SyllabusDashboard = lazy (() =>
+  import ('../Syllabus/pages/SyllabusDashboard')
+);
+
 // NOTIFICATION IMPORTS
 const NotificationDashboard = lazy (() =>
   import ('../Notifications/pages/NotificationDashboard')
@@ -70,6 +75,9 @@ const MainRouter = props => (
     <Router history={history}>
       <Suspense fallback={<PageLoader />}>
         <Switch>
+
+          {/* SYLLABUS ROUTES */}
+          <PrivateRoute path="/syllabus" component={SyllabusDashboard} />
 
           {/* NOTIFICATION ROUTES */}
           <PrivateRoute
