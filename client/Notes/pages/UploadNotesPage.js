@@ -16,6 +16,7 @@ import {listCourses} from '../../api/course';
 import {listSubjects} from '../../api/subject';
 import {createNote} from '../../api/notes';
 import {semesters} from '../../helpers/notes';
+import {isAuthenticated} from '../../helpers/auth';
 
 import Navbar from '../../components/Navbar';
 import NotesNav from '../components/NotesNav';
@@ -42,13 +43,29 @@ class UploadNotesPage extends React.Component {
     uploaded: false,
     showCourseLoader: false,
     showSubjectLoader: false,
+    showSemesterLoader: false,
     showCourses: false,
     showSubjects: false,
+    showSemesters: false,
   };
 
   componentDidMount = async () => {
     const departments = await listDepartments ();
     this.setState (() => ({departments}));
+
+    const {user} = isAuthenticated ();
+
+    if (user.department) {
+      const courses = await listCourses (user.department);
+
+      this.setState (() => ({
+        department: user.department,
+        courses,
+        course: user.course,
+        showCourses: true,
+        showSemesters: true,
+      }));
+    }
   };
 
   onFileChange = e => {
@@ -75,6 +92,7 @@ class UploadNotesPage extends React.Component {
       showCourseLoader: true,
       showCourses: false,
       showSubjects: false,
+      showSemesters: false,
     }));
 
     const courses = await listCourses (department);
@@ -86,8 +104,14 @@ class UploadNotesPage extends React.Component {
   };
 
   onCourseChange = e => {
+    this.setState (() => ({showSemesterLoader: true, showSemesters: false}));
     const course = e.target.value;
-    this.setState (() => ({course, subject: ''}));
+    this.setState (() => ({
+      course,
+      subject: '',
+      showSemesterLoader: false,
+      showSemesters: true,
+    }));
   };
 
   onSemesterChange = async e => {
@@ -265,46 +289,58 @@ class UploadNotesPage extends React.Component {
                   ))}
                 </TextField>
                 <br />
-                <TextField
-                  className={classes.textField}
-                  select
-                  value={this.state.semester}
-                  onChange={this.onSemesterChange}
-                  margin="normal"
-                  label="Semester"
-                  variant="outlined"
-                >
-                  {semesters.map (semester => (
-                    <MenuItem key={semester.value} value={semester.value}>
-                      {semester.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <br />
-                {this.state.showSubjectLoader &&
+
+                {this.state.showSemesterLoader &&
                   <CircularProgress
                     className={classes.progress}
                     size={20}
                     variant="indeterminate"
                   />}
 
-                {this.state.showSubjects &&
-                  <TextField
-                    className={classes.textField}
-                    select
-                    value={this.state.subject}
-                    onChange={this.onSubjectChange}
-                    margin="normal"
-                    label="Subject"
-                    variant="outlined"
-                  >
-                    {this.state.subjects.map (subject => (
-                      <MenuItem key={subject._id} value={subject._id}>
-                        {subject.name}
-                      </MenuItem>
-                    ))}
-                  </TextField>}
-                <br />
+                {this.state.showSemesters &&
+                  <React.Fragment>
+                    <TextField
+                      className={classes.textField}
+                      select
+                      value={this.state.semester}
+                      onChange={this.onSemesterChange}
+                      margin="normal"
+                      label="Semester"
+                      variant="outlined"
+                    >
+                      {semesters.map (semester => (
+                        <MenuItem key={semester.value} value={semester.value}>
+                          {semester.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    <br />
+                    {this.state.showSubjectLoader &&
+                      <CircularProgress
+                        className={classes.progress}
+                        size={20}
+                        variant="indeterminate"
+                      />}
+
+                    {this.state.showSubjects &&
+                      <TextField
+                        className={classes.textField}
+                        select
+                        value={this.state.subject}
+                        onChange={this.onSubjectChange}
+                        margin="normal"
+                        label="Subject"
+                        variant="outlined"
+                      >
+                        {this.state.subjects.map (subject => (
+                          <MenuItem key={subject._id} value={subject._id}>
+                            {subject.name}
+                          </MenuItem>
+                        ))}
+                      </TextField>}
+                    <br />
+                  </React.Fragment>}
+
               </div>}
           </CardContent>
           <CardActions>
