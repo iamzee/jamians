@@ -1,4 +1,5 @@
 import React from 'react';
+import queryString from 'query-string';
 
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -12,13 +13,28 @@ import NotesNav from '../components/NotesNav';
 import Filter from '../components/Filter';
 import styles from '../styles/NotesPage.styles';
 
+import {isAuthenticated} from '../../helpers/auth';
+
 class NotesPage extends React.Component {
+  componentDidMount () {
+    const {user} = isAuthenticated ();
+
+    if (
+      user.department &&
+      !queryString.parse (this.props.location.search).department
+    ) {
+      this.props.history.push (
+        `/notes?department=${user.department}&course=${user.course}&semester=&subject=`
+      );
+    }
+  }
+
   onDialogOpen = () => {
-    this.setState(() => ({openDialog: true}));
+    this.setState (() => ({openDialog: true}));
   };
 
-  render() {
-    const queryString = this.props.location.search;
+  render () {
+    const query = this.props.location.search;
     const {classes} = this.props;
     return (
       <div>
@@ -32,14 +48,14 @@ class NotesPage extends React.Component {
           <Divider />
 
           <div className={classes.filters}>
-            <Filter history={this.props.history} queryString={queryString} />
+            <Filter history={this.props.history} query={query} />
           </div>
 
-          <NotesList queryString={queryString} />
+          <NotesList query={query} />
         </div>
       </div>
     );
   }
 }
 
-export default withStyles(styles)(NotesPage);
+export default withStyles (styles) (NotesPage);

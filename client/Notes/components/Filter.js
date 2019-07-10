@@ -1,4 +1,5 @@
 import React from 'react';
+import queryString from 'query-string';
 
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -52,6 +53,82 @@ class Filter extends React.Component {
   componentDidMount = async () => {
     const departments = await listDepartments ();
     this.setState (() => ({departments}));
+
+    const {department, course, semester, subject} = queryString.parse (
+      this.props.query
+    );
+
+    if (department) {
+      this.setState (() => ({
+        department,
+        showCourses: true,
+        showCourseLoader: true,
+      }));
+      const courses = await listCourses (department);
+      this.setState (() => ({
+        courses,
+        showCourses: true,
+        showCourseLoader: false,
+      }));
+
+      if (course) {
+        this.setState (() => ({course, showSemesters: true}));
+
+        if (semester) {
+          this.setState (() => ({semester, showSubjectLoader: true}));
+          const subjects = await listSubjects (course, semester);
+          this.setState (() => ({
+            subjects,
+            showSubjects: true,
+            showSubjectLoader: false,
+          }));
+
+          if (subject) {
+            this.setState (() => ({subject}));
+          }
+        }
+      }
+    }
+  };
+
+  componentDidUpdate = async prevProps => {
+    if (this.props.query !== prevProps.query) {
+      const {department, course, semester, subject} = queryString.parse (
+        this.props.query
+      );
+
+      if (department) {
+        this.setState (() => ({
+          department,
+          showCourses: true,
+          showCourseLoader: true,
+        }));
+        const courses = await listCourses (department);
+        this.setState (() => ({
+          courses,
+          showCourses: true,
+          showCourseLoader: false,
+        }));
+
+        if (course) {
+          this.setState (() => ({course, showSemesters: true}));
+
+          if (semester) {
+            this.setState (() => ({semester, showSubjectLoader: true}));
+            const subjects = await listSubjects (course, semester);
+            this.setState (() => ({
+              subjects,
+              showSubjects: true,
+              showSubjectLoader: false,
+            }));
+
+            if (subject) {
+              this.setState (() => ({subject}));
+            }
+          }
+        }
+      }
+    }
   };
 
   onDepartmentChange = async e => {

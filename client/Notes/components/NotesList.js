@@ -15,7 +15,7 @@ class NotesList extends React.Component {
   };
 
   componentDidMount = async () => {
-    const query = queryString.parse (this.props.queryString);
+    const query = queryString.parse (this.props.query);
 
     const notes = await listNotes (query);
     this.setState (() => ({notes}));
@@ -26,9 +26,9 @@ class NotesList extends React.Component {
   };
 
   componentDidUpdate = async prevProps => {
-    if (this.props.queryString !== prevProps.queryString) {
+    if (this.props.query !== prevProps.query) {
       this.setState (() => ({notes: []}));
-      const parsed = queryString.parse (this.props.queryString);
+      const parsed = queryString.parse (this.props.query);
       const notes = await listNotes (parsed);
       this.setState (() => ({notes, noNotes: false}));
 
