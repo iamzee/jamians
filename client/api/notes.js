@@ -57,6 +57,20 @@ export const readNote = async noteId => {
   }
 };
 
+export const removeNote = async id => {
+  try {
+    return await axios ({
+      method: 'delete',
+      url: `/api/notes/${id}`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+  } catch (e) {
+    console.log (e.response);
+  }
+};
+
 export const addBookmark = async noteId => {
   try {
     return await axios ({

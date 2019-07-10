@@ -11,10 +11,12 @@ import {withStyles} from '@material-ui/core/styles';
 
 import {readNote} from '../../api/notes';
 import {getSAS, download} from '../../api/upload';
+import {isAuthenticated} from '../../helpers/auth';
 import BookmarkButton from '../components/BookmarkButton';
 import Navbar from '../../components/Navbar';
 import PageLoader from '../../components/PageLoader';
 import NotesNav from '../components/NotesNav';
+import DeleteButton from '../components/DeleteButton';
 
 const styles = theme => ({
   card: {
@@ -30,9 +32,6 @@ const styles = theme => ({
   },
   contentBody: {
     marginTop: theme.spacing (2),
-  },
-  button: {
-    marginRight: theme.spacing (2),
   },
 });
 
@@ -56,6 +55,7 @@ class Note extends React.Component {
   render () {
     const {note} = this.state;
     const {classes} = this.props;
+    const {user} = isAuthenticated ();
 
     return (
       <div>
@@ -115,14 +115,12 @@ class Note extends React.Component {
                   </div>
                 </CardContent>
                 <CardActions>
-                  <Button
-                    color="secondary"
-                    className={classes.button}
-                    onClick={this.onView}
-                  >
+                  <Button color="secondary" onClick={this.onView}>
                     View
                   </Button>
                   <BookmarkButton note={note} />
+                  {user._id.toString () === note.createdBy._id.toString () &&
+                    <DeleteButton note={note} history={this.props.history} />}
                 </CardActions>
               </Card>
             : <PageLoader />}
