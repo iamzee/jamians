@@ -6,19 +6,37 @@ import uuid from 'uuid/v1';
 import p from 'path';
 import tmp from 'tmp';
 
-export const create = (req, res) => {
+export const POST_EVENT = async (req, res) => {
+  try {
+    let event = _.pick(
+      req.body,
+      'title',
+      'body',
+      'startDate',
+      'endDate',
+      'category',
+      'registration'
+    );
+
+    event = {...event, createdBy: req.user._id};
+    event = new Event(event);
+    await event.save();
+    res.send(event);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
+
+export const POST_POSTER = async (req, res) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
   form.maxFileSize = 0.5 * 1024 * 1024;
-
   form.parse(req, async function(err, fields, files) {
     if (err) {
       return res.status(400).send({error: err.message});
     }
-
     try {
       let blobName = uuid();
-
       if (files.poster.type === 'image/png') {
         blobName = `${blobName}.png`;
       } else if (files.poster.type === 'image/jpeg') {
@@ -26,24 +44,14 @@ export const create = (req, res) => {
       } else {
         return res.status(400).send({error: 'Invalid file type.'});
       }
-
       await upload('events', blobName, files.poster.path);
 
-      let event = _.pick(fields, [
-        'title',
-        'body',
-        'startDate',
-        'endDate',
-        'category',
-        'registrationLink',
-      ]);
-
-      event = {...event, poster: blobName, createdBy: req.user._id};
-
-      event = new Event(event);
-
-      await event.save();
-      res.send(event);
+      await Event.findByIdAndUpdate(
+        req.params.id,
+        {poster: blobName},
+        {new: true}
+      );
+      res.send();
     } catch (e) {
       res.status(500).send(e);
     }
@@ -95,6 +103,8 @@ export const readPoster = (req, res) => {
     res.status(500).send(e);
   }
 };
+
+export const edit = (req, res) => {};
 
 // export const read = async (req, res) => {
 //   const {id} = req.params;

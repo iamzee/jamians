@@ -24,7 +24,7 @@ const eventCategory = [
   'Other',
 ];
 
-const eventSchema = mongoose.Schema (
+const eventSchema = mongoose.Schema(
   {
     title: {
       type: String,
@@ -54,8 +54,8 @@ const eventSchema = mongoose.Schema (
       type: 'String',
       required: true,
       validate: {
-        validator: function (v) {
-          return eventCategory.includes (v);
+        validator: function(v) {
+          return eventCategory.includes(v);
         },
         message: props => `${props.value} is not a valid event category.`,
       },
@@ -66,11 +66,11 @@ const eventSchema = mongoose.Schema (
         ref: 'User',
       },
     ],
-    registrationLink: {
+    registration: {
       type: String,
       validate: {
-        validator: function (v) {
-          return validator.isURL (v);
+        validator: function(v) {
+          return validator.isURL(v);
         },
         message: props => `${props.value} is not a valid url.`,
       },
@@ -107,6 +107,6 @@ const eventSchema = mongoose.Schema (
   }
 );
 
-const Event = mongoose.model ('Event', eventSchema);
+const Event = mongoose.model('Event', eventSchema);
 
 export default Event;
