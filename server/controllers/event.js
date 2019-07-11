@@ -104,6 +104,20 @@ export const readPoster = (req, res) => {
   }
 };
 
+export const readEvent = async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id);
+
+    if (!event) {
+      return res.status(404).send();
+    }
+
+    res.send(event);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
+
 export const editEvent = async (req, res) => {
   try {
     let updatedEvent = _.pick(

@@ -5,6 +5,7 @@ import {
   listEvents,
   editEvent,
   readPoster,
+  readEvent,
 } from '../controllers/event';
 import auth from '../middlewares/auth';
 import hasAuthorization from '../middlewares/event';
@@ -15,7 +16,10 @@ router
   .post(auth, createEvent)
   .get(auth, listEvents);
 
-router.route('/api/events/:id').patch(auth, editEvent);
+router
+  .route('/api/events/:id')
+  .get(auth, readEvent)
+  .patch(auth, editEvent);
 
 router
   .route('/api/events/:id/poster')
