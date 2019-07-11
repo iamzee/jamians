@@ -144,6 +144,20 @@ export const editEvent = async (req, res) => {
   }
 };
 
+export const removeEvent = async (req, res) => {
+  try {
+    const event = await Event.findByIdAndRemove(req.params.id);
+
+    if (!event) {
+      return res.status(404).send();
+    }
+
+    res.send(event);
+  } catch (e) {
+    res.status(400).send();
+  }
+};
+
 // export const read = async (req, res) => {
 //   const {id} = req.params;
 

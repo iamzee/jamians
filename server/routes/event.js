@@ -6,6 +6,7 @@ import {
   editEvent,
   readPoster,
   readEvent,
+  removeEvent,
 } from '../controllers/event';
 import auth from '../middlewares/auth';
 import hasAuthorization from '../middlewares/event';
@@ -19,7 +20,8 @@ router
 router
   .route('/api/events/:id')
   .get(auth, readEvent)
-  .patch(auth, editEvent);
+  .patch(auth, editEvent)
+  .delete(auth, hasAuthorization, removeEvent);
 
 router
   .route('/api/events/:id/poster')

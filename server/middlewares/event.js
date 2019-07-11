@@ -10,6 +10,6 @@ export default async (req, res, next) => {
 
     next();
   } catch (e) {
-    res.status(500).send();
+    res.status(400).send();
   }
 };
