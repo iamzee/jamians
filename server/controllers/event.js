@@ -1,8 +1,10 @@
 import Event from '../models/event';
 import formidable from 'formidable';
 import _ from 'lodash';
-import {upload} from '../azure/blob';
+import {upload, download} from '../azure/blob';
 import uuid from 'uuid/v1';
+import p from 'path';
+import tmp from 'tmp';
 
 export const create = (req, res) => {
   let form = new formidable.IncomingForm();
@@ -64,6 +66,33 @@ export const list = async (req, res) => {
     res.send({events});
   } catch (e) {
     res.status(500).send({error: e.message});
+  }
+};
+
+export const readPoster = (req, res) => {
+  try {
+    tmp.dir({unsafeCleanup: true}, async function _tempDirCreated(
+      err,
+      path,
+      cleanCallback
+    ) {
+      if (err) {
+        throw new Error(err);
+      }
+
+      console.log('Dir: ', path);
+
+      const event = await Event.findById(req.params.id);
+
+      const blob = await download('events', event.poster, path);
+
+      res.set('Content-Type', blob.contentSettings.contentType);
+      res.sendFile(p.resolve(path, event.poster));
+
+      cleanCallback();
+    });
+  } catch (e) {
+    res.status(500).send(e);
   }
 };
 

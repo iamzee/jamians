@@ -13,6 +13,7 @@ import {
   listDiscussion,
   addComment,
   listComment,
+  readPoster,
 } from '../controllers/event';
 import auth from '../middlewares/auth';
 const router = express.Router();
@@ -21,6 +22,8 @@ router
   .route('/api/events')
   .post(auth, create)
   .get(auth, list);
+
+router.route('/api/events/:id/poster').get(auth, readPoster);
 
 // router
 //   .route ('/api/event/:id')
