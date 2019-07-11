@@ -5,29 +5,29 @@ import {upload} from '../azure/blob';
 import uuid from 'uuid/v1';
 
 export const create = (req, res) => {
-  let form = new formidable.IncomingForm ();
+  let form = new formidable.IncomingForm();
   form.keepExtensions = true;
   form.maxFileSize = 0.5 * 1024 * 1024;
 
-  form.parse (req, async function (err, fields, files) {
+  form.parse(req, async function(err, fields, files) {
     if (err) {
-      return res.status (400).send ({error: err.message});
+      return res.status(400).send({error: err.message});
     }
 
     try {
-      let blobName = uuid ();
+      let blobName = uuid();
 
       if (files.poster.type === 'image/png') {
         blobName = `${blobName}.png`;
       } else if (files.poster.type === 'image/jpeg') {
         blobName = `${blobName}.jpg`;
       } else {
-        return res.status (400).send ({error: 'Invalid file type.'});
+        return res.status(400).send({error: 'Invalid file type.'});
       }
 
-      await upload ('events', blobName, files.poster.path);
+      await upload('events', blobName, files.poster.path);
 
-      let event = _.pick (fields, [
+      let event = _.pick(fields, [
         'title',
         'body',
         'startDate',
@@ -38,33 +38,34 @@ export const create = (req, res) => {
 
       event = {...event, poster: blobName, createdBy: req.user._id};
 
-      event = new Event (event);
+      event = new Event(event);
 
-      await event.save ();
-      res.send (event);
+      await event.save();
+      res.send(event);
     } catch (e) {
-      res.status (500).send (e);
+      res.status(500).send(e);
     }
   });
 };
 
-// export const list = async (req, res) => {
-//   try {
-//     const {skip, limit} = req.query;
-//     if (!skip || !limit) {
-//       return res
-//         .status (400)
-//         .send ({error: 'skip and limit query fields are required.'});
-//     }
-//     const events = await Event.find ()
-//       .sort ('-createdAt')
-//       .skip (parseInt (skip, 10))
-//       .limit (parseInt (limit, 10));
-//     res.send ({events});
-//   } catch (e) {
-//     res.status (500).send ({error: e.message});
-//   }
-// };
+export const list = async (req, res) => {
+  try {
+    const {skip, limit} = req.query;
+    if (!skip || !limit) {
+      return res
+        .status(400)
+        .send({error: 'skip and limit query fields are required.'});
+    }
+    const events = await Event.find({})
+      .select('-poster')
+      .sort('-createdAt')
+      .skip(parseInt(skip, 10))
+      .limit(parseInt(limit, 10));
+    res.send({events});
+  } catch (e) {
+    res.status(500).send({error: e.message});
+  }
+};
 
 // export const read = async (req, res) => {
 //   const {id} = req.params;

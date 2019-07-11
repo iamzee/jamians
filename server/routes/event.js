@@ -15,9 +15,12 @@ import {
   listComment,
 } from '../controllers/event';
 import auth from '../middlewares/auth';
-const router = express.Router ();
+const router = express.Router();
 
-router.route ('/api/event').post (auth, create);
+router
+  .route('/api/events')
+  .post(auth, create)
+  .get(auth, list);
 
 // router
 //   .route ('/api/event/:id')
