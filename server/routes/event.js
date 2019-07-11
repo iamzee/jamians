@@ -26,7 +26,7 @@ router
 router
   .route('/api/events/:id/poster')
   .post(auth, hasAuthorization, createPoster)
-  .get(auth, readPoster);
+  .get(readPoster);
 
 // router
 //   .route ('/api/event/:id')

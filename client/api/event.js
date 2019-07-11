@@ -33,11 +33,11 @@ export const createEvent = async event => {
   }
 };
 
-export const listEvents = async (skip, token) => {
+export const listEvents = async skip => {
   try {
     const {data} = await axios({
       method: 'get',
-      url: `/api/event?skip=${skip}&limit=5`,
+      url: `/api/events?skip=${skip}&limit=5`,
       headers: {
         Authorization: 'Bearer ' + token,
       },
@@ -49,7 +49,7 @@ export const listEvents = async (skip, token) => {
   }
 };
 
-export const updateEvent = async (eventId, event, token) => {
+export const updateEvent = async (eventId, event) => {
   console.log(event);
   try {
     await axios({

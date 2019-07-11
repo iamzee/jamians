@@ -68,7 +68,7 @@ export const listEvents = async (req, res) => {
         .send({error: 'skip and limit query fields are required.'});
     }
     const events = await Event.find({})
-      .select('-poster')
+      .populate('createdBy', 'name')
       .sort('-createdAt')
       .skip(parseInt(skip, 10))
       .limit(parseInt(limit, 10));

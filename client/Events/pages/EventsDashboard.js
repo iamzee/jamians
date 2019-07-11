@@ -10,34 +10,33 @@ import {withStyles} from '@material-ui/core/styles';
 import Navbar from '../../components/Navbar';
 import EventsNav from '../components/EventsNav';
 import {listEvents} from '../../api/event';
-import {isAuthenticated} from '../../helpers/auth';
 import EventListCard from '../components/EventListCard';
 
 const styles = theme => ({
   root: {
     maxWidth: 600,
     margin: 'auto',
-    marginTop: theme.spacing (15),
-    padding: theme.spacing (5),
-    [theme.breakpoints.down ('xs')]: {
-      marginTop: theme.spacing (15),
+    marginTop: theme.spacing(15),
+    padding: theme.spacing(5),
+    [theme.breakpoints.down('xs')]: {
+      marginTop: theme.spacing(15),
       padding: 0,
     },
     fontFamily: 'Roboto',
   },
   container: {
-    marginTop: theme.spacing (2),
+    marginTop: theme.spacing(2),
     margin: 'auto',
   },
   title: {
     fontWeight: 300,
   },
   buttonGroup: {
-    marginTop: theme.spacing (2),
+    marginTop: theme.spacing(2),
     display: 'flex',
     justifyContent: 'space-around',
   },
-  eventsList: {marginTop: theme.spacing (2)},
+  eventsList: {marginTop: theme.spacing(2)},
 });
 
 class EventsDashboard extends React.Component {
@@ -46,35 +45,33 @@ class EventsDashboard extends React.Component {
   };
 
   componentDidMount = async () => {
-    let {skip} = queryString.parse (this.props.location.search);
+    let {skip} = queryString.parse(this.props.location.search);
     if (skip === '0' || !skip) {
-      this.props.history.push ('/events?skip=0&limit=5');
+      this.props.history.push('/events?skip=0&limit=5');
     }
-    const {token} = isAuthenticated ();
-    const events = await listEvents (skip, token);
-    this.setState (() => ({events}));
+    const events = await listEvents(skip);
+    this.setState(() => ({events}));
   };
 
   onPrev = async () => {
-    let {skip} = queryString.parse (this.props.location.search);
-    this.props.history.push (`/events?skip=${parseInt (skip, 10) - 5}&limit=5`);
+    let {skip} = queryString.parse(this.props.location.search);
+    this.props.history.push(`/events?skip=${parseInt(skip, 10) - 5}&limit=5`);
   };
 
   onNext = async () => {
-    let {skip} = queryString.parse (this.props.location.search);
-    this.props.history.push (`/events?skip=${parseInt (skip, 10) + 5}&limit=5`);
+    let {skip} = queryString.parse(this.props.location.search);
+    this.props.history.push(`/events?skip=${parseInt(skip, 10) + 5}&limit=5`);
   };
 
   componentDidUpdate = async prevProps => {
     if (prevProps.location.search !== this.props.location.search) {
-      const {skip} = queryString.parse (this.props.location.search);
-      const {token} = isAuthenticated ();
-      const events = await listEvents (skip, token);
-      this.setState (() => ({events}));
+      const {skip} = queryString.parse(this.props.location.search);
+      const events = await listEvents(skip);
+      this.setState(() => ({events}));
     }
   };
 
-  render () {
+  render() {
     const {classes} = this.props;
     return (
       <div>
@@ -89,19 +86,20 @@ class EventsDashboard extends React.Component {
           <Divider />
 
           <div className={classes.eventsList}>
-            {this.state.events.length > 0 &&
+            {this.state.events.length > 0 && (
               <React.Fragment>
-                {this.state.events.map (e => (
+                {this.state.events.map(e => (
                   <EventListCard key={e._id} event={e} />
                 ))}
-              </React.Fragment>}
+              </React.Fragment>
+            )}
           </div>
 
           <div className={classes.buttonGroup}>
             <ButtonGroup color="secondary" size="large">
               <Button
                 disabled={
-                  queryString.parse (this.props.location.search).skip === '0'
+                  queryString.parse(this.props.location.search).skip === '0'
                 }
                 onClick={this.onPrev}
               >
@@ -121,4 +119,4 @@ class EventsDashboard extends React.Component {
   }
 }
 
-export default withStyles (styles) (EventsDashboard);
+export default withStyles(styles)(EventsDashboard);
