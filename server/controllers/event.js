@@ -107,7 +107,10 @@ export const readPoster = (req, res) => {
 
 export const readEvent = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id);
+    const event = await Event.findById(req.params.id).populate(
+      'createdBy',
+      'name'
+    );
 
     if (!event) {
       return res.status(404).send();

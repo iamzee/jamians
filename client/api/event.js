@@ -49,6 +49,21 @@ export const listEvents = async skip => {
   }
 };
 
+export const readEvent = async eventId => {
+  try {
+    const {data} = await axios({
+      method: 'get',
+      url: `/api/events/${eventId}`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+    return data;
+  } catch (e) {
+    console.log(e.response);
+  }
+};
+
 export const updateEvent = async (eventId, event) => {
   console.log(event);
   try {
@@ -61,21 +76,6 @@ export const updateEvent = async (eventId, event) => {
         Authorization: 'Bearer ' + token,
       },
     });
-  } catch (e) {
-    console.log(e.response);
-  }
-};
-
-export const readEvent = async (eventId, token) => {
-  try {
-    const {data} = await axios({
-      method: 'get',
-      url: `/api/event/${eventId}`,
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    });
-    return data;
   } catch (e) {
     console.log(e.response);
   }

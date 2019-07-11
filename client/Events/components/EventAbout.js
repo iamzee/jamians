@@ -27,7 +27,6 @@ const styles = theme => ({
 class EventAbout extends React.Component {
   render() {
     const {event, classes} = this.props;
-    console.log(event.going);
     return (
       <div className={classes.root}>
         <Paper className={classes.paper}>
