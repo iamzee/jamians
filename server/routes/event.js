@@ -1,20 +1,9 @@
 import express from 'express';
 import {
-  POST_EVENT,
-  POST_POSTER,
-  list,
-  edit,
-  read,
-  update,
-  remove,
-  addGoing,
-  removeGoing,
-  addBookmark,
-  removeBookmark,
-  addDiscussion,
-  listDiscussion,
-  addComment,
-  listComment,
+  createEvent,
+  createPoster,
+  listEvents,
+  editEvent,
   readPoster,
 } from '../controllers/event';
 import auth from '../middlewares/auth';
@@ -23,13 +12,14 @@ const router = express.Router();
 
 router
   .route('/api/events')
-  .post(auth, POST_EVENT)
-  .get(auth, list)
-  .patch(auth, edit);
+  .post(auth, createEvent)
+  .get(auth, listEvents);
+
+router.route('/api/events/:id').patch(auth, editEvent);
 
 router
   .route('/api/events/:id/poster')
-  .post(auth, hasAuthorization, POST_POSTER)
+  .post(auth, hasAuthorization, createPoster)
   .get(auth, readPoster);
 
 // router

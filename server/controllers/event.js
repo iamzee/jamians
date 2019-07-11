@@ -6,7 +6,7 @@ import uuid from 'uuid/v1';
 import p from 'path';
 import tmp from 'tmp';
 
-export const POST_EVENT = async (req, res) => {
+export const createEvent = async (req, res) => {
   try {
     let event = _.pick(
       req.body,
@@ -27,7 +27,7 @@ export const POST_EVENT = async (req, res) => {
   }
 };
 
-export const POST_POSTER = async (req, res) => {
+export const createPoster = async (req, res) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
   form.maxFileSize = 0.5 * 1024 * 1024;
@@ -58,7 +58,7 @@ export const POST_POSTER = async (req, res) => {
   });
 };
 
-export const list = async (req, res) => {
+export const listEvents = async (req, res) => {
   try {
     const {skip, limit} = req.query;
     if (!skip || !limit) {
@@ -104,7 +104,31 @@ export const readPoster = (req, res) => {
   }
 };
 
-export const edit = (req, res) => {};
+export const editEvent = async (req, res) => {
+  try {
+    let updatedEvent = _.pick(
+      req.body,
+      'title',
+      'body',
+      'startDate',
+      'endDate',
+      'category',
+      'registration'
+    );
+
+    const event = await Event.findByIdAndUpdate(req.params.id, updatedEvent, {
+      new: true,
+    });
+
+    if (!event) {
+      return res.status(404).send();
+    }
+
+    res.send(event);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
 
 // export const read = async (req, res) => {
 //   const {id} = req.params;
