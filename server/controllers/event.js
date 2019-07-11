@@ -32,6 +32,7 @@ export const createPoster = async (req, res) => {
   form.keepExtensions = true;
   form.maxFileSize = 0.5 * 1024 * 1024;
   form.parse(req, async function(err, fields, files) {
+    console.log(files);
     if (err) {
       return res.status(400).send({error: err.message});
     }

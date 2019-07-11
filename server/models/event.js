@@ -68,12 +68,6 @@ const eventSchema = mongoose.Schema(
     ],
     registration: {
       type: String,
-      validate: {
-        validator: function(v) {
-          return validator.isURL(v);
-        },
-        message: props => `${props.value} is not a valid url.`,
-      },
     },
     comments: [
       {

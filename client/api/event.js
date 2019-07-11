@@ -1,24 +1,41 @@
 import axios from 'axios';
+import {isAuthenticated} from '../helpers/auth';
+const {token} = isAuthenticated();
 
-export const createEvent = async (event, token) => {
+export const createEvent = async event => {
   try {
-    await axios ({
+    const {data} = await axios({
       method: 'post',
-      url: '/api/event',
-      data: JSON.stringify (event),
+      url: '/api/events',
+      data: JSON.stringify(event),
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
       },
     });
+
+    if (event.poster) {
+      const bodyFormData = new FormData();
+      bodyFormData.set('poster', event.poster);
+
+      await axios({
+        method: 'post',
+        url: `/api/events/${data._id}/poster`,
+        data: bodyFormData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: 'Bearer ' + token,
+        },
+      });
+    }
   } catch (e) {
-    console.log (e);
+    console.log(e);
   }
 };
 
 export const listEvents = async (skip, token) => {
   try {
-    const {data} = await axios ({
+    const {data} = await axios({
       method: 'get',
       url: `/api/event?skip=${skip}&limit=5`,
       headers: {
@@ -28,30 +45,30 @@ export const listEvents = async (skip, token) => {
 
     return data.events;
   } catch (e) {
-    console.log (e.response);
+    console.log(e.response);
   }
 };
 
 export const updateEvent = async (eventId, event, token) => {
-  console.log (event);
+  console.log(event);
   try {
-    await axios ({
+    await axios({
       method: 'patch',
       url: `/api/event/${eventId}`,
-      data: JSON.stringify (event),
+      data: JSON.stringify(event),
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
       },
     });
   } catch (e) {
-    console.log (e.response);
+    console.log(e.response);
   }
 };
 
 export const readEvent = async (eventId, token) => {
   try {
-    const {data} = await axios ({
+    const {data} = await axios({
       method: 'get',
       url: `/api/event/${eventId}`,
       headers: {
@@ -60,13 +77,13 @@ export const readEvent = async (eventId, token) => {
     });
     return data;
   } catch (e) {
-    console.log (e.response);
+    console.log(e.response);
   }
 };
 
 export const addGoing = async (eventId, token) => {
   try {
-    await axios ({
+    await axios({
       method: 'post',
       url: `/api/event/${eventId}/going`,
       headers: {
@@ -74,13 +91,13 @@ export const addGoing = async (eventId, token) => {
       },
     });
   } catch (e) {
-    console.log (e.response);
+    console.log(e.response);
   }
 };
 
 export const removeGoing = async (eventId, token) => {
   try {
-    await axios ({
+    await axios({
       method: 'delete',
       url: `/api/event/${eventId}/going`,
       headers: {
@@ -88,13 +105,13 @@ export const removeGoing = async (eventId, token) => {
       },
     });
   } catch (e) {
-    console.log (e.response);
+    console.log(e.response);
   }
 };
 
 export const addBookmark = async (eventId, token) => {
   try {
-    await axios ({
+    await axios({
       method: 'post',
       url: `/api/event/${eventId}/bookmark`,
       headers: {
@@ -102,13 +119,13 @@ export const addBookmark = async (eventId, token) => {
       },
     });
   } catch (e) {
-    console.log (e.response);
+    console.log(e.response);
   }
 };
 
 export const removeBookmark = async (eventId, token) => {
   try {
-    await axios ({
+    await axios({
       method: 'delete',
       url: `/api/event/${eventId}/bookmark`,
       headers: {
@@ -116,16 +133,16 @@ export const removeBookmark = async (eventId, token) => {
       },
     });
   } catch (e) {
-    console.log (e.response);
+    console.log(e.response);
   }
 };
 
 export const addDiscussion = async (discussion, eventId, token) => {
   try {
-    const {data} = await axios ({
+    const {data} = await axios({
       method: 'post',
       url: `/api/event/${eventId}/discussion`,
-      data: JSON.stringify (discussion),
+      data: JSON.stringify(discussion),
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
@@ -133,13 +150,13 @@ export const addDiscussion = async (discussion, eventId, token) => {
     });
     return data;
   } catch (e) {
-    console.log (e.response);
+    console.log(e.response);
   }
 };
 
 export const listDiscussion = async (eventId, token) => {
   try {
-    const {data} = await axios ({
+    const {data} = await axios({
       method: 'get',
       url: `/api/event/${eventId}/discussion`,
       headers: {
@@ -148,16 +165,16 @@ export const listDiscussion = async (eventId, token) => {
     });
     return data.discussions;
   } catch (e) {
-    console.log (e.response);
+    console.log(e.response);
   }
 };
 
 export const addComment = async (comment, eventId, discussionId, token) => {
   try {
-    const {data} = await axios ({
+    const {data} = await axios({
       method: 'post',
       url: `/api/event/${eventId}/discussion/${discussionId}/addComment`,
-      data: JSON.stringify (comment),
+      data: JSON.stringify(comment),
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
@@ -165,13 +182,13 @@ export const addComment = async (comment, eventId, discussionId, token) => {
     });
     return data;
   } catch (e) {
-    console.log (e.response);
+    console.log(e.response);
   }
 };
 
 export const listComment = async (eventId, discussionId, token) => {
   try {
-    const {data} = await axios ({
+    const {data} = await axios({
       method: 'get',
       url: `/api/event/${eventId}/discussion/${discussionId}/addComment`,
       headers: {
@@ -180,6 +197,6 @@ export const listComment = async (eventId, discussionId, token) => {
     });
     return data.comments;
   } catch (e) {
-    console.log (e.response);
+    console.log(e.response);
   }
 };
