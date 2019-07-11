@@ -162,6 +162,30 @@ export const removeEvent = async (req, res) => {
   }
 };
 
+export const createComment = async (req, res) => {
+  try {
+    let comment = _.pick(req.body, ['text']);
+    const eventId = req.params.id;
+    const userId = req.user._id;
+
+    comment = {...comment, createdBy: userId};
+
+    const event = await Event.findByIdAndUpdate(
+      eventId,
+      {$push: {comments: comment}},
+      {new: true}
+    );
+
+    if (!event) {
+      return res.status(404).send();
+    }
+
+    res.send(event);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+};
+
 // export const read = async (req, res) => {
 //   const {id} = req.params;
 
