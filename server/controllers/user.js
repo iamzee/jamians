@@ -4,15 +4,42 @@ import formidable from 'formidable';
 import uuid from 'uuid/v1';
 import tmp from 'tmp';
 import p from 'path';
+import _ from 'lodash';
+import Department from '../models/department';
+import Course from '../models/course';
 
 export const create = async (req, res) => {
-  const user = new User(req.body);
-
   try {
+    let data = _.pick(req.body, [
+      'name',
+      'email',
+      'password',
+      'department',
+      'course',
+    ]);
+
+    if (data.department && !data.course) {
+      return res.status(400).send({
+        error: 'Department and Course fields are required for a student.',
+      });
+    }
+
+    if (data.department) {
+      const department = await Department.findById(data.department);
+      const course = await Course.findOne({
+        _id: data.course,
+        department: data.department,
+      });
+
+      if (!department || !course) {
+        return res.status(400).send();
+      }
+    }
+
+    const user = new User(data);
     await user.save();
     res.send(user);
   } catch (e) {
-    console.log(e);
     res.status(400).send(e);
   }
 };
@@ -178,11 +205,16 @@ export const addAvatar = (req, res) => {
         return res.status(400).send({error: 'Invalid file type.'});
       }
       await upload('avatar', blobName, files.avatar.path);
-      await User.findByIdAndUpdate(
+      const user = await User.findByIdAndUpdate(
         req.params.id,
         {avatar: blobName},
         {new: true}
       );
+
+      if (!user) {
+        res.status(404).send();
+      }
+
       res.send();
     } catch (e) {
       console.log(e);

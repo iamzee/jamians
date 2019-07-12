@@ -7,7 +7,7 @@ const router = express.Router();
 router
   .route('/api/course')
   .post(create)
-  .get(auth, list);
+  .get(list);
 
 router.route('/api/course/:id').get(read);
 

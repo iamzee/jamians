@@ -6,45 +6,46 @@ import PrivateRoute from './PrivateRouter';
 import PageLoader from '../components/PageLoader';
 
 // TIMETABLE IMPORTS
-const TimeTableDashboard = lazy (() => import ('../TimeTable/pages/Dashboard'));
+const TimeTableDashboard = lazy(() => import('../TimeTable/pages/Dashboard'));
 
 // SYLLABUS IMPORTS
-const SyllabusDashboard = lazy (() =>
-  import ('../Syllabus/pages/SyllabusDashboard')
+const SyllabusDashboard = lazy(() =>
+  import('../Syllabus/pages/SyllabusDashboard')
 );
 
 // NOTIFICATION IMPORTS
-const NotificationDashboard = lazy (() =>
-  import ('../Notifications/pages/NotificationDashboard')
+const NotificationDashboard = lazy(() =>
+  import('../Notifications/pages/NotificationDashboard')
 );
 
 // USER  IMPORTS
-const EditProfile = lazy (() => import ('../Users/pages/EditProfile'));
-const UsersDashboard = lazy (() => import ('../Users/pages/UsersDashboard'));
-const Profile = lazy (() => import ('../Users/pages/Profile'));
+const CreateUser = lazy(() => import('../Users/pages/CreateUser'));
+const EditProfile = lazy(() => import('../Users/pages/EditProfile'));
+const UsersDashboard = lazy(() => import('../Users/pages/UsersDashboard'));
+const Profile = lazy(() => import('../Users/pages/Profile'));
 
 // AUTH IMPORTS
-const Signup = lazy (() => import ('../Home/pages/Signup'));
-const Login = lazy (() => import ('../Home/pages/Login'));
+const Signup = lazy(() => import('../Home/pages/Signup'));
+const Login = lazy(() => import('../Home/pages/Login'));
 
 // NOTE IMPORTS
-const NotesPage = lazy (() => import ('../Notes/pages/NotesPage'));
-const NotesBookmarkPage = lazy (() =>
-  import ('../Notes/pages/NotesBookmarkPage')
+const NotesPage = lazy(() => import('../Notes/pages/NotesPage'));
+const NotesBookmarkPage = lazy(() =>
+  import('../Notes/pages/NotesBookmarkPage')
 );
-const Note = lazy (() => import ('../Notes/pages/Note'));
-const UploadNotesPage = lazy (() => import ('../Notes/pages/UploadNotesPage'));
+const Note = lazy(() => import('../Notes/pages/Note'));
+const UploadNotesPage = lazy(() => import('../Notes/pages/UploadNotesPage'));
 
 // QUESTION PAPER IMPORTS
-const Upload = lazy (() => import ('../QuestionPaper/pages/Upload'));
-const QuestionPaperDashboard = lazy (() =>
-  import ('../QuestionPaper/pages/QuestionPaperDashboard')
+const Upload = lazy(() => import('../QuestionPaper/pages/Upload'));
+const QuestionPaperDashboard = lazy(() =>
+  import('../QuestionPaper/pages/QuestionPaperDashboard')
 );
-const QuestionPaper = lazy (() =>
-  import ('../QuestionPaper/pages/QusetionPaper')
+const QuestionPaper = lazy(() =>
+  import('../QuestionPaper/pages/QusetionPaper')
 );
-const QuestionPaperBookmarkPage = lazy (() =>
-  import ('../QuestionPaper/pages/QuestionPaperBookmarkPage')
+const QuestionPaperBookmarkPage = lazy(() =>
+  import('../QuestionPaper/pages/QuestionPaperBookmarkPage')
 );
 
 // DISCUSSION IMPORTS
@@ -60,25 +61,24 @@ const QuestionPaperBookmarkPage = lazy (() =>
 // const Settings = lazy (() => import ('../Settings/pages/Settings'));
 
 // EVENT IMPORTS
-const Event = lazy (() => import ('../Events/pages/Event'));
-const NewEventPage = lazy (() => import ('../Events/pages/NewEventPage'));
-const EventsDashboard = lazy (() => import ('../Events/pages/EventsDashboard'));
-const EventBookmarksPage = lazy (() =>
-  import ('../Events/pages/EventBookmarksPage')
+const Event = lazy(() => import('../Events/pages/Event'));
+const NewEventPage = lazy(() => import('../Events/pages/NewEventPage'));
+const EventsDashboard = lazy(() => import('../Events/pages/EventsDashboard'));
+const EventBookmarksPage = lazy(() =>
+  import('../Events/pages/EventBookmarksPage')
 );
-const EventEditPage = lazy (() => import ('../Events/pages/EventEditPage'));
+const EventEditPage = lazy(() => import('../Events/pages/EventEditPage'));
 
 // HOME IMPORTS
-const HomePage = lazy (() => import ('../Home/pages/HomePage'));
+const HomePage = lazy(() => import('../Home/pages/HomePage'));
 
-const history = createHistory ();
+const history = createHistory();
 
 const MainRouter = props => (
   <React.Fragment>
     <Router history={history}>
       <Suspense fallback={<PageLoader />}>
         <Switch>
-
           {/* TIME TABLE ROUTES */}
           <PrivateRoute path="/timetable" component={TimeTableDashboard} />
 
@@ -143,7 +143,7 @@ const MainRouter = props => (
 
           {/* HOME ROUTES */}
           <Route path="/login" component={Login} />
-          <Route path="/signup" component={Signup} />
+          <Route path="/signup" component={CreateUser} />
           <PrivateRoute exact path="/" component={HomePage} />
         </Switch>
       </Suspense>

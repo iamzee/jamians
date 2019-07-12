@@ -35,7 +35,7 @@ router
 
 router
   .route('/api/users/:id/avatar')
-  .post(auth, hasAuthorization, addAvatar)
+  .post(addAvatar)
   .get(getAvatar);
 
 router
