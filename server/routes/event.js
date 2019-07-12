@@ -8,6 +8,7 @@ import {
   readEvent,
   removeEvent,
   createComment,
+  addReply,
 } from '../controllers/event';
 import auth from '../middlewares/auth';
 import hasAuthorization from '../middlewares/event';
@@ -30,6 +31,8 @@ router
   .get(readPoster);
 
 router.route('/api/events/:id/comments').post(auth, createComment);
+
+router.route('/api/events/:id/comments/:commentId/reply').post(auth, addReply);
 
 // router
 //   .route ('/api/event/:id')

@@ -116,6 +116,10 @@ export const readEvent = async (req, res) => {
         path: 'comments.createdBy',
         select: 'name',
       })
+      .populate({
+        path: 'comments.replies.createdBy',
+        select: 'name',
+      })
       .exec();
 
     if (!event) {
@@ -197,6 +201,39 @@ export const createComment = async (req, res) => {
 
     res.send(event);
   } catch (e) {
+    res.status(400).send(e);
+  }
+};
+
+export const addReply = async (req, res) => {
+  try {
+    let reply = _.pick(req.body, ['text']);
+    const eventId = req.params.id;
+    const {commentId} = req.params;
+
+    const event = await Event.findById(eventId);
+
+    event.comments.forEach(comment => {
+      if (comment._id.toString() === commentId) {
+        comment.replies.push({...reply, createdBy: req.user._id});
+      }
+    });
+
+    await event
+      .populate({
+        path: 'comments.createdBy',
+        select: 'name',
+      })
+      .populate({
+        path: 'comments.replies.createdBy',
+        select: 'name',
+      })
+      .execPopulate();
+
+    await event.save();
+    res.send(event);
+  } catch (e) {
+    console.log(e);
     res.status(400).send(e);
   }
 };

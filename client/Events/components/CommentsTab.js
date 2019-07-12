@@ -36,7 +36,11 @@ class CommentsTab extends React.Component {
         <CommentForm addComment={this.addComment} />
         {this.state.comments.length > 0 &&
           this.state.comments.map(comment => (
-            <Comment comment={comment} key={comment._id} />
+            <Comment
+              comment={comment}
+              key={comment._id}
+              eventId={this.props.event._id}
+            />
           ))}
       </div>
     );

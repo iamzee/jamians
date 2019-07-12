@@ -11,14 +11,14 @@ import Typography from '@material-ui/core/Typography';
 import {withStyles} from '@material-ui/core/styles';
 
 const styles = theme => ({
-  author: {
-    color: theme.palette.primary.main,
-  },
+  // author: {
+  //   color: theme.palette.primary.main,
+  // },
 });
 
-class CommentListItem extends React.Component {
+class Reply extends React.Component {
   render() {
-    const {comment, classes} = this.props;
+    const {reply, classes} = this.props;
     return (
       <ListItem>
         <ListItemAvatar>
@@ -30,28 +30,26 @@ class CommentListItem extends React.Component {
           primary={
             <React.Fragment>
               <Typography
-                className={clsx(
-                  comment.createdBy._id === comment.event.createdBy &&
-                    classes.author
-                )}
+                // className={clsx(
+                //   comment.createdBy._id === comment.event.createdBy &&
+                //     classes.author
+                // )}
                 variant="subtitle2"
                 component="span"
               >
-                {comment.createdBy.name}
+                {reply.createdBy.name}
               </Typography>
               &ndash;
               <Typography variant="caption" component="span">
-                {moment(comment.createdAt).format('MMM DD, hh:mm A')}
+                {moment(reply.createdAt).format('MMM DD, hh:mm A')}
               </Typography>
             </React.Fragment>
           }
-          secondary={
-            <Typography variant="subtitle1">{comment.text}</Typography>
-          }
+          secondary={<Typography variant="subtitle1">{reply.text}</Typography>}
         />
       </ListItem>
     );
   }
 }
 
-export default withStyles(styles)(CommentListItem);
+export default withStyles(styles)(Reply);

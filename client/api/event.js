@@ -82,6 +82,23 @@ export const addComment = async (eventId, comment) => {
   }
 };
 
+export const addReply = async (eventId, commentId, reply) => {
+  try {
+    const {data} = await axios({
+      method: 'post',
+      url: `/api/events/${eventId}/comments/${commentId}/reply`,
+      data: JSON.stringify(reply),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    });
+    return data;
+  } catch (e) {
+    console.log(e.response);
+  }
+};
+
 // export const updateEvent = async (eventId, event) => {
 //   console.log(event);
 //   try {
