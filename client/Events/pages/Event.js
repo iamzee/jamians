@@ -24,6 +24,7 @@ import EventAbout from '../components/EventAbout';
 import Navbar from '../../components/Navbar';
 import EventsNav from '../components/EventsNav';
 // import EventDiscussion from '../components/EventDiscussion';
+import CommentsTab from '../components/CommentsTab';
 
 const styles = theme => ({
   root: {
@@ -153,11 +154,11 @@ class Event extends React.Component {
               <AppBar position="static" color="secondary">
                 <Tabs value={this.state.tab} onChange={this.onTabChange}>
                   <Tab label="About" />
-                  <Tab label="Discussion" />
+                  <Tab label="Comments" />
                 </Tabs>
               </AppBar>
               {this.state.tab === 0 && <EventAbout event={event} />}
-              {/* {this.state.tab === 1 && <EventDiscussion event={event} />} */}
+              {this.state.tab === 1 && <CommentsTab event={event} />}
             </div>
           )}
         </div>

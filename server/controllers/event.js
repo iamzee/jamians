@@ -107,10 +107,16 @@ export const readPoster = (req, res) => {
 
 export const readEvent = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id).populate(
-      'createdBy',
-      'name'
-    );
+    const event = await Event.findById(req.params.id)
+      .populate({
+        path: 'createdBy',
+        select: 'name',
+      })
+      .populate({
+        path: 'comments.createdBy',
+        select: 'name',
+      })
+      .exec();
 
     if (!event) {
       return res.status(404).send();
@@ -174,7 +180,16 @@ export const createComment = async (req, res) => {
       eventId,
       {$push: {comments: comment}},
       {new: true}
-    );
+    )
+      .populate({
+        path: 'createdBy',
+        select: 'name',
+      })
+      .populate({
+        path: 'comments.createdBy',
+        select: 'name',
+      })
+      .exec();
 
     if (!event) {
       return res.status(404).send();
