@@ -62,20 +62,35 @@ export const readUser = async (userId, token) => {
   }
 };
 
-export const updateUser = async (userId, payload) => {
+export const updateMe = async payload => {
   try {
-    // return await axios({
-    //   method: 'patch',
-    //   url: `/api/users/${userId}`,
-    //   data: JSON.stringify(payload),
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: 'Bearer ' + token,
-    //   },
-    // });
-    // if (payload.avatar) {
-    //   return await
-    // }
+    try {
+      const user = await axios({
+        method: 'patch',
+        url: '/api/users/me',
+        data: JSON.stringify(payload),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+      });
+
+      if (payload.avatar) {
+        const bodyFormData = new FormData();
+        bodyFormData.set('avatar', payload.avatar);
+        return await axios({
+          method: 'patch',
+          url: '/api/users/me/avatar',
+          data: bodyFormData,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: 'Bearer ' + token,
+          },
+        });
+      }
+    } catch (e) {
+      console.log(e.response);
+    }
   } catch (e) {
     console.log(e.response);
   }
@@ -146,6 +161,22 @@ export const me = async () => {
         Authorization: 'Bearer ' + token,
       },
     });
+    return data;
+  } catch (e) {
+    console.log(e.response);
+  }
+};
+
+export const readMe = async () => {
+  try {
+    const {data} = await axios({
+      method: 'get',
+      url: '/api/users/me',
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+
     return data;
   } catch (e) {
     console.log(e.response);

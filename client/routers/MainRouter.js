@@ -20,7 +20,7 @@ const NotificationDashboard = lazy(() =>
 
 // USER  IMPORTS
 const CreateUser = lazy(() => import('../Users/pages/CreateUser'));
-const EditProfile = lazy(() => import('../Users/pages/EditProfile'));
+const EditMe = lazy(() => import('../Users/pages/EditMe'));
 const UsersDashboard = lazy(() => import('../Users/pages/UsersDashboard'));
 const Profile = lazy(() => import('../Users/pages/Profile'));
 
@@ -92,7 +92,7 @@ const MainRouter = props => (
           />
 
           {/* USER ROUTES */}
-          <PrivateRoute path="/users/:userId/edit" component={EditProfile} />
+          <PrivateRoute path="/users/:userId/edit" component={EditMe} />
           <PrivateRoute path="/users/:userId" component={Profile} />
           <PrivateRoute path="/users" component={UsersDashboard} />
 

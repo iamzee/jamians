@@ -1,5 +1,5 @@
 import User from '../models/user';
-import {upload, download} from '../azure/blob';
+import {upload, download, deleteBlob} from '../azure/blob';
 import formidable from 'formidable';
 import uuid from 'uuid/v1';
 import tmp from 'tmp';
@@ -68,22 +68,51 @@ export const read = async (req, res) => {
   }
 };
 
-export const update = async (req, res) => {
+export const updateMe = async (req, res) => {
   try {
-    const {id} = req.params;
+    const allowedUpdates = [
+      'name',
+      'email',
+      'password',
+      'department',
+      'course',
+    ];
+    const data = _.pick(req.body, allowedUpdates);
 
-    if (id !== req.user._id.toString()) {
-      return res.status(403).send();
-    }
-
-    const user = await User.findByIdAndUpdate(id, req.body, {new: true});
+    let user = await User.findById(req.user._id);
 
     if (!user) {
       return res.status(404).send();
     }
 
+    if (data.department && !data.course) {
+      return res.status(400).send({
+        error: 'Both department and course fields are required for a student',
+      });
+    }
+
+    if (data.department && data.course) {
+      const matchedDepartment = await Department.findById(data.department);
+      const matchedCourse = await Course.findOne({
+        _id: data.course,
+        department: data.department,
+      });
+
+      if (!matchedDepartment || !matchedCourse) {
+        return res.status(400).send();
+      }
+    }
+
+    _.keysIn(data).forEach(key => {
+      user[key] = data[key];
+    });
+
+    await user.save();
     res.send(user);
-  } catch (e) {}
+  } catch (e) {
+    console.log(e);
+    res.status(400).send(e);
+  }
 };
 
 export const addFriendRequestSent = async (req, res) => {
@@ -183,7 +212,7 @@ export const removeFriend = async (req, res) => {
   }
 };
 
-export const currentUser = (req, res) => {
+export const readMe = (req, res) => {
   res.send(req.user);
 };
 
@@ -223,7 +252,7 @@ export const addAvatar = (req, res) => {
   });
 };
 
-export const getAvatar = (req, res) => {
+export const readAvatar = (req, res) => {
   try {
     tmp.dir({unsafeCleanup: true}, async function _tempDirCreated(
       err,
@@ -248,4 +277,38 @@ export const getAvatar = (req, res) => {
   } catch (e) {
     res.status(500).send(e);
   }
+};
+
+export const updateMyAvatar = async (req, res) => {
+  let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+  form.maxFileSize = 0.5 * 1024 * 1024;
+  form.parse(req, async function(err, fields, files) {
+    if (err) {
+      return res.status(400).send({error: err.message});
+    }
+    try {
+      let user = await User.findById(req.user._id);
+
+      await deleteBlob('avatar', user.avatar);
+
+      let blobName = uuid();
+      if (files.avatar.type === 'image/png') {
+        blobName = `${blobName}.png`;
+      } else if (files.avatar.type === 'image/jpeg') {
+        blobName = `${blobName}.jpg`;
+      } else {
+        return res.status(400).send({error: 'Invalid file type.'});
+      }
+      await upload('avatar', blobName, files.avatar.path);
+      user.avatar = blobName;
+
+      await user.save();
+
+      res.send();
+    } catch (e) {
+      console.log(e);
+      res.status(500).send(e);
+    }
+  });
 };

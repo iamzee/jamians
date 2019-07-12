@@ -1,21 +1,21 @@
 import express from 'express';
 import {
   create,
-  update,
+  updateMe,
   list,
   read,
   addFriendRequestSent,
   removeFriendRequestSent,
   addFriend,
   removeFriend,
-  currentUser,
+  readMe,
   addAvatar,
-  getAvatar,
+  updateMyAvatar,
+  readAvatar,
 } from '../controllers/user';
 import {
   addFriendRequestReceived,
   removeFriendRequestReceived,
-  hasAuthorization,
 } from '../middlewares/user';
 import auth from '../middlewares/auth';
 
@@ -26,17 +26,19 @@ router
   .post(create)
   .get(auth, list);
 
-router.route('/api/users/me').get(auth, currentUser);
-
 router
-  .route('/api/users/:id')
-  .get(auth, read)
-  .patch(auth, update);
+  .route('/api/users/me')
+  .get(auth, readMe)
+  .patch(auth, updateMe);
+
+router.route('/api/users/me/avatar').patch(auth, updateMyAvatar);
+
+router.route('/api/users/:id').get(auth, read);
 
 router
   .route('/api/users/:id/avatar')
-  .post(addAvatar)
-  .get(getAvatar);
+  .get(readAvatar)
+  .post(addAvatar);
 
 router
   .route('/api/users/:id/friendRequest')

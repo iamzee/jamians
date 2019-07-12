@@ -51,14 +51,14 @@ const styles = theme => ({
 class UserForm extends React.Component {
   state = {
     file: null,
-    name: '',
-    email: '',
+    name: this.props.me ? this.props.me.name : '',
+    email: this.props.me ? this.props.me.email : '',
     password: '',
     error: '',
     departments: [],
-    department: '',
+    department: this.props.me ? this.props.me.department : '',
     courses: [],
-    course: '',
+    course: this.props.me ? this.props.me.course : '',
     isStudent: false,
     showDepartmentLoader: false,
     showDepartments: false,
@@ -66,6 +66,30 @@ class UserForm extends React.Component {
     showCourses: false,
     signing: false,
     done: false,
+  };
+
+  componentDidMount = async () => {
+    if (this.props.me.department) {
+      this.setState(() => ({
+        isStudent: true,
+        showDepartmentLoader: true,
+        showDepartments: false,
+      }));
+
+      const departments = await listDepartments();
+      this.setState(() => ({
+        showDepartmentLoader: false,
+        departments,
+        showDepartments: true,
+        showCourseLoader: true,
+      }));
+      const courses = await listCourses(this.props.me.department);
+      this.setState(() => ({
+        showCourseLoader: false,
+        showCourses: true,
+        courses,
+      }));
+    }
   };
 
   onFileChange = e => {
@@ -132,12 +156,14 @@ class UserForm extends React.Component {
   };
 
   onSubmit = async () => {
-    if (!this.state.name || !this.state.email || !this.state.password) {
-      this.setState(() => ({error: 'Name, Email and Password are required.'}));
+    if (!this.state.name || !this.state.email) {
+      this.setState(() => ({error: 'Name and Email are required.'}));
+    } else if (!this.props.me && !this.state.password) {
+      this.setState(() => ({error: 'Password is required'}));
     } else {
       if (!validator.isEmail(this.state.email)) {
         this.setState(() => ({error: 'Enter a valid email'}));
-      } else if (this.state.password.length < 6) {
+      } else if (this.state.password.length < 6 && !this.props.me) {
         this.setState(() => ({
           error: 'Password should be minimum of 6 characters.',
         }));
@@ -158,7 +184,7 @@ class UserForm extends React.Component {
         };
 
         this.props.onSubmit(user, () => {
-          this.setState(() => ({signing: false}));
+          this.setState(() => ({signing: false, done: true}));
         });
       }
     }
@@ -182,17 +208,19 @@ class UserForm extends React.Component {
 
         <div className={classes.root}>
           <Typography className={classes.title} variant="h4" gutterBottom>
-            New Account
+            {this.props.me ? 'Update Profile' : 'New Account'}
           </Typography>
           <Divider variant="middle" />
 
           {/* ---------------------------- AVATAR ----------------------------------------- */}
 
-          {this.state.file ? (
+          {this.props.me.avatar && !this.state.file ? (
             <React.Fragment>
               <Avatar
                 className={classes.avatar}
-                src={URL.createObjectURL(this.state.file)}
+                src={`http://localhost:3000/api/users/${
+                  this.props.me._id
+                }/avatar`}
               />
               <input
                 className={classes.fileInput}
@@ -208,20 +236,42 @@ class UserForm extends React.Component {
             </React.Fragment>
           ) : (
             <React.Fragment>
-              <Avatar className={classes.avatar}>
-                <PersonIcon />
-              </Avatar>
-              <input
-                className={classes.fileInput}
-                type="file"
-                onChange={this.onFileChange}
-                id="avatar"
-              />
-              <label htmlFor="avatar">
-                <Button color="secondary" component="span">
-                  Add Profile Photo
-                </Button>
-              </label>
+              {this.state.file ? (
+                <React.Fragment>
+                  <Avatar
+                    className={classes.avatar}
+                    src={URL.createObjectURL(this.state.file)}
+                  />
+                  <input
+                    className={classes.fileInput}
+                    type="file"
+                    onChange={this.onFileChange}
+                    id="avatar"
+                  />
+                  <label htmlFor="avatar">
+                    <Button color="secondary" component="span">
+                      Change
+                    </Button>
+                  </label>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <Avatar className={classes.avatar}>
+                    <PersonIcon />
+                  </Avatar>
+                  <input
+                    className={classes.fileInput}
+                    type="file"
+                    onChange={this.onFileChange}
+                    id="avatar"
+                  />
+                  <label htmlFor="avatar">
+                    <Button color="secondary" component="span">
+                      Add Profile Photo
+                    </Button>
+                  </label>
+                </React.Fragment>
+              )}
             </React.Fragment>
           )}
 
@@ -247,14 +297,16 @@ class UserForm extends React.Component {
             className={classes.textField}
           />
           <br />
-          <TextField
-            label="Password"
-            value={this.state.password}
-            onChange={this.onPasswordChange}
-            margin="normal"
-            variant="outlined"
-            className={classes.textField}
-          />
+          {!this.props.me && (
+            <TextField
+              label="Password"
+              value={this.state.password}
+              onChange={this.onPasswordChange}
+              margin="normal"
+              variant="outlined"
+              className={classes.textField}
+            />
+          )}
           <br />
 
           {/* ------------------------------- CHECKBOX  ---------------------------------------*/}
@@ -331,7 +383,7 @@ class UserForm extends React.Component {
           {this.state.signing ? (
             <Button variant="contained" color="secondary">
               <CircularProgress size={24} color="inherit" />
-              Creating Account
+              {this.props.me ? 'Saving' : 'Creating Account'}
             </Button>
           ) : (
             <Button
@@ -339,7 +391,7 @@ class UserForm extends React.Component {
               color="secondary"
               onClick={this.onSubmit}
             >
-              Create Account
+              {this.props.me ? 'Save' : 'Create Account'}
             </Button>
           )}
           <br />
@@ -348,6 +400,14 @@ class UserForm extends React.Component {
           <SnackbarComponent
             variant="error"
             message={this.state.error}
+            open={true}
+            onClose={this.onSnackbarClose}
+          />
+        )}
+        {this.state.done && (
+          <SnackbarComponent
+            variant="success"
+            message={'Profile updated. Refresh.'}
             open={true}
             onClose={this.onSnackbarClose}
           />
