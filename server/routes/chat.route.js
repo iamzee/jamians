@@ -1,12 +1,12 @@
-import express from 'express';
-import authCtrl from '../controllers/auth.controller';
-import chatCtrl from '../controllers/chat.controller';
+// import express from 'express';
+// import authCtrl from '../controllers/auth.controller';
+// import chatCtrl from '../controllers/chat.controller';
 
-const router = express.Router ();
+// const router = express.Router ();
 
-router
-  .route ('/api/chat')
-  .get (authCtrl.requireSignin, chatCtrl.list)
-  .post (authCtrl.requireSignin, chatCtrl.create);
+// router
+//   .route ('/api/chat')
+//   .get (authCtrl.requireSignin, chatCtrl.list)
+//   .post (authCtrl.requireSignin, chatCtrl.create);
 
-export default router;
+// export default router;
