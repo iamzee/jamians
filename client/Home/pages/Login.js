@@ -21,6 +21,7 @@ const styles = theme => ({
     [theme.breakpoints.down('xs')]: {
       padding: theme.spacing(2),
     },
+    textAlign: 'center',
   },
   title: {
     fontWeight: 300,

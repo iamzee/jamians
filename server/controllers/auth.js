@@ -1,11 +1,11 @@
 import User from '../models/user';
+import _ from 'lodash';
 
 export const login = async (req, res) => {
   try {
-    const user = await User.findByCredentials(
-      req.body.email,
-      req.body.password
-    );
+    const data = _.pick(req.body, ['email', 'password']);
+
+    const user = await User.findByCredentials(data.email, data.password);
 
     const token = await user.generateToken();
 
