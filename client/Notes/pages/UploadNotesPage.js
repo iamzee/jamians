@@ -10,7 +10,6 @@ import CardActions from '@material-ui/core/CardActions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {withStyles} from '@material-ui/core/styles';
 
-import {getSAS, upload} from '../../api/upload';
 import {listDepartments} from '../../api/department';
 import {listCourses} from '../../api/course';
 import {listSubjects} from '../../api/subject';
@@ -154,37 +153,18 @@ class UploadNotesPage extends React.Component {
     } else {
       this.setState (() => ({uploading: true, error: ''}));
 
-      const sasToken = await getSAS ('notes');
+      const note = {
+        name: this.state.file,
+        topic: this.state.topic,
+        description: this.state.description,
+        department: this.state.department,
+        course: this.state.course,
+        semester: this.state.semester,
+        subject: this.state.subject,
+      };
 
-      const {speedSummary, blobName} = await upload (
-        sasToken,
-        this.state.file,
-        'notes'
-      );
-
-      speedSummary.on ('progress', async () => {
-        const progressPercent = speedSummary.getCompletePercent ();
-        this.setState (() => ({
-          progressPercent,
-        }));
-
-        if (progressPercent == 100) {
-          const note = {
-            name: blobName,
-            topic: this.state.topic,
-            description: this.state.description,
-          };
-
-          await createNote (
-            note,
-            this.state.department,
-            this.state.course,
-            this.state.semester,
-            this.state.subject
-          );
-          this.setState (() => ({uploading: false, uploaded: true}));
-        }
-      });
+      await createNote (note);
+      this.setState (() => ({uploading: false, uploaded: true}));
     }
   };
 

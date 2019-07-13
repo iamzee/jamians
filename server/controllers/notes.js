@@ -2,35 +2,66 @@ import Note from '../models/notes';
 import Department from '../models/department';
 import Course from '../models/course';
 import Subject from '../models/subject';
+import formidable from 'formidable';
+import {upload} from '../azure/blob';
+import uuid from 'uuid/v1';
 
 export const create = async (req, res) => {
   try {
-    const {department, course, subject, semester} = req.query;
-    const d = await Department.findById (department);
-    const c = await Course.findOne ({
-      _id: course,
-      department: department,
-    });
-    const s = await Subject.findOne ({
-      _id: subject,
-      course: course,
-      semester: semester,
-    });
+    let form = new formidable.IncomingForm ();
+    form.keepExtensions = true;
+    form.maxFileSize = 200 * 1024 * 1024;
 
-    if (!d || !c || !s) {
-      return res.status (400).send ();
-    }
+    form.parse (req, async (err, fields, files) => {
+      if (err) {
+        return res.status (400).send (e);
+      }
 
-    const note = new Note ({
-      ...req.body,
-      createdBy: req.user._id,
-      department,
-      course,
-      subject,
-      semester,
+      if (files.name.type !== 'application/pdf') {
+        return res.status (400).send ({error: 'Invalid file type.'});
+      }
+
+      const {
+        topic,
+        description,
+        department,
+        course,
+        subject,
+        semester,
+      } = fields;
+
+      const d = await Department.findById (department);
+      const c = await Course.findOne ({
+        _id: course,
+        department: department,
+      });
+      const s = await Subject.findOne ({
+        _id: subject,
+        course: course,
+        semester: semester,
+      });
+
+      if (!d || !c || !s) {
+        return res.status (400).send ();
+      }
+
+      const blob = `${uuid ()}.pdf`;
+      await upload ('notes', blob, files.name.path);
+
+      const note = new Note ({
+        name: blob,
+        topic,
+        description,
+        createdBy: req.user._id,
+        department,
+        course,
+        subject,
+        semester,
+      });
+
+      await note.save ();
+      res.send (note);
     });
-    await note.save ();
-    res.send (note);
   } catch (e) {
     console.log (e);
     res.status (400).send (e);

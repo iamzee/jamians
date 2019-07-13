@@ -1,24 +1,28 @@
 import axios from 'axios';
+import _ from 'lodash';
 import {isAuthenticated} from '../helpers/auth';
 const {token} = isAuthenticated ();
 
-export const createNote = async (
-  note,
-  department,
-  course,
-  semester,
-  subject
-) => {
+export const createNote = async data => {
   try {
-    return await axios ({
+    const bodyFormData = new FormData ();
+    const keys = _.keys (data);
+
+    keys.forEach (key => {
+      bodyFormData.append (key, data[key]);
+    });
+
+    const note = await axios ({
       method: 'post',
-      url: `/api/notes?department=${department}&course=${course}&semester=${semester}&subject=${subject}`,
-      data: JSON.stringify (note),
+      url: `/api/notes`,
+      data: bodyFormData,
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         Authorization: 'Bearer ' + token,
       },
     });
+
+    return note;
   } catch (e) {
     console.log (e.response);
   }
