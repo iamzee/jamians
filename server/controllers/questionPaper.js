@@ -2,9 +2,11 @@ import QuestionPaper from '../models/questionPaper';
 import Department from '../models/department';
 import Course from '../models/course';
 import Subject from '../models/subject';
-import {upload} from '../azure/blob';
+import {upload, download} from '../azure/blob';
 import uuid from 'uuid/v1';
 import formidable from 'formidable';
+import tmp from 'tmp';
+import p from 'path';
 
 export const create = async (req, res) => {
   try {
@@ -167,5 +169,32 @@ export const listBookmarks = async (req, res) => {
     res.send ({questionPapers});
   } catch (e) {
     res.status (400).send (e);
+  }
+};
+
+export const downloadQuestionPaper = async (req, res) => {
+  try {
+    tmp.dir ({unsafeCleanup: true}, async function _tempDirCreated (
+      err,
+      path,
+      cleanCallback
+    ) {
+      if (err) {
+        throw new Error (err);
+      }
+
+      console.log ('Dir: ', path);
+
+      const questionPaper = await QuestionPaper.findById (req.params.id);
+
+      const blob = await download ('question-papers', questionPaper.name, path);
+
+      res.set ('Content-Type', blob.contentSettings.contentType);
+      res.sendFile (p.resolve (path, questionPaper.name));
+
+      cleanCallback ();
+    });
+  } catch (e) {
+    res.status (500).send (e);
   }
 };

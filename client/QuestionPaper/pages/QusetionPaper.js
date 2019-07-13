@@ -9,7 +9,6 @@ import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
 import {read} from '../../api/questionPaper';
-import {getSAS, download} from '../../api/upload';
 
 import Navbar from '../../components/Navbar';
 import QuestionPaperNav from '../components/QuestionPaperNav';
@@ -36,6 +35,9 @@ const styles = theme => ({
   button: {
     marginRight: theme.spacing (2),
   },
+  link: {
+    textDecoration: 'none',
+  },
 });
 
 class QuestionPaper extends React.Component {
@@ -48,16 +50,6 @@ class QuestionPaper extends React.Component {
 
     const questionPaper = await read (questionPaperId);
     this.setState (() => ({questionPaper}));
-  };
-
-  handleView = async () => {
-    const sasToken = await getSAS ('question-papers');
-    const downloadLink = download (
-      sasToken,
-      'question-papers',
-      this.state.questionPaper.name
-    );
-    window.open (downloadLink, '_blank');
   };
 
   render () {
@@ -118,14 +110,13 @@ class QuestionPaper extends React.Component {
                   </div>
                 </CardContent>
                 <CardActions>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={this.handleView}
-                    className={classes.button}
+                  <a
+                    className={classes.link}
+                    target="_blank"
+                    href={`http://localhost:3000/api/questionPaper/${questionPaper._id}/download`}
                   >
-                    View
-                  </Button>
+                    <Button color="secondary" component="span">View</Button>
+                  </a>
                   <BookmarkButton questionPaper={questionPaper} />
                 </CardActions>
               </Card>

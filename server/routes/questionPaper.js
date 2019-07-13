@@ -6,6 +6,7 @@ import {
   addBookmark,
   removeBookmark,
   listBookmarks,
+  downloadQuestionPaper,
 } from '../controllers/questionPaper';
 
 import auth from '../middlewares/auth';
@@ -22,5 +23,7 @@ router
   .route ('/api/questionPaper/:id/bookmark')
   .post (auth, addBookmark)
   .delete (auth, removeBookmark);
+
+router.route ('/api/questionPaper/:id/download').get (downloadQuestionPaper);
 
 export default router;
