@@ -3,7 +3,7 @@ import Department from '../models/department';
 import Course from '../models/course';
 import Subject from '../models/subject';
 import formidable from 'formidable';
-import {upload, download} from '../azure/blob';
+import {upload, download, deleteBlob} from '../azure/blob';
 import uuid from 'uuid/v1';
 import tmp from 'tmp';
 import p from 'path';
@@ -126,6 +126,8 @@ export const remove = async (req, res) => {
     if (!note) {
       return res.status (404).send ();
     }
+
+    await deleteBlob ('notes', note.name);
 
     res.send (note);
   } catch (e) {
