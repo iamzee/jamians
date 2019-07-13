@@ -107,3 +107,17 @@ export const getBookmarkedQuestionPapers = async () => {
     console.log (e.response);
   }
 };
+
+export const remove = async id => {
+  try {
+    return await axios ({
+      method: 'delete',
+      url: `/api/questionPaper/${id}`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+  } catch (e) {
+    console.log (e.response);
+  }
+};

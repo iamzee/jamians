@@ -3,6 +3,7 @@ import {
   create,
   list,
   read,
+  remove,
   addBookmark,
   removeBookmark,
   listBookmarks,
@@ -17,7 +18,7 @@ router.route ('/api/questionPaper').post (auth, create).get (auth, list);
 
 router.route ('/api/questionPaper/bookmark').get (auth, listBookmarks);
 
-router.route ('/api/questionPaper/:id').get (auth, read);
+router.route ('/api/questionPaper/:id').get (auth, read).delete (auth, remove);
 
 router
   .route ('/api/questionPaper/:id/bookmark')

@@ -2,7 +2,7 @@ import QuestionPaper from '../models/questionPaper';
 import Department from '../models/department';
 import Course from '../models/course';
 import Subject from '../models/subject';
-import {upload, download} from '../azure/blob';
+import {upload, download, deleteBlob} from '../azure/blob';
 import uuid from 'uuid/v1';
 import formidable from 'formidable';
 import tmp from 'tmp';
@@ -195,6 +195,29 @@ export const downloadQuestionPaper = async (req, res) => {
       cleanCallback ();
     });
   } catch (e) {
+    res.status (500).send (e);
+  }
+};
+
+export const remove = async (req, res) => {
+  try {
+    const questionPaperId = req.params.id;
+    const userId = req.user._id;
+
+    const questionPaper = await QuestionPaper.findOneAndDelete ({
+      _id: questionPaperId,
+      createdBy: userId,
+    });
+
+    if (!questionPaper) {
+      return res.status (404).send ();
+    }
+
+    await deleteBlob ('question-papers', questionPaper.name);
+
+    res.send (questionPaper);
+  } catch (e) {
+    console.log (e);
     res.status (500).send (e);
   }
 };

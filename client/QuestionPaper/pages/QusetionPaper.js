@@ -14,6 +14,8 @@ import Navbar from '../../components/Navbar';
 import QuestionPaperNav from '../components/QuestionPaperNav';
 import PageLoader from '../../components/PageLoader';
 import BookmarkButton from '../components/BookmarkButton';
+import DeleteButton from '../components/DeleteButton';
+import {isAuthenticated} from '../../helpers/auth';
 
 const styles = theme => ({
   container: {
@@ -55,6 +57,7 @@ class QuestionPaper extends React.Component {
   render () {
     const {questionPaper} = this.state;
     const {classes} = this.props;
+    const {user} = isAuthenticated ();
 
     return (
       <div>
@@ -118,6 +121,12 @@ class QuestionPaper extends React.Component {
                     <Button color="secondary" component="span">View</Button>
                   </a>
                   <BookmarkButton questionPaper={questionPaper} />
+                  {questionPaper.createdBy._id.toString () ===
+                    user._id.toString () &&
+                    <DeleteButton
+                      id={questionPaper._id}
+                      history={this.props.history}
+                    />}
                 </CardActions>
               </Card>
             : <PageLoader />}
