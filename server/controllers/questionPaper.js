@@ -2,35 +2,58 @@ import QuestionPaper from '../models/questionPaper';
 import Department from '../models/department';
 import Course from '../models/course';
 import Subject from '../models/subject';
+import {upload} from '../azure/blob';
+import uuid from 'uuid/v1';
+import formidable from 'formidable';
 
 export const create = async (req, res) => {
   try {
-    const {department, course, subject, semester} = req.query;
-    const d = await Department.findById (department);
-    const c = await Course.findOne ({
-      _id: course,
-      department: department,
-    });
-    const s = await Subject.findOne ({
-      _id: subject,
-      course: course,
-      semester: semester,
-    });
+    let form = new formidable.IncomingForm ();
+    form.keepExtensions = true;
+    form.maxFileSize = 200 * 1024 * 1024;
 
-    if (!d || !c || !s) {
-      return res.status (400).send ();
-    }
+    form.parse (req, async (err, fields, files) => {
+      if (err) {
+        return res.status (400).send (e);
+      }
 
-    const questionPaper = new QuestionPaper ({
-      ...req.body,
-      createdBy: req.user._id,
-      department,
-      course,
-      subject,
-      semester,
+      if (files.name.type !== 'application/pdf') {
+        return res.status (400).send ({error: 'Invalid file type.'});
+      }
+
+      const {year, department, course, subject, semester} = fields;
+
+      const d = await Department.findById (department);
+      const c = await Course.findOne ({
+        _id: course,
+        department: department,
+      });
+      const s = await Subject.findOne ({
+        _id: subject,
+        course: course,
+        semester: semester,
+      });
+
+      if (!d || !c || !s) {
+        return res.status (400).send ();
+      }
+
+      const blob = `${uuid ()}.pdf`;
+      await upload ('question-papers', blob, files.name.path);
+
+      const questionPaper = new QuestionPaper ({
+        name: blob,
+        year,
+        createdBy: req.user._id,
+        department,
+        course,
+        subject,
+        semester,
+      });
+
+      await questionPaper.save ();
+      res.send (questionPaper);
     });
-    await questionPaper.save ();
-    res.send (questionPaper);
   } catch (e) {
     console.log (e);
     res.status (400).send (e);

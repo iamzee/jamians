@@ -8,7 +8,6 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Snackbar from '@material-ui/core/Snackbar';
 import {withStyles} from '@material-ui/core/styles';
 
 import {semesters} from '../../helpers/notes';
@@ -16,7 +15,6 @@ import {listDepartments} from '../../api/department';
 import {listCourses} from '../../api/course';
 import {listSubjects} from '../../api/subject';
 import {years} from '../../helpers/questionPaper';
-import {getSAS, upload} from '../../api/upload';
 import {createQuestionPaper} from '../../api/questionPaper';
 
 import styles from '../styles/upload.style';
@@ -129,36 +127,17 @@ class Upload extends React.Component {
     } else {
       this.setState (() => ({uploading: true, error: ''}));
 
-      const sasToken = await getSAS ('question-papers');
+      const questionPaper = {
+        name: this.state.file,
+        department: this.state.department,
+        course: this.state.course,
+        subject: this.state.subject,
+        semester: this.state.semester,
+        year: this.state.year,
+      };
 
-      const {speedSummary, blobName} = await upload (
-        sasToken,
-        this.state.file,
-        'question-papers'
-      );
-
-      speedSummary.on ('progress', async () => {
-        const progressPercent = speedSummary.getCompletePercent ();
-        this.setState (() => ({
-          progressPercent,
-        }));
-
-        if (progressPercent == 100) {
-          const questionPaper = {
-            name: blobName,
-            year: this.state.year,
-          };
-
-          await createQuestionPaper (
-            questionPaper,
-            this.state.department,
-            this.state.course,
-            this.state.semester,
-            this.state.subject
-          );
-          this.setState (() => ({uploading: false, uploaded: true}));
-        }
-      });
+      await createQuestionPaper (questionPaper);
+      this.setState (() => ({uploading: false, uploaded: true}));
     }
   };
 

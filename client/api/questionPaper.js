@@ -1,26 +1,30 @@
 import axios from 'axios';
+import _ from 'lodash';
 import {isAuthenticated} from '../helpers/auth';
 const {token} = isAuthenticated ();
 
-export const createQuestionPaper = async (
-  questionPaper,
-  department,
-  course,
-  semester,
-  subject
-) => {
+export const createQuestionPaper = async data => {
   try {
-    return await axios ({
+    const bodyFormData = new FormData ();
+    const keys = _.keys (data);
+
+    keys.forEach (key => {
+      bodyFormData.append (key, data[key]);
+    });
+
+    const questionPaper = await axios ({
       method: 'post',
-      url: `/api/questionPaper?department=${department}&course=${course}&semester=${semester}&subject=${subject}`,
-      data: JSON.stringify (questionPaper),
+      url: `/api/questionPaper`,
+      data: bodyFormData,
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         Authorization: 'Bearer ' + token,
       },
     });
+
+    return questionPaper;
   } catch (e) {
-    console.log (e);
+    console.log (e.response);
   }
 };
 
