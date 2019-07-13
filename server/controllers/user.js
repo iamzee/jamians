@@ -10,7 +10,7 @@ import Course from '../models/course';
 
 export const create = async (req, res) => {
   try {
-    let data = _.pick(req.body, [
+    let data = _.pick (req.body, [
       'name',
       'email',
       'password',
@@ -19,52 +19,52 @@ export const create = async (req, res) => {
     ]);
 
     if (data.department && !data.course) {
-      return res.status(400).send({
+      return res.status (400).send ({
         error: 'Department and Course fields are required for a student.',
       });
     }
 
     if (data.department) {
-      const department = await Department.findById(data.department);
-      const course = await Course.findOne({
+      const department = await Department.findById (data.department);
+      const course = await Course.findOne ({
         _id: data.course,
         department: data.department,
       });
 
       if (!department || !course) {
-        return res.status(400).send();
+        return res.status (400).send ();
       }
     }
 
-    const user = new User(data);
-    await user.save();
-    res.send(user);
+    const user = new User (data);
+    await user.save ();
+    res.send (user);
   } catch (e) {
-    res.status(400).send(e);
+    res.status (400).send (e);
   }
 };
 
 export const list = async (req, res) => {
   try {
-    const users = await User.find({});
-    res.send({users});
+    const users = await User.find ({});
+    res.send ({users});
   } catch (e) {
-    res.status(500).send();
+    res.status (500).send ();
   }
 };
 
 export const read = async (req, res) => {
   try {
     const {id} = req.params;
-    const user = await User.findById(id);
+    const user = await User.findById (id);
 
     if (!user) {
-      return res.status(404).send();
+      return res.status (404).send ();
     }
 
-    res.send(user);
+    res.send (user);
   } catch (e) {
-    res.status(400).send(e);
+    res.status (400).send (e);
   }
 };
 
@@ -77,41 +77,41 @@ export const updateMe = async (req, res) => {
       'department',
       'course',
     ];
-    const data = _.pick(req.body, allowedUpdates);
+    const data = _.pick (req.body, allowedUpdates);
 
-    let user = await User.findById(req.user._id);
+    let user = await User.findById (req.user._id);
 
     if (!user) {
-      return res.status(404).send();
+      return res.status (404).send ();
     }
 
     if (data.department && !data.course) {
-      return res.status(400).send({
+      return res.status (400).send ({
         error: 'Both department and course fields are required for a student',
       });
     }
 
     if (data.department && data.course) {
-      const matchedDepartment = await Department.findById(data.department);
-      const matchedCourse = await Course.findOne({
+      const matchedDepartment = await Department.findById (data.department);
+      const matchedCourse = await Course.findOne ({
         _id: data.course,
         department: data.department,
       });
 
       if (!matchedDepartment || !matchedCourse) {
-        return res.status(400).send();
+        return res.status (400).send ();
       }
     }
 
-    _.keysIn(data).forEach(key => {
+    _.keysIn (data).forEach (key => {
       user[key] = data[key];
     });
 
-    await user.save();
-    res.send(user);
+    await user.save ();
+    res.send (user);
   } catch (e) {
-    console.log(e);
-    res.status(400).send(e);
+    console.log (e);
+    res.status (400).send (e);
   }
 };
 
@@ -120,16 +120,16 @@ export const addFriendRequestSent = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    const user = await User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate (
       userId,
       {
         $push: {friendRequestsSent: friendId},
       },
       {new: true}
     );
-    res.send(user);
+    res.send (user);
   } catch (e) {
-    res.status(400).send(e);
+    res.status (400).send (e);
   }
 };
 
@@ -138,16 +138,16 @@ export const removeFriendRequestSent = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    const user = await User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate (
       userId,
       {
         $pull: {friendRequestsSent: friendId},
       },
       {new: true}
     );
-    res.send(user);
+    res.send (user);
   } catch (e) {
-    res.status(400).send(e);
+    res.status (400).send (e);
   }
 };
 
@@ -156,24 +156,24 @@ export const addFriend = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    const friendRequest = req.user.friendRequestsReceived.find(
-      friendRequests => friendRequests.toString() === friendId
+    const friendRequest = req.user.friendRequestsReceived.find (
+      friendRequests => friendRequests.toString () === friendId
     );
 
     if (!friendRequest) {
-      return res.status(400).send();
+      return res.status (400).send ();
     }
 
-    const friend = await User.findByIdAndUpdate(friendId, {
+    const friend = await User.findByIdAndUpdate (friendId, {
       $pull: {friendRequestsSent: userId},
       $push: {friends: userId},
     });
 
     if (!friend) {
-      return res.status(404).send();
+      return res.status (404).send ();
     }
 
-    const user = await User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate (
       userId,
       {
         $pull: {friendRequestsReceived: friendId},
@@ -182,7 +182,7 @@ export const addFriend = async (req, res) => {
       {new: true}
     );
 
-    res.send(user);
+    res.send (user);
   } catch (e) {}
 };
 
@@ -191,124 +191,126 @@ export const removeFriend = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    const friend = await User.findByIdAndUpdate(
+    const friend = await User.findByIdAndUpdate (
       friendId,
       {$pull: {friends: userId}},
       {new: true}
     );
 
     if (!friend) {
-      return res.status(404).send();
+      return res.status (404).send ();
     }
 
-    const user = await User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate (
       userId,
       {$pull: {friends: friendId}},
       {new: true}
     );
-    res.send(user);
+    res.send (user);
   } catch (e) {
-    res.status(400).send(e);
+    res.status (400).send (e);
   }
 };
 
 export const readMe = (req, res) => {
-  res.send(req.user);
+  res.send (req.user);
 };
 
 export const addAvatar = (req, res) => {
-  let form = new formidable.IncomingForm();
+  let form = new formidable.IncomingForm ();
   form.keepExtensions = true;
   form.maxFileSize = 0.5 * 1024 * 1024;
-  form.parse(req, async function(err, fields, files) {
+  form.parse (req, async function (err, fields, files) {
     if (err) {
-      return res.status(400).send({error: err.message});
+      return res.status (400).send ({error: err.message});
     }
     try {
-      let blobName = uuid();
+      let blobName = uuid ();
       if (files.avatar.type === 'image/png') {
         blobName = `${blobName}.png`;
       } else if (files.avatar.type === 'image/jpeg') {
         blobName = `${blobName}.jpg`;
       } else {
-        return res.status(400).send({error: 'Invalid file type.'});
+        return res.status (400).send ({error: 'Invalid file type.'});
       }
-      await upload('avatar', blobName, files.avatar.path);
-      const user = await User.findByIdAndUpdate(
+      await upload ('avatar', blobName, files.avatar.path);
+      const user = await User.findByIdAndUpdate (
         req.params.id,
         {avatar: blobName},
         {new: true}
       );
 
       if (!user) {
-        res.status(404).send();
+        res.status (404).send ();
       }
 
-      res.send();
+      res.send ();
     } catch (e) {
-      console.log(e);
-      res.status(500).send(e);
+      console.log (e);
+      res.status (500).send (e);
     }
   });
 };
 
 export const readAvatar = (req, res) => {
   try {
-    tmp.dir({unsafeCleanup: true}, async function _tempDirCreated(
+    tmp.dir ({unsafeCleanup: true}, async function _tempDirCreated (
       err,
       path,
       cleanCallback
     ) {
       if (err) {
-        throw new Error(err);
+        throw new Error (err);
       }
 
-      console.log('Dir: ', path);
+      console.log ('Dir: ', path);
 
-      const user = await User.findById(req.params.id);
+      const user = await User.findById (req.params.id);
 
-      const blob = await download('avatar', user.avatar, path);
+      const blob = await download ('avatar', user.avatar, path);
 
-      res.set('Content-Type', blob.contentSettings.contentType);
-      res.sendFile(p.resolve(path, user.avatar));
+      res.set ('Content-Type', blob.contentSettings.contentType);
+      res.sendFile (p.resolve (path, user.avatar));
 
-      cleanCallback();
+      cleanCallback ();
     });
   } catch (e) {
-    res.status(500).send(e);
+    res.status (500).send (e);
   }
 };
 
 export const updateMyAvatar = async (req, res) => {
-  let form = new formidable.IncomingForm();
+  let form = new formidable.IncomingForm ();
   form.keepExtensions = true;
   form.maxFileSize = 0.5 * 1024 * 1024;
-  form.parse(req, async function(err, fields, files) {
+  form.parse (req, async function (err, fields, files) {
     if (err) {
-      return res.status(400).send({error: err.message});
+      return res.status (400).send ({error: err.message});
     }
     try {
-      let user = await User.findById(req.user._id);
+      let user = await User.findById (req.user._id);
 
-      await deleteBlob('avatar', user.avatar);
+      if (user.avatar) {
+        await deleteBlob ('avatar', user.avatar);
+      }
 
-      let blobName = uuid();
+      let blobName = uuid ();
       if (files.avatar.type === 'image/png') {
         blobName = `${blobName}.png`;
       } else if (files.avatar.type === 'image/jpeg') {
         blobName = `${blobName}.jpg`;
       } else {
-        return res.status(400).send({error: 'Invalid file type.'});
+        return res.status (400).send ({error: 'Invalid file type.'});
       }
-      await upload('avatar', blobName, files.avatar.path);
+      await upload ('avatar', blobName, files.avatar.path);
       user.avatar = blobName;
 
-      await user.save();
+      await user.save ();
 
-      res.send();
+      res.send ();
     } catch (e) {
-      console.log(e);
-      res.status(500).send(e);
+      console.log (e);
+      res.status (500).send (e);
     }
   });
 };

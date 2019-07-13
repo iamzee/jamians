@@ -8,8 +8,6 @@ import PersonIcon from '@material-ui/icons/Person';
 import ListItemText from '@material-ui/core/ListItemText';
 import {withStyles} from '@material-ui/core/styles';
 
-import {getSAS, download} from '../../api/upload';
-
 const styles = theme => ({
   link: {
     textDecoration: 'none',
@@ -17,38 +15,24 @@ const styles = theme => ({
   },
 });
 
-class UserSearchItem extends React.Component {
-  state = {
-    posterLink: null,
-  };
-
-  componentDidMount = async () => {
-    if (this.props.user.avatar) {
-      const sasToken = await getSAS('avatar');
-      const posterLink = download(sasToken, 'avatar', this.props.user.avatar);
-      this.setState(() => ({posterLink}));
-    }
-  };
-
-  render() {
-    const {classes, user} = this.props;
-    return (
-      <Link to={`/users/${user._id}`} key={user._id} className={classes.link}>
-        <ListItem>
-          <ListItemAvatar>
-            {this.state.posterLink ? (
-              <Avatar src={this.state.posterLink} />
-            ) : (
-              <Avatar>
+const UserSearchItem = props => {
+  const {classes, user} = props;
+  return (
+    <Link to={`/users/${user._id}`} key={user._id} className={classes.link}>
+      <ListItem>
+        <ListItemAvatar>
+          {user.avatar
+            ? <Avatar
+                src={`http://localhost:3000/api/users/${user._id}/avatar`}
+              />
+            : <Avatar>
                 <PersonIcon />
-              </Avatar>
-            )}
-          </ListItemAvatar>
-          <ListItemText primary={user.name} />
-        </ListItem>
-      </Link>
-    );
-  }
-}
+              </Avatar>}
+        </ListItemAvatar>
+        <ListItemText primary={user.name} />
+      </ListItem>
+    </Link>
+  );
+};
 
-export default withStyles(styles)(UserSearchItem);
+export default withStyles (styles) (UserSearchItem);

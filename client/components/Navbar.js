@@ -24,9 +24,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import Avatar from '@material-ui/core/Avatar';
 import Badge from '@material-ui/core/Badge';
 
-import {me} from '../api/user';
-import {getSAS, download} from '../api/upload';
-import {countUnseen} from '../api/notification';
+import {isAuthenticated} from '../helpers/auth';
 
 const styles = theme => ({
   root: {
@@ -92,28 +90,13 @@ class Navbar extends React.Component {
     count: null,
   };
 
-  componentDidMount = async () => {
-    const user = await me ();
-    this.setState (() => ({user}));
-
-    if (user.avatar) {
-      const sasToken = await getSAS ('avatar');
-      const avatarLink = download (sasToken, 'avatar', user.avatar);
-      this.setState (() => ({
-        avatarLink,
-      }));
-    }
-
-    const count = await countUnseen ();
-    this.setState (() => ({count}));
-  };
-
   toggleDrawer = open => () => {
     this.setState (() => ({open}));
   };
 
   render () {
     const {classes} = this.props;
+    const {user} = isAuthenticated ();
     return (
       <div>
         <div className={classes.root}>
@@ -152,19 +135,18 @@ class Navbar extends React.Component {
               <div className={classes.list} style={{height: '100%'}}>
 
                 <div className={classes.avatarSection}>
-                  {this.state.avatarLink
+                  {user.avatar
                     ? <Avatar
                         className={classes.avatar}
-                        src={this.state.avatarLink}
+                        src={`http://localhost:3000/api/users/${user._id}/avatar`}
                       />
                     : <Avatar className={classes.avatar}>
                         <PersonIcon />
                       </Avatar>}
 
-                  {this.state.user &&
-                    <Typography variant="h6">
-                      {this.state.user.name}
-                    </Typography>}
+                  <Typography variant="h6">
+                    {user.name}
+                  </Typography>
                 </div>
 
                 <List>

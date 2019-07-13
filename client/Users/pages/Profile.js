@@ -10,19 +10,19 @@ import {withStyles} from '@material-ui/core/styles';
 
 import {isAuthenticated} from '../../helpers/auth';
 import {readUser} from '../../api/user';
-import {getSAS, download} from '../../api/upload';
 import ProfileActionButton from '../components/ProfileActionButton';
 import Navbar from '../../components/Navbar';
+import PageLoader from '../../components/PageLoader';
 
 const styles = theme => ({
   root: {
     maxWidth: 600,
     margin: 'auto',
-    marginTop: theme.spacing(10),
-    padding: theme.spacing(5),
-    [theme.breakpoints.down('xs')]: {
-      marginTop: theme.spacing(10),
-      padding: theme.spacing(2),
+    marginTop: theme.spacing (10),
+    padding: theme.spacing (5),
+    [theme.breakpoints.down ('xs')]: {
+      marginTop: theme.spacing (10),
+      padding: theme.spacing (2),
     },
   },
   card: {
@@ -42,59 +42,52 @@ class Profile extends React.Component {
   state = {
     me: null,
     user: null,
-    posterLink: null,
   };
 
   componentDidMount = async () => {
-    let {user: me, token} = isAuthenticated();
+    let {user: me, token} = isAuthenticated ();
     const {userId} = this.props.match.params;
-    me = await readUser(me._id, token);
-    const user = await readUser(userId, token);
+    me = await readUser (me._id, token);
+    const user = await readUser (userId, token);
 
-    if (user.avatar) {
-      const sasToken = await getSAS('avatar');
-      const posterLink = download(sasToken, 'avatar', user.avatar);
-      this.setState(() => ({posterLink}));
-    }
-
-    this.setState(() => ({me, user}));
+    this.setState (() => ({me, user}));
   };
 
-  render() {
+  render () {
     const {me, user, posterLink} = this.state;
     const {classes} = this.props;
-    if (me && user) {
-      return (
-        <div>
-          <Navbar title="Profile" />
+    return (
+      <div>
+        <Navbar title="Profile" />
 
-          <div className={classes.root}>
-            <Card className={classes.card}>
-              <CardContent>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
-                    {posterLink ? (
-                      <Avatar className={classes.avatar} src={posterLink} />
-                    ) : (
-                      <Avatar className={classes.avatar}>
-                        <PersonIcon />
-                      </Avatar>
-                    )}
+        {me && user
+          ? <div className={classes.root}>
+              <Card className={classes.card}>
+                <CardContent>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                      {user.avatar
+                        ? <Avatar
+                            className={classes.avatar}
+                            src={`http://localhost:3000/api/users/${user._id}/avatar`}
+                          />
+                        : <Avatar className={classes.avatar}>
+                            <PersonIcon />
+                          </Avatar>}
+                    </Grid>
+                    <Grid item xs={!2} sm={6} className={classes.infoSection}>
+                      <Typography variant="h5">{user.name}</Typography>
+                      <ProfileActionButton me={me} user={user} />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={!2} sm={6} className={classes.infoSection}>
-                    <Typography variant="h5">{user.name}</Typography>
-                    <ProfileActionButton me={me} user={user} />
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      );
-    }
+                </CardContent>
+              </Card>
+            </div>
+          : <PageLoader />}
 
-    return <div>Loading...</div>;
+      </div>
+    );
   }
 }
 
-export default withStyles(styles)(Profile);
+export default withStyles (styles) (Profile);
