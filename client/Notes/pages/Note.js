@@ -10,7 +10,6 @@ import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core/styles';
 
 import {readNote} from '../../api/notes';
-import {getSAS, download} from '../../api/upload';
 import {isAuthenticated} from '../../helpers/auth';
 import BookmarkButton from '../components/BookmarkButton';
 import Navbar from '../../components/Navbar';
@@ -33,6 +32,9 @@ const styles = theme => ({
   contentBody: {
     marginTop: theme.spacing (2),
   },
+  link: {
+    textDecoration: 'none',
+  },
 });
 
 class Note extends React.Component {
@@ -44,12 +46,6 @@ class Note extends React.Component {
     const {noteId} = this.props.match.params;
     const note = await readNote (noteId);
     this.setState (() => ({note}));
-  };
-
-  onView = async () => {
-    const sasToken = getSAS ('notes');
-    const downloadLink = download (sasToken, 'notes', this.state.note.name);
-    window.open (downloadLink, '_blank');
   };
 
   render () {
@@ -115,9 +111,14 @@ class Note extends React.Component {
                   </div>
                 </CardContent>
                 <CardActions>
-                  <Button color="secondary" onClick={this.onView}>
-                    View
-                  </Button>
+                  <a
+                    className={classes.link}
+                    target="_blank"
+                    href={`http://localhost:3000/api/notes/${note._id}/download`}
+                  >
+                    <Button color="secondary" component="span">View</Button>
+                  </a>
+
                   <BookmarkButton note={note} />
                   {user._id.toString () === note.createdBy._id.toString () &&
                     <DeleteButton note={note} history={this.props.history} />}

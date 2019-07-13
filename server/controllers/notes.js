@@ -3,8 +3,10 @@ import Department from '../models/department';
 import Course from '../models/course';
 import Subject from '../models/subject';
 import formidable from 'formidable';
-import {upload} from '../azure/blob';
+import {upload, download} from '../azure/blob';
 import uuid from 'uuid/v1';
+import tmp from 'tmp';
+import p from 'path';
 
 export const create = async (req, res) => {
   try {
@@ -196,5 +198,32 @@ export const getBookmarkedNotes = async (req, res) => {
     res.send ({notes});
   } catch (e) {
     res.status (400).send (e);
+  }
+};
+
+export const downloadNote = async (req, res) => {
+  try {
+    tmp.dir ({unsafeCleanup: true}, async function _tempDirCreated (
+      err,
+      path,
+      cleanCallback
+    ) {
+      if (err) {
+        throw new Error (err);
+      }
+
+      console.log ('Dir: ', path);
+
+      const note = await Note.findById (req.params.id);
+
+      const blob = await download ('notes', note.name, path);
+
+      res.set ('Content-Type', blob.contentSettings.contentType);
+      res.sendFile (p.resolve (path, note.name));
+
+      cleanCallback ();
+    });
+  } catch (e) {
+    res.status (500).send (e);
   }
 };

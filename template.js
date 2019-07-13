@@ -23,7 +23,6 @@ export default () => {
         <div id="root"></div>
         <script src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="/bundles/main.bundle.js"></script>
-        <script type="text/javascript" src="/js/azure-storage.blob.min.js"></script>
       </body>
     </html>  
   `;
