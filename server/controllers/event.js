@@ -1,7 +1,7 @@
 import Event from '../models/event';
 import formidable from 'formidable';
 import _ from 'lodash';
-import {upload, download} from '../azure/blob';
+import {upload, download, deleteBlob} from '../azure/blob';
 import uuid from 'uuid/v1';
 import p from 'path';
 import tmp from 'tmp';
@@ -24,6 +24,7 @@ export const createEvent = async (req, res) => {
         'endDate',
         'category',
         'registration',
+        'poster',
       ];
 
       let blob = null;
@@ -61,38 +62,6 @@ export const createEvent = async (req, res) => {
   } catch (e) {
     res.status(400).send(e);
   }
-};
-
-export const createPoster = async (req, res) => {
-  let form = new formidable.IncomingForm();
-  form.keepExtensions = true;
-  form.maxFileSize = 0.5 * 1024 * 1024;
-  form.parse(req, async function(err, fields, files) {
-    console.log(files);
-    if (err) {
-      return res.status(400).send({error: err.message});
-    }
-    try {
-      let blobName = uuid();
-      if (files.poster.type === 'image/png') {
-        blobName = `${blobName}.png`;
-      } else if (files.poster.type === 'image/jpeg') {
-        blobName = `${blobName}.jpg`;
-      } else {
-        return res.status(400).send({error: 'Invalid file type.'});
-      }
-      await upload('events', blobName, files.poster.path);
-
-      await Event.findByIdAndUpdate(
-        req.params.id,
-        {poster: blobName},
-        {new: true}
-      );
-      res.send();
-    } catch (e) {
-      res.status(500).send(e);
-    }
-  });
 };
 
 export const listEvents = async (req, res) => {
@@ -168,27 +137,65 @@ export const readEvent = async (req, res) => {
   }
 };
 
-export const editEvent = async (req, res) => {
+export const editEvent = (req, res) => {
   try {
-    let updatedEvent = _.pick(
-      req.body,
-      'title',
-      'body',
-      'startDate',
-      'endDate',
-      'category',
-      'registration'
-    );
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.maxFileSize = 0.5 * 1024 * 1024;
 
-    const event = await Event.findByIdAndUpdate(req.params.id, updatedEvent, {
-      new: true,
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        return res.status(400).send(err);
+      }
+
+      const event = await Event.findById(req.params.id);
+
+      if (!event) {
+        return res.status(404).send();
+      }
+
+      const allowedKeys = [
+        'title',
+        'body',
+        'startDate',
+        'endDate',
+        'category',
+        'registration',
+        'poster',
+      ];
+
+      allowedKeys.forEach(key => {
+        if (!fields[key]) {
+          delete fields[key];
+        }
+      });
+
+      console.log('FIELDS______________', fields);
+
+      if (files.poster) {
+        if (event.poster) {
+          await deleteBlob('events', event.poster);
+        }
+
+        let blob = uuid();
+        if (files.poster.type === 'image/png') {
+          blob = `${blob}.png`;
+        } else if (files.poster.type === 'image/jpeg') {
+          blob = `${blob}.jpg`;
+        } else {
+          return res.status(400).send({error: 'Invalid file type.'});
+        }
+
+        await upload('events', blob, files.poster.path);
+        fields.poster = blob;
+      }
+
+      _.keys(fields).forEach(key => {
+        event[key] = fields[key];
+      });
+      await event.save();
+      res.send(event);
     });
-
-    if (!event) {
-      return res.status(404).send();
-    }
-
-    res.send(event);
   } catch (e) {
     res.status(400).send(e);
   }

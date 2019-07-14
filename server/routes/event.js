@@ -1,7 +1,6 @@
 import express from 'express';
 import {
   createEvent,
-  createPoster,
   listEvents,
   editEvent,
   readPoster,
@@ -25,10 +24,7 @@ router
   .patch(auth, editEvent)
   .delete(auth, hasAuthorization, removeEvent);
 
-router
-  .route('/api/events/:id/poster')
-  .post(auth, hasAuthorization, createPoster)
-  .get(readPoster);
+router.route('/api/events/:id/poster').get(readPoster);
 
 router.route('/api/events/:id/comments').post(auth, createComment);
 
