@@ -18,11 +18,11 @@ const styles = theme => ({
   root: {
     maxWidth: 600,
     margin: 'auto',
-    marginTop: theme.spacing (10),
-    padding: theme.spacing (5),
-    [theme.breakpoints.down ('xs')]: {
-      marginTop: theme.spacing (10),
-      padding: theme.spacing (2),
+    marginTop: theme.spacing(10),
+    padding: theme.spacing(5),
+    [theme.breakpoints.down('xs')]: {
+      marginTop: theme.spacing(10),
+      padding: theme.spacing(2),
     },
   },
   card: {
@@ -45,49 +45,54 @@ class Profile extends React.Component {
   };
 
   componentDidMount = async () => {
-    let {user: me, token} = isAuthenticated ();
+    let {user: me, token} = isAuthenticated();
     const {userId} = this.props.match.params;
-    me = await readUser (me._id, token);
-    const user = await readUser (userId, token);
+    me = await readUser(me._id, token);
+    const user = await readUser(userId, token);
 
-    this.setState (() => ({me, user}));
+    this.setState(() => ({me, user}));
   };
 
-  render () {
+  render() {
     const {me, user, posterLink} = this.state;
     const {classes} = this.props;
     return (
       <div>
         <Navbar title="Profile" />
 
-        {me && user
-          ? <div className={classes.root}>
-              <Card className={classes.card}>
-                <CardContent>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} sm={6}>
-                      {user.avatar
-                        ? <Avatar
-                            className={classes.avatar}
-                            src={`http://localhost:3000/api/users/${user._id}/avatar`}
-                          />
-                        : <Avatar className={classes.avatar}>
-                            <PersonIcon />
-                          </Avatar>}
-                    </Grid>
-                    <Grid item xs={!2} sm={6} className={classes.infoSection}>
-                      <Typography variant="h5">{user.name}</Typography>
-                      <ProfileActionButton me={me} user={user} />
-                    </Grid>
+        {me && user ? (
+          <div className={classes.root}>
+            <Card className={classes.card}>
+              <CardContent>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={6}>
+                    {user.avatar ? (
+                      <Avatar
+                        className={classes.avatar}
+                        src={`http://${window.location.host}/api/users/${
+                          user._id
+                        }/avatar`}
+                      />
+                    ) : (
+                      <Avatar className={classes.avatar}>
+                        <PersonIcon />
+                      </Avatar>
+                    )}
                   </Grid>
-                </CardContent>
-              </Card>
-            </div>
-          : <PageLoader />}
-
+                  <Grid item xs={!2} sm={6} className={classes.infoSection}>
+                    <Typography variant="h5">{user.name}</Typography>
+                    <ProfileActionButton me={me} user={user} />
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </div>
+        ) : (
+          <PageLoader />
+        )}
       </div>
     );
   }
 }
 
-export default withStyles (styles) (Profile);
+export default withStyles(styles)(Profile);

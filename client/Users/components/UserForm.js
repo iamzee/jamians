@@ -218,7 +218,7 @@ class UserForm extends React.Component {
             <React.Fragment>
               <Avatar
                 className={classes.avatar}
-                src={`http://localhost:3000/api/users/${
+                src={`http://${window.location.host}/api/users/${
                   this.props.me._id
                 }/avatar`}
               />

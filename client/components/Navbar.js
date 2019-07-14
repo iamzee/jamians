@@ -29,14 +29,14 @@ import {isAuthenticated} from '../helpers/auth';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    marginBottom: theme.spacing (5),
+    marginBottom: theme.spacing(5),
   },
   grow: {
     flexGrow: 1,
     color: '#fff',
   },
   iconButton: {
-    marginRight: theme.spacing (1),
+    marginRight: theme.spacing(1),
     color: '#fff',
   },
   list: {
@@ -51,14 +51,14 @@ const styles = theme => ({
     color: 'black',
   },
   listTitle: {
-    padding: theme.spacing (2),
+    padding: theme.spacing(2),
     backgroundColor: theme.palette.primary.main,
   },
   listTitleText: {
     color: '#fff',
   },
   listItemText: {
-    paddingLeft: theme.spacing (1),
+    paddingLeft: theme.spacing(1),
   },
   link: {
     textDecoration: 'none',
@@ -68,8 +68,8 @@ const styles = theme => ({
   },
   avatar: {
     margin: 'auto',
-    marginTop: theme.spacing (2),
-    marginBottom: theme.spacing (2),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     width: 150,
     height: 150,
   },
@@ -91,12 +91,12 @@ class Navbar extends React.Component {
   };
 
   toggleDrawer = open => () => {
-    this.setState (() => ({open}));
+    this.setState(() => ({open}));
   };
 
-  render () {
+  render() {
     const {classes} = this.props;
-    const {user} = isAuthenticated ();
+    const {user} = isAuthenticated();
     return (
       <div>
         <div className={classes.root}>
@@ -104,49 +104,51 @@ class Navbar extends React.Component {
             <Toolbar>
               <IconButton
                 className={classes.iconButton}
-                onClick={this.toggleDrawer (true)}
+                onClick={this.toggleDrawer(true)}
               >
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" className={classes.grow}>
                 {this.props.title}
               </Typography>
-              {this.state.count >= 0 &&
+              {this.state.count >= 0 && (
                 <Link className={classes.link} to="/notifications">
                   <IconButton>
                     <Badge badgeContent={this.state.count} color="secondary">
                       <NotificationsIcon />
                     </Badge>
                   </IconButton>
-                </Link>}
+                </Link>
+              )}
             </Toolbar>
           </AppBar>
         </div>
 
         <div>
-          <Drawer open={this.state.open} onClose={this.toggleDrawer (false)}>
+          <Drawer open={this.state.open} onClose={this.toggleDrawer(false)}>
             <div
               tabIndex={0}
               role="button"
-              onKeyDown={this.toggleDrawer (false)}
-              onClick={this.toggleDrawer (false)}
+              onKeyDown={this.toggleDrawer(false)}
+              onClick={this.toggleDrawer(false)}
               style={{height: '100%'}}
             >
               <div className={classes.list} style={{height: '100%'}}>
-
                 <div className={classes.avatarSection}>
-                  {user.avatar
-                    ? <Avatar
-                        className={classes.avatar}
-                        src={`http://localhost:3000/api/users/${user._id}/avatar`}
-                      />
-                    : <Avatar className={classes.avatar}>
-                        <PersonIcon />
-                      </Avatar>}
+                  {user.avatar ? (
+                    <Avatar
+                      className={classes.avatar}
+                      src={`http://${window.location.host}/api/users/${
+                        user._id
+                      }/avatar`}
+                    />
+                  ) : (
+                    <Avatar className={classes.avatar}>
+                      <PersonIcon />
+                    </Avatar>
+                  )}
 
-                  <Typography variant="h6">
-                    {user.name}
-                  </Typography>
+                  <Typography variant="h6">{user.name}</Typography>
                 </div>
 
                 <List>
@@ -237,4 +239,4 @@ class Navbar extends React.Component {
   }
 }
 
-export default withStyles (styles) (Navbar);
+export default withStyles(styles)(Navbar);

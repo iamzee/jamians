@@ -62,7 +62,9 @@ class EventForm extends React.Component {
     title: this.props.event ? this.props.event.title : '',
     file: this.props.event
       ? this.props.event.poster
-        ? `http://localhost:3000/api/events/${this.props.event._id}/poster`
+        ? `http://${window.location.host}/api/events/${
+            this.props.event._id
+          }/poster`
         : null
       : null,
     fileChange: false,

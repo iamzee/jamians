@@ -25,7 +25,7 @@ const EventListCard = props => {
       {event.poster && (
         <CardMedia
           component="img"
-          src={`http://localhost:3000/api/events/${event._id}/poster`}
+          src={`http://${window.location.host}/api/events/${event._id}/poster`}
         />
       )}
       <CardContent>

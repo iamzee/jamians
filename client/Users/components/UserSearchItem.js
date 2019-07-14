@@ -21,13 +21,17 @@ const UserSearchItem = props => {
     <Link to={`/users/${user._id}`} key={user._id} className={classes.link}>
       <ListItem>
         <ListItemAvatar>
-          {user.avatar
-            ? <Avatar
-                src={`http://localhost:3000/api/users/${user._id}/avatar`}
-              />
-            : <Avatar>
-                <PersonIcon />
-              </Avatar>}
+          {user.avatar ? (
+            <Avatar
+              src={`http://${window.location.host}/api/users/${
+                user._id
+              }/avatar`}
+            />
+          ) : (
+            <Avatar>
+              <PersonIcon />
+            </Avatar>
+          )}
         </ListItemAvatar>
         <ListItemText primary={user.name} />
       </ListItem>
@@ -35,4 +39,4 @@ const UserSearchItem = props => {
   );
 };
 
-export default withStyles (styles) (UserSearchItem);
+export default withStyles(styles)(UserSearchItem);

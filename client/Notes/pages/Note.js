@@ -24,13 +24,13 @@ const styles = theme => ({
   },
 
   container: {
-    marginTop: theme.spacing (20),
-    [theme.breakpoints.down ('xs')]: {
-      marginTop: theme.spacing (15),
+    marginTop: theme.spacing(20),
+    [theme.breakpoints.down('xs')]: {
+      marginTop: theme.spacing(15),
     },
   },
   contentBody: {
-    marginTop: theme.spacing (2),
+    marginTop: theme.spacing(2),
   },
   link: {
     textDecoration: 'none',
@@ -44,91 +44,96 @@ class Note extends React.Component {
 
   componentDidMount = async () => {
     const {noteId} = this.props.match.params;
-    const note = await readNote (noteId);
-    this.setState (() => ({note}));
+    const note = await readNote(noteId);
+    this.setState(() => ({note}));
   };
 
-  render () {
+  render() {
     const {note} = this.state;
     const {classes} = this.props;
-    const {user} = isAuthenticated ();
+    const {user} = isAuthenticated();
 
     return (
       <div>
         <Navbar title={'Notes'} />
         <NotesNav />
         <div className={classes.container}>
-          {note
-            ? <Card className={classes.card}>
-                <CardContent>
-                  <Typography variant="h5" gutterBottom>
-                    {note.topic}
+          {note ? (
+            <Card className={classes.card}>
+              <CardContent>
+                <Typography variant="h5" gutterBottom>
+                  {note.topic}
+                </Typography>
+                <Typography variant="subtitle1" gutterBottom>
+                  {note.description}
+                </Typography>
+                <Divider />
+                <div className={classes.contentBody}>
+                  <Typography variant="caption">
+                    Uploaded On:{' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {moment(note.uploadedOn).format('Mo MMM YYYY')}
+                    </span>
                   </Typography>
-                  <Typography variant="subtitle1" gutterBottom>
-                    {note.description}
+                  <br />
+                  <Typography variant="caption">
+                    Uploaded By:{' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {note.createdBy.name}
+                    </span>
                   </Typography>
-                  <Divider />
-                  <div className={classes.contentBody}>
-                    <Typography variant="caption">
-                      Uploaded On:{' '}
-                      <span style={{fontWeight: 'bold'}}>
-                        {moment (note.uploadedOn).format ('Mo MMM YYYY')}
-                      </span>
-                    </Typography>
-                    <br />
-                    <Typography variant="caption">
-                      Uploaded By:{' '}
-                      <span style={{fontWeight: 'bold'}}>
-                        {note.createdBy.name}
-                      </span>
-                    </Typography>
-                    <br />
-                    <Typography variant="caption">
-                      Semester:{' '}
-                      <span style={{fontWeight: 'bold'}}>{note.semester}</span>
-                    </Typography>
-                    <br />
-                    <Typography variant="caption">
-                      Department:{' '}
-                      <span style={{fontWeight: 'bold'}}>
-                        {note.department.name}
-                      </span>
-                    </Typography>
-                    <br />
-                    <Typography variant="caption">
-                      Course:{' '}
-                      <span style={{fontWeight: 'bold'}}>
-                        {note.course.name}
-                      </span>
-                    </Typography>
-                    <br />
-                    <Typography variant="caption">
-                      Subject:{' '}
-                      <span style={{fontWeight: 'bold'}}>
-                        {note.subject.name}
-                      </span>
-                    </Typography>
-                  </div>
-                </CardContent>
-                <CardActions>
-                  <a
-                    className={classes.link}
-                    target="_blank"
-                    href={`http://localhost:3000/api/notes/${note._id}/download`}
-                  >
-                    <Button color="secondary" component="span">View</Button>
-                  </a>
+                  <br />
+                  <Typography variant="caption">
+                    Semester:{' '}
+                    <span style={{fontWeight: 'bold'}}>{note.semester}</span>
+                  </Typography>
+                  <br />
+                  <Typography variant="caption">
+                    Department:{' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {note.department.name}
+                    </span>
+                  </Typography>
+                  <br />
+                  <Typography variant="caption">
+                    Course:{' '}
+                    <span style={{fontWeight: 'bold'}}>{note.course.name}</span>
+                  </Typography>
+                  <br />
+                  <Typography variant="caption">
+                    Subject:{' '}
+                    <span style={{fontWeight: 'bold'}}>
+                      {note.subject.name}
+                    </span>
+                  </Typography>
+                </div>
+              </CardContent>
+              <CardActions>
+                <a
+                  className={classes.link}
+                  target="_blank"
+                  href={`http://${window.location.host}/api/notes/${
+                    note._id
+                  }/download`}
+                >
+                  <Button color="secondary" component="span">
+                    View
+                  </Button>
+                </a>
 
-                  <BookmarkButton note={note} />
-                  {user._id.toString () === note.createdBy._id.toString () &&
-                    <DeleteButton note={note} history={this.props.history} />}
-                </CardActions>
-              </Card>
-            : <PageLoader />}
+                <BookmarkButton note={note} />
+                {user._id.toString() === note.createdBy._id.toString() && (
+                  <DeleteButton note={note} history={this.props.history} />
+                )}
+              </CardActions>
+            </Card>
+          ) : (
+            <PageLoader />
+          )}
         </div>
       </div>
     );
   }
 }
 
-export default withStyles (styles) (Note);
+export default withStyles(styles)(Note);
