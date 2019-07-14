@@ -3,7 +3,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogTitle from '@material-ui/core/DIalogTitle';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import {removeNote} from '../../api/notes';
 
@@ -13,24 +13,26 @@ class DeleteButton extends React.Component {
   };
 
   handleClose = () => {
-    this.setState (() => ({open: false}));
+    this.setState(() => ({open: false}));
   };
 
   handleOpen = () => {
-    this.setState (() => ({open: true}));
+    this.setState(() => ({open: true}));
   };
 
   handleDelete = async () => {
-    await removeNote (this.props.note._id);
-    this.setState (() => ({open: false}));
-    this.props.history.push ('/notes');
+    await removeNote(this.props.note._id);
+    this.setState(() => ({open: false}));
+    this.props.history.push('/notes');
   };
 
-  render () {
+  render() {
     const {open} = this.state;
     return (
       <React.Fragment>
-        <Button onClick={this.handleOpen} color="secondary">Delete</Button>
+        <Button onClick={this.handleOpen} color="secondary">
+          Delete
+        </Button>
         <Dialog
           open={open}
           onClose={this.handleClose}
@@ -40,7 +42,9 @@ class DeleteButton extends React.Component {
             {'Are you sure you want to delete this note?'}
           </DialogTitle>
           <DialogActions>
-            <Button color="secondary" onClick={this.handleClose}>Cancel</Button>
+            <Button color="secondary" onClick={this.handleClose}>
+              Cancel
+            </Button>
             <Button color="secondary" onClick={this.handleDelete}>
               Delete
             </Button>
