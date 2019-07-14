@@ -64,9 +64,6 @@ const QuestionPaperBookmarkPage = lazy(() =>
 const Event = lazy(() => import('../Events/pages/Event'));
 const NewEventPage = lazy(() => import('../Events/pages/NewEventPage'));
 const EventsDashboard = lazy(() => import('../Events/pages/EventsDashboard'));
-const EventBookmarksPage = lazy(() =>
-  import('../Events/pages/EventBookmarksPage')
-);
 const EventEditPage = lazy(() => import('../Events/pages/EventEditPage'));
 
 // HOME IMPORTS
@@ -97,10 +94,6 @@ const MainRouter = props => (
           <PrivateRoute path="/users" component={UsersDashboard} />
 
           {/* EVENT ROUTES */}
-          <PrivateRoute
-            path="/events/bookmarks"
-            component={EventBookmarksPage}
-          />
           <PrivateRoute path="/events/new" component={NewEventPage} />
           <PrivateRoute
             path="/events/:eventId/edit"
