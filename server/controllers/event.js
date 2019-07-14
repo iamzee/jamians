@@ -8,20 +8,56 @@ import tmp from 'tmp';
 
 export const createEvent = async (req, res) => {
   try {
-    let event = _.pick(
-      req.body,
-      'title',
-      'body',
-      'startDate',
-      'endDate',
-      'category',
-      'registration'
-    );
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.maxFileSize = 0.5 * 1024 * 1024;
 
-    event = {...event, createdBy: req.user._id};
-    event = new Event(event);
-    await event.save();
-    res.send(event);
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        return res.status(400).send(e);
+      }
+
+      const allowedKeys = [
+        'title',
+        'body',
+        'startDate',
+        'endDate',
+        'category',
+        'registration',
+      ];
+
+      let blob = null;
+
+      if (files.poster) {
+        blob = uuid();
+
+        if (files.poster.type === 'image/png') {
+          blob = `${blob}.png`;
+        } else if (files.poster.type === 'image/jpeg') {
+          blob = `${blob}.jpg`;
+        } else {
+          return res.status(400).send({error: 'Invalid file type.'});
+        }
+
+        await upload('events', blob, files.poster.path);
+      }
+
+      allowedKeys.forEach(key => {
+        if (!fields[key]) {
+          delete fields[key];
+        }
+      });
+
+      const event = new Event({
+        ...fields,
+        poster: blob,
+        createdBy: req.user._id,
+      });
+
+      await event.save();
+
+      res.send(event);
+    });
   } catch (e) {
     res.status(400).send(e);
   }
