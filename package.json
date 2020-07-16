@@ -47,7 +47,7 @@
     "formidable": "^1.2.1",
     "history": "^4.7.2",
     "jsonwebtoken": "^8.5.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "material-ui-pickers": "^2.2.4",
     "moment": "^2.24.0",
     "mongoose": "^5.4.16",
