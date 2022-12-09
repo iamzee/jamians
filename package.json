@@ -41,7 +41,7 @@
     "draft-js-linkify-plugin": "^2.0.1",
     "draft-js-plugins-editor": "^2.1.1",
     "emotion": "^10.0.9",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "express-jwt": "^5.3.1",
     "file-loader": "^3.0.1",
     "formidable": "^1.2.1",
